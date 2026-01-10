@@ -19,12 +19,15 @@
     
     <header class="mb-8 flex flex-col md:flex-row justify-between items-center border-b border-gray-700 pb-4">
         <div>
-            <h1 class="text-3xl font-bold text-white mb-2">🚀 台股動能突破選股</h1>
-            <p class="text-gray-400 text-sm">策略：長期整理後帶量突破新高 (買進) / 趨勢轉弱 (出場)</p>
+            <h1 class="text-3xl font-bold text-white mb-2">📈 台股大漲訊號篩選</h1>
+            <p class="text-gray-400 text-sm">
+                進場：突破2年新高 + 實體紅K棒 (甦醒) + 基本面檢核<br>
+                出場：跌破13週線且趨勢下彎 (轉折) 或 虧損8% (停損)
+            </p>
         </div>
         
-        <div class="mt-4 md:mt-0">
-            <label class="text-gray-400 mr-2">選擇日期:</label>
+        <div class="mt-4 md:mt-0 flex items-center gap-2">
+            <label class="text-gray-400 text-sm">歷史回顧:</label>
             <select v-model="selectedDateIndex" class="bg-gray-800 border border-gray-600 text-white rounded px-3 py-2 focus:outline-none focus:border-blue-500">
                 <option v-for="(record, index) in reversedHistory" :value="index">
                     {{ record.date }} ({{ record.buy.length }} 進 / {{ record.sell.length }} 出)
@@ -64,10 +67,12 @@
             </div>
             
             <div v-for="stock in currentRecord.buy" :key="stock.code" @click="openModal(stock, 'buy')" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 relative overflow-hidden group">
-                <div class="absolute top-0 right-0 bg-red-600 text-white text-xs px-2 py-1 rounded-bl-lg">
-                    {{ stock.score }}分
+                <div class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg"
+                     :class="stock.score >= 3 ? 'bg-red-600' : 'bg-gray-600'">
+                    綜合評分: {{ stock.score }}
                 </div>
-                <div class="flex justify-between items-end mb-4">
+
+                <div class="flex justify-between items-end mb-3">
                     <div>
                         <h3 class="text-2xl font-bold text-white">{{ stock.code.replace('.TW', '').replace('.TWO', '') }}</h3>
                         <p class="text-gray-400 text-sm">台股代號</p>
@@ -77,8 +82,26 @@
                         <div class="text-xs text-gray-500">{{ stock.date }}</div>
                     </div>
                 </div>
+
+                <div class="grid grid-cols-3 gap-2 mb-3 text-center bg-gray-700/30 p-2 rounded-lg">
+                    <div>
+                        <div class="text-xs text-gray-400">獲利成長</div>
+                        <div class="font-bold" :class="parseFloat(stock.fundamentals.growth) > 0 ? 'text-red-300' : 'text-green-300'">
+                            {{ stock.fundamentals.growth }}
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400">本益比</div>
+                        <div class="font-bold text-blue-300">{{ stock.fundamentals.pe }}</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400">ROE</div>
+                        <div class="font-bold text-yellow-300">{{ stock.fundamentals.roe }}</div>
+                    </div>
+                </div>
+
                 <div class="space-y-1">
-                    <span v-for="reason in stock.reasons" class="inline-block bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded mr-1 mb-1">
+                    <span v-for="reason in stock.reasons" class="inline-block border border-gray-600 text-gray-300 text-xs px-2 py-1 rounded mr-1 mb-1">
                         {{ reason }}
                     </span>
                 </div>
@@ -144,12 +167,13 @@
 
                 <div class="pt-4">
                     <a :href="`https://tw.stock.yahoo.com/quote/${selectedStock.code.replace('.TW', '').replace('.TWO', '')}`" target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">
-                        前往 Yahoo 股市查看
+                        前往 Yahoo 股市查看 K 線
                     </a>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 
 <script>
@@ -161,7 +185,7 @@
                 loading: true,
                 history: [],
                 selectedDateIndex: 0,
-                viewMode: 'buy',
+                viewMode: 'buy', // 'buy' or 'sell'
                 showModal: false,
                 selectedStock: null,
                 modalType: 'buy'
@@ -169,6 +193,7 @@
         },
         computed: {
             reversedHistory() {
+                // 將資料反轉，讓最新的日期排在第一個
                 return [...this.history].reverse();
             },
             currentRecord() {
@@ -185,7 +210,11 @@
                     this.history = data;
                 } catch (error) {
                     console.error(error);
-                    this.history = [{ date: "暫無資料", buy: [], sell: [] }];
+                    this.history = [{
+                        date: "暫無資料", 
+                        buy: [], 
+                        sell: [] 
+                    }];
                 } finally {
                     this.loading = false;
                 }
