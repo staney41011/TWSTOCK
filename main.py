@@ -7,14 +7,13 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
-# --- 設定參數 ---
-LOOKBACK_LONG = 500  # 林則行: 兩年新高
-MA_SHORT = 60        # 季線 (出場判斷用)
+# --- 策略參數設定 (您可以在此調整) ---
+LOOKBACK_LONG = 500  # 長期新高 (約2年)
+MA_EXIT = 60         # 出場均線 (季線)
 VOL_MA = 20          # 成交量均線
 DATA_FILE = "data.json"
 
 def get_tw_stock_list():
-    """取得台灣上市櫃股票代號"""
     twse = twstock.twse
     tpex = twstock.tpex
     stocks = []
@@ -25,60 +24,53 @@ def get_tw_stock_list():
     return stocks
 
 def analyze_stock(ticker, check_exit=False):
-    """
-    check_exit=False -> 掃描買進 (林則行策略)
-    check_exit=True  -> 掃描賣出 (跌破季線)
-    """
     try:
         stock = yf.Ticker(ticker)
-        # 抓取稍長一點的歷史資料以確保均線計算無誤
-        df = stock.history(period="2y")
+        df = stock.history(period="2y") # 抓取兩年資料
         
         if len(df) < 250: return None
         
         latest = df.iloc[-1]
-        prev = df.iloc[-2] # 前一日
         
-        # 計算季線
-        ma60 = df['Close'].rolling(window=MA_SHORT).mean()
-        curr_ma60 = ma60.iloc[-1]
+        # 計算均線
+        ma_exit_line = df['Close'].rolling(window=MA_EXIT).mean()
+        curr_ma_exit = ma_exit_line.iloc[-1]
 
         # --- 賣出檢查模式 ---
         if check_exit:
-            # 判斷邏輯：收盤價低於季線
-            is_below_ma60 = latest['Close'] < curr_ma60
-            if is_below_ma60:
+            # 策略：收盤價 跌破 出場均線
+            if latest['Close'] < curr_ma_exit:
                 return {
                     "code": ticker,
                     "name": ticker,
                     "price": float(f"{latest['Close']:.2f}"),
                     "date": latest.name.strftime('%Y-%m-%d'),
-                    "reason": "跌破季線 (60MA)"
+                    "reason": f"跌破 {MA_EXIT}MA"
                 }
             return None
 
-        # --- 買進檢查模式 (林則行) ---
-        # 0. 基本過濾：今日無量(殭屍股)跳過
+        # --- 買進檢查模式 ---
         if latest['Volume'] < 500000: return None 
 
-        # 1. 計算區間高點
+        # 1. 創區間新高
         lookback_days = min(len(df)-1, LOOKBACK_LONG)
         window_high = df['Close'][-lookback_days:-1].max()
-        
         is_breaking_high = latest['Close'] > window_high
         
         # 2. 均線趨勢
+        # 使用 60MA 作為趨勢判斷
+        ma60 = df['Close'].rolling(window=60).mean()
+        curr_ma60 = ma60.iloc[-1]
         is_ma60_up = curr_ma60 > ma60.iloc[-2]
         is_above_ma60 = latest['Close'] > curr_ma60
         
-        # 3. 成交量
+        # 3. 成交量爆發
         vol_ma20 = df['Volume'].rolling(window=VOL_MA).mean().iloc[-1]
         is_volume_spike = latest['Volume'] > (vol_ma20 * 1.5)
 
-        # 計分
         score = 0
         reasons = []
-        if is_breaking_high: score += 2; reasons.append("突破兩年高")
+        if is_breaking_high: score += 2; reasons.append("突破長期新高")
         if is_ma60_up: score += 1; reasons.append("季線向上")
         if is_above_ma60: score += 1; reasons.append("站上季線")
         if is_volume_spike: score += 1; reasons.append("量增1.5倍")
@@ -100,7 +92,6 @@ def analyze_stock(ticker, check_exit=False):
 def main():
     print("啟動掃描...")
     
-    # 1. 讀取歷史資料 (為了追蹤持股)
     history_data = []
     if os.path.exists(DATA_FILE):
         try:
@@ -109,22 +100,18 @@ def main():
         except:
             pass
 
-    # 找出過去 60 天內曾入選的股票代號，作為「潛在持倉」來檢查是否出場
     potential_holdings = set()
-    # 稍微保護一下，以免資料格式錯誤
     if isinstance(history_data, list):
-        for day_record in history_data[-60:]: # 只看最近兩個月入選的
+        for day_record in history_data[-60:]: 
             for stock in day_record.get('buy', []):
                 potential_holdings.add(stock['code'])
             
     all_stocks = get_tw_stock_list()
-    # 測試時可解除下方註解只跑前50檔
-    # all_stocks = all_stocks[:50] 
+    # all_stocks = all_stocks[:50] # 測試用
     
     today_buys = []
     today_exits = []
 
-    # 2. 執行買入掃描
     print(f"正在掃描全市場買點 ({len(all_stocks)} 檔)...")
     with ThreadPoolExecutor(max_workers=20) as executor:
         futures = [executor.submit(analyze_stock, code, False) for code in all_stocks]
@@ -132,7 +119,6 @@ def main():
             res = future.result()
             if res: today_buys.append(res)
 
-    # 3. 執行賣出掃描 (針對潛在持倉)
     print(f"正在檢查出場訊號 ({len(potential_holdings)} 檔)...")
     if potential_holdings:
         with ThreadPoolExecutor(max_workers=20) as executor:
@@ -141,19 +127,15 @@ def main():
                 res = future.result()
                 if res: today_exits.append(res)
 
-    # 排序
     today_buys.sort(key=lambda x: (-x['score'], -x['price']))
     
-    # 4. 存檔
     today_str = datetime.now().strftime('%Y-%m-%d')
-    
     new_record = {
         "date": today_str,
         "buy": today_buys,
         "sell": today_exits
     }
     
-    # 如果最後一筆是今天的，就覆蓋；否則 append
     if history_data and history_data[-1]['date'] == today_str:
         history_data[-1] = new_record
     else:
