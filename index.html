@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>林則行 大漲訊號儀表板</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        [v-cloak] { display: none; }
+        body { background-color: #0f172a; color: #e2e8f0; }
+        .card { transition: all 0.2s; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5); }
+    </style>
+</head>
+<body>
+
+<div id="app" v-cloak class="min-h-screen p-4 md:p-8 max-w-6xl mx-auto">
+    
+    <header class="mb-8 flex flex-col md:flex-row justify-between items-center border-b border-gray-700 pb-4">
+        <div>
+            <h1 class="text-3xl font-bold text-white mb-2">📈 林則行 大漲訊號選股</h1>
+            <p class="text-gray-400 text-sm">策略：長期盤整後帶量突破新高 (買進) / 跌破季線 (出場)</p>
+        </div>
+        
+        <div class="mt-4 md:mt-0">
+            <label class="text-gray-400 mr-2">選擇日期:</label>
+            <select v-model="selectedDateIndex" class="bg-gray-800 border border-gray-600 text-white rounded px-3 py-2 focus:outline-none focus:border-blue-500">
+                <option v-for="(record, index) in reversedHistory" :value="index">
+                    {{ record.date }} ({{ record.buy.length }} 進 / {{ record.sell.length }} 出)
+                </option>
+            </select>
+        </div>
+    </header>
+
+    <div v-if="loading" class="text-center text-gray-500 py-20">
+        <p class="text-xl animate-pulse">正在讀取最新股市資料...</p>
+    </div>
+
+    <div v-else>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-red-500">
+                <div class="text-gray-400 text-sm">今日買進訊號</div>
+                <div class="text-3xl font-bold text-red-400">{{ currentRecord.buy.length }} <span class="text-sm text-gray-500">檔</span></div>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-green-500">
+                <div class="text-gray-400 text-sm">今日出場訊號</div>
+                <div class="text-3xl font-bold text-green-400">{{ currentRecord.sell.length }} <span class="text-sm text-gray-500">檔</span></div>
+            </div>
+        </div>
+
+        <div class="flex space-x-4 mb-6">
+            <button @click="viewMode = 'buy'" :class="{'bg-red-600 text-white': viewMode === 'buy', 'bg-gray-800 text-gray-400': viewMode !== 'buy'}" class="px-6 py-2 rounded-full font-bold transition">
+                🚀 進場訊號 (Buy)
+            </button>
+            <button @click="viewMode = 'sell'" :class="{'bg-green-600 text-white': viewMode === 'sell', 'bg-gray-800 text-gray-400': viewMode !== 'sell'}" class="px-6 py-2 rounded-full font-bold transition">
+                👋 出場訊號 (Sell)
+            </button>
+        </div>
+
+        <div v-if="viewMode === 'buy'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-if="currentRecord.buy.length === 0" class="col-span-full text-center text-gray-500 py-10">
+                今日無符合條件的股票
+            </div>
+            
+            <div v-for="stock in currentRecord.buy" :key="stock.code" @click="openModal(stock, 'buy')" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 bg-red-600 text-white text-xs px-2 py-1 rounded-bl-lg">
+                    {{ stock.score }}分
+                </div>
+                <div class="flex justify-between items-end mb-4">
+                    <div>
+                        <h3 class="text-2xl font-bold text-white">{{ stock.code.replace('.TW', '').replace('.TWO', '') }}</h3>
+                        <p class="text-gray-400 text-sm">台股代號</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-xl font-bold text-red-400">${{ stock.price }}</div>
+                        <div class="text-xs text-gray-500">{{ stock.date }}</div>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <span v-for="reason in stock.reasons" class="inline-block bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded mr-1 mb-1">
+                        {{ reason }}
+                    </span>
+                </div>
+                <div class="mt-4 text-center text-blue-400 text-sm opacity-0 group-hover:opacity-100 transition">
+                    點擊查看詳情
+                </div>
+            </div>
+        </div>
+
+        <div v-if="viewMode === 'sell'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-if="currentRecord.sell.length === 0" class="col-span-full text-center text-gray-500 py-10">
+                今日無觸發出場的股票
+            </div>
+
+            <div v-for="stock in currentRecord.sell" :key="stock.code" @click="openModal(stock, 'sell')" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700">
+                <div class="flex justify-between items-end mb-4">
+                    <div>
+                        <h3 class="text-2xl font-bold text-white">{{ stock.code.replace('.TW', '').replace('.TWO', '') }}</h3>
+                        <p class="text-gray-400 text-sm">出場訊號</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-xl font-bold text-green-400">${{ stock.price }}</div>
+                        <div class="text-xs text-gray-500">{{ stock.date }}</div>
+                    </div>
+                </div>
+                <div class="bg-gray-700/50 p-2 rounded text-sm text-gray-300">
+                    原因：{{ stock.reason }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4" @click.self="showModal = false">
+        <div class="bg-gray-800 rounded-xl max-w-md w-full p-6 border border-gray-600 shadow-2xl relative">
+            <button @click="showModal = false" class="absolute top-4 right-4 text-gray-400 hover:text-white">✕</button>
+            
+            <h2 class="text-3xl font-bold mb-1">{{ selectedStock.code.replace('.TW', '').replace('.TWO', '') }}</h2>
+            <div class="text-gray-400 text-sm mb-6">詳細資訊</div>
+
+            <div class="space-y-4">
+                <div class="flex justify-between border-b border-gray-700 pb-2">
+                    <span class="text-gray-400">訊號日期</span>
+                    <span class="text-white font-mono">{{ selectedStock.date }}</span>
+                </div>
+                <div class="flex justify-between border-b border-gray-700 pb-2">
+                    <span class="text-gray-400">訊號價格</span>
+                    <span :class="modalType === 'buy' ? 'text-red-400' : 'text-green-400'" class="font-bold text-xl">
+                        ${{ selectedStock.price }}
+                    </span>
+                </div>
+                
+                <div v-if="modalType === 'buy'">
+                    <p class="text-gray-400 mb-2">符合條件：</p>
+                    <ul class="list-disc list-inside text-gray-300 space-y-1">
+                        <li v-for="r in selectedStock.reasons">{{ r }}</li>
+                    </ul>
+                </div>
+                
+                <div v-if="modalType === 'sell'">
+                    <p class="text-gray-400 mb-2">出場原因：</p>
+                    <p class="text-green-300 bg-green-900/30 p-2 rounded">{{ selectedStock.reason }}</p>
+                </div>
+
+                <div class="pt-4">
+                    <a :href="`https://tw.stock.yahoo.com/quote/${selectedStock.code.replace('.TW', '').replace('.TWO', '')}`" target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">
+                        前往 Yahoo 股市查看 K 線
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const { createApp } = Vue;
+
+    createApp({
+        data() {
+            return {
+                loading: true,
+                history: [],
+                selectedDateIndex: 0,
+                viewMode: 'buy', // 'buy' or 'sell'
+                showModal: false,
+                selectedStock: null,
+                modalType: 'buy'
+            }
+        },
+        computed: {
+            reversedHistory() {
+                // 將資料反轉，讓最新的日期排在第一個
+                return [...this.history].reverse();
+            },
+            currentRecord() {
+                if (this.reversedHistory.length === 0) return { buy: [], sell: [] };
+                return this.reversedHistory[this.selectedDateIndex];
+            }
+        },
+        methods: {
+            async loadData() {
+                try {
+                    // 讀取 GitHub Actions 產生的 JSON 檔
+                    // 注意：如果是本地測試，請確保目錄下有 data.json
+                    // 如果是 GitHub Pages，路徑通常是對的
+                    const response = await fetch('./data.json');
+                    if (!response.ok) throw new Error('無法讀取資料');
+                    const data = await response.json();
+                    this.history = data;
+                } catch (error) {
+                    console.error(error);
+                    // 假資料 (如果讀不到檔案時顯示，方便測試)
+                    this.history = [{
+                        date: "範例資料", 
+                        buy: [], 
+                        sell: [] 
+                    }];
+                } finally {
+                    this.loading = false;
+                }
+            },
+            openModal(stock, type) {
+                this.selectedStock = stock;
+                this.modalType = type;
+                this.showModal = true;
+            }
+        },
+        mounted() {
+            this.loadData();
+        }
+    }).mount('#app');
+</script>
+</body>
+</html>
