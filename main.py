@@ -2,102 +2,87 @@ import yfinance as yf
 import pandas as pd
 import twstock
 import time
+import json
+import os
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-import os
 
 # --- 設定參數 ---
-LOOKBACK_LONG = 500  # 林則行: 兩年新高 (約500交易日)
-MA_SHORT = 60        # 季線
+LOOKBACK_LONG = 500  # 林則行: 兩年新高
+MA_SHORT = 60        # 季線 (出場判斷用)
 VOL_MA = 20          # 成交量均線
+DATA_FILE = "data.json"
 
 def get_tw_stock_list():
-    """取得台灣上市櫃股票代號清單"""
-    print("正在抓取股票代號清單...")
-    # 上市
+    """取得台灣上市櫃股票代號"""
     twse = twstock.twse
-    # 上櫃
     tpex = twstock.tpex
-    
-    # 這裡我們先篩選常見的股票，避免抓到權證或奇怪的商品
-    # 簡單過濾：代號必須是 4 位數
     stocks = []
     for code in twse:
-        if len(code) == 4:
-            stocks.append(f"{code}.TW")
+        if len(code) == 4: stocks.append(f"{code}.TW")
     for code in tpex:
-        if len(code) == 4:
-            stocks.append(f"{code}.TWO")
-            
-    print(f"共取得 {len(stocks)} 檔股票代號")
+        if len(code) == 4: stocks.append(f"{code}.TWO")
     return stocks
 
-def analyze_stock(ticker):
-    """分析單一股票是否符合林則行策略"""
+def analyze_stock(ticker, check_exit=False):
+    """
+    check_exit=False -> 掃描買進 (林則行策略)
+    check_exit=True  -> 掃描賣出 (跌破季線)
+    """
     try:
         stock = yf.Ticker(ticker)
-        # 抓取歷史資料 (稍微多抓一點以計算均線)
         df = stock.history(period="2y")
         
-        if len(df) < 250: # 上市不滿一年先跳過
-            return None
-
-        # 取得最新與前一日資料
+        if len(df) < 250: return None
+        
         latest = df.iloc[-1]
         prev = df.iloc[-2]
-        
-        # 0. 基本過濾：今日成交量太低(殭屍股)跳過
-        if latest['Volume'] < 500000: # 少於500張
-            return None
-
-        # --- 林則行策略計算 ---
-        
-        # 1. 兩年新高判斷 (不含今日)
-        # 注意：若資料不足500日，就用現有資料的最大值
-        lookback_days = min(len(df)-1, LOOKBACK_LONG)
-        window_high = df['Close'][-lookback_days:-1].max()
-        is_breaking_high = latest['Close'] > window_high
-        
-        # 2. 60日均線(季線)趨勢
         ma60 = df['Close'].rolling(window=MA_SHORT).mean()
         curr_ma60 = ma60.iloc[-1]
-        prev_ma60 = ma60.iloc[-2]
-        is_ma60_up = curr_ma60 > prev_ma60
+
+        # --- 賣出檢查模式 ---
+        if check_exit:
+            # 如果收盤價跌破季線，且昨天還在季線上 (剛跌破)
+            # 或者單純檢查現在是否低於季線
+            is_below_ma60 = latest['Close'] < curr_ma60
+            if is_below_ma60:
+                return {
+                    "code": ticker,
+                    "name": ticker, # yfinance 抓中文名較慢，先用代號
+                    "price": float(f"{latest['Close']:.2f}"),
+                    "date": latest.name.strftime('%Y-%m-%d'),
+                    "reason": "跌破季線 (60MA)"
+                }
+            return None
+
+        # --- 買進檢查模式 (林則行) ---
+        if latest['Volume'] < 500000: return None # 濾掉無量
+
+        lookback_days = min(len(df)-1, LOOKBACK_LONG)
+        window_high = df['Close'][-lookback_days:-1].max()
+        
+        is_breaking_high = latest['Close'] > window_high
+        is_ma60_up = curr_ma60 > ma60.iloc[-2]
         is_above_ma60 = latest['Close'] > curr_ma60
+        
+        vol_ma20 = df['Volume'].rolling(window=VOL_MA).mean().iloc[-1]
+        is_volume_spike = latest['Volume'] > (vol_ma20 * 1.5)
 
-        # 3. 成交量爆發
-        vol_ma20 = df['Volume'].rolling(window=VOL_MA).mean()
-        curr_vol_ma20 = vol_ma20.iloc[-1]
-        is_volume_spike = latest['Volume'] > (curr_vol_ma20 * 1.5)
-
-        # --- 評分 (滿分5分) ---
         score = 0
         reasons = []
+        if is_breaking_high: score += 2; reasons.append("突破兩年高")
+        if is_ma60_up: score += 1; reasons.append("季線向上")
+        if is_above_ma60: score += 1; reasons.append("站上季線")
+        if is_volume_spike: score += 1; reasons.append("量增1.5倍")
 
-        if is_breaking_high:
-            score += 2
-            reasons.append("突破兩年新高")
-        
-        if is_ma60_up:
-            score += 1
-            reasons.append("季線向上")
-            
-        if is_above_ma60:
-            score += 1
-            reasons.append("站上季線")
-            
-        if is_volume_spike:
-            score += 1
-            reasons.append("成交量爆發")
-
-        # 只回傳高分股票 (例如 4分以上) 以節省報告長度
         if score >= 4:
             return {
-                "Code": ticker,
-                "Price": f"{latest['Close']:.2f}",
-                "Score": score,
-                "Volume": int(latest['Volume']),
-                "Reasons": ", ".join(reasons)
+                "code": ticker,
+                "name": ticker, 
+                "price": float(f"{latest['Close']:.2f}"),
+                "score": score,
+                "reasons": reasons,
+                "date": latest.name.strftime('%Y-%m-%d')
             }
         return None
 
@@ -105,48 +90,70 @@ def analyze_stock(ticker):
         return None
 
 def main():
-    start_time = time.time()
+    print("啟動掃描...")
+    
+    # 1. 讀取歷史資料 (為了追蹤持股)
+    history_data = []
+    if os.path.exists(DATA_FILE):
+        try:
+            with open(DATA_FILE, 'r', encoding='utf-8') as f:
+                history_data = json.load(f)
+        except:
+            pass
+
+    # 找出過去 60 天內曾入選的股票代號，作為「潛在持倉」來檢查是否出場
+    potential_holdings = set()
+    for day_record in history_data[-60:]: # 只看最近兩個月入選的
+        for stock in day_record.get('buy', []):
+            potential_holdings.add(stock['code'])
+            
     all_stocks = get_tw_stock_list()
+    # 測試時限制數量，正式跑請拿掉下一行
+    # all_stocks = all_stocks[:50] 
     
-    # 測試用：為了避免跑太久，你可以先限制只跑前 100 檔
-    # all_stocks = all_stocks[:100] 
-    
-    results = []
-    
-    print("開始掃描 (這可能需要幾分鐘)...")
-    
-    # 使用多執行緒加速 (GitHub Actions 通常可以承受 10-20 threads)
+    today_buys = []
+    today_exits = []
+
+    # 2. 執行買入掃描
+    print(f"正在掃描全市場買點 ({len(all_stocks)} 檔)...")
     with ThreadPoolExecutor(max_workers=20) as executor:
-        futures = [executor.submit(analyze_stock, code) for code in all_stocks]
+        futures = [executor.submit(analyze_stock, code, False) for code in all_stocks]
         for future in futures:
             res = future.result()
-            if res:
-                results.append(res)
+            if res: today_buys.append(res)
 
-    # 排序：分數高 -> 價格高
-    results.sort(key=lambda x: (-x['Score'], -float(x['Price'])))
+    # 3. 執行賣出掃描 (針對潛在持倉)
+    print(f"正在檢查出場訊號 ({len(potential_holdings)} 檔)...")
+    if potential_holdings:
+        with ThreadPoolExecutor(max_workers=20) as executor:
+            futures = [executor.submit(analyze_stock, code, True) for code in list(potential_holdings)]
+            for future in futures:
+                res = future.result()
+                if res: today_exits.append(res)
 
-    # --- 產生 Markdown 報告 ---
-    report_content = f"# 📈 林則行《大漲的訊號》自動篩選報告\n\n"
-    report_content += f"**更新時間**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} (UTC)\n\n"
-    report_content += f"**篩選標準**: 突破兩年新高(2分)、季線向上(1分)、站上季線(1分)、量增1.5倍(1分)\n\n"
-    report_content += f"**總掃描檔數**: {len(all_stocks)} | **符合條件**: {len(results)}\n\n"
-    report_content += "---\n\n"
-    report_content += "| 代號 | 股價 | 分數 | 觸發條件 | 成交量 |\n"
-    report_content += "|---|---|---|---|---|\n"
+    # 排序
+    today_buys.sort(key=lambda x: (-x['score'], -x['price']))
+    
+    # 4. 存檔
+    today_str = datetime.now().strftime('%Y-%m-%d')
+    
+    # 檢查今天是否已經跑過 (避免重複)，若跑過則更新，沒跑過則新增
+    new_record = {
+        "date": today_str,
+        "buy": today_buys,
+        "sell": today_exits
+    }
+    
+    # 簡單邏輯：如果最後一筆是今天的，就覆蓋；否則 append
+    if history_data and history_data[-1]['date'] == today_str:
+        history_data[-1] = new_record
+    else:
+        history_data.append(new_record)
 
-    for r in results:
-        # 將 .TW / .TWO 拿掉顯示比較乾淨
-        clean_code = r['Code'].replace('.TW', '').replace('.TWO', '')
-        # 產生 Yahoo股市連結
-        link = f"[{clean_code}](https://tw.stock.yahoo.com/quote/{clean_code})"
-        report_content += f"| {link} | {r['Price']} | **{r['Score']}** | {r['Reasons']} | {r['Volume']:,} |\n"
+    with open(DATA_FILE, 'w', encoding='utf-8') as f:
+        json.dump(history_data, f, ensure_ascii=False, indent=2)
 
-    # 寫入 README.md (這樣一進 GitHub 首頁就看得到)
-    with open("README.md", "w", encoding="utf-8") as f:
-        f.write(report_content)
-
-    print(f"掃描完成！耗時 {time.time() - start_time:.2f} 秒")
+    print(f"掃描完成！資料已更新至 {DATA_FILE}")
 
 if __name__ == "__main__":
     main()
