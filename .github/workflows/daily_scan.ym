@@ -34,7 +34,7 @@ jobs:
       run: |
         git config --global user.name "GitHub Action"
         git config --global user.email "action@github.com"
-        git add README.md
+        git add README.md data.json
         # 如果有變更才 commit，避免錯誤
         git commit -m "Update stock scan report" || exit 0
         git push
