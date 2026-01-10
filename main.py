@@ -31,24 +31,26 @@ def analyze_stock(ticker, check_exit=False):
     """
     try:
         stock = yf.Ticker(ticker)
+        # 抓取稍長一點的歷史資料以確保均線計算無誤
         df = stock.history(period="2y")
         
         if len(df) < 250: return None
         
         latest = df.iloc[-1]
-        prev = df.iloc[-2]
+        prev = df.iloc[-2] # 前一日
+        
+        # 計算季線
         ma60 = df['Close'].rolling(window=MA_SHORT).mean()
         curr_ma60 = ma60.iloc[-1]
 
         # --- 賣出檢查模式 ---
         if check_exit:
-            # 如果收盤價跌破季線，且昨天還在季線上 (剛跌破)
-            # 或者單純檢查現在是否低於季線
+            # 判斷邏輯：收盤價低於季線
             is_below_ma60 = latest['Close'] < curr_ma60
             if is_below_ma60:
                 return {
                     "code": ticker,
-                    "name": ticker, # yfinance 抓中文名較慢，先用代號
+                    "name": ticker,
                     "price": float(f"{latest['Close']:.2f}"),
                     "date": latest.name.strftime('%Y-%m-%d'),
                     "reason": "跌破季線 (60MA)"
@@ -56,18 +58,24 @@ def analyze_stock(ticker, check_exit=False):
             return None
 
         # --- 買進檢查模式 (林則行) ---
-        if latest['Volume'] < 500000: return None # 濾掉無量
+        # 0. 基本過濾：今日無量(殭屍股)跳過
+        if latest['Volume'] < 500000: return None 
 
+        # 1. 計算區間高點
         lookback_days = min(len(df)-1, LOOKBACK_LONG)
         window_high = df['Close'][-lookback_days:-1].max()
         
         is_breaking_high = latest['Close'] > window_high
+        
+        # 2. 均線趨勢
         is_ma60_up = curr_ma60 > ma60.iloc[-2]
         is_above_ma60 = latest['Close'] > curr_ma60
         
+        # 3. 成交量
         vol_ma20 = df['Volume'].rolling(window=VOL_MA).mean().iloc[-1]
         is_volume_spike = latest['Volume'] > (vol_ma20 * 1.5)
 
+        # 計分
         score = 0
         reasons = []
         if is_breaking_high: score += 2; reasons.append("突破兩年高")
@@ -103,12 +111,14 @@ def main():
 
     # 找出過去 60 天內曾入選的股票代號，作為「潛在持倉」來檢查是否出場
     potential_holdings = set()
-    for day_record in history_data[-60:]: # 只看最近兩個月入選的
-        for stock in day_record.get('buy', []):
-            potential_holdings.add(stock['code'])
+    # 稍微保護一下，以免資料格式錯誤
+    if isinstance(history_data, list):
+        for day_record in history_data[-60:]: # 只看最近兩個月入選的
+            for stock in day_record.get('buy', []):
+                potential_holdings.add(stock['code'])
             
     all_stocks = get_tw_stock_list()
-    # 測試時限制數量，正式跑請拿掉下一行
+    # 測試時可解除下方註解只跑前50檔
     # all_stocks = all_stocks[:50] 
     
     today_buys = []
@@ -137,14 +147,13 @@ def main():
     # 4. 存檔
     today_str = datetime.now().strftime('%Y-%m-%d')
     
-    # 檢查今天是否已經跑過 (避免重複)，若跑過則更新，沒跑過則新增
     new_record = {
         "date": today_str,
         "buy": today_buys,
         "sell": today_exits
     }
     
-    # 簡單邏輯：如果最後一筆是今天的，就覆蓋；否則 append
+    # 如果最後一筆是今天的，就覆蓋；否則 append
     if history_data and history_data[-1]['date'] == today_str:
         history_data[-1] = new_record
     else:
