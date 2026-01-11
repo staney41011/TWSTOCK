@@ -17,23 +17,33 @@ MAX_PE = 60            # 本益比
 
 DATA_FILE = "data.json"
 
-# --- 預先載入台股代號對照表 (加速查詢) ---
-# twstock.codes 是一個字典，Key 是代號 (如 '2330')，Value 是 StockCodeInfo 物件
+# --- 預先載入台股代號對照表 ---
 tw_stock_map = twstock.codes 
 
-def get_stock_name(ticker, region):
+def get_stock_name(ticker, region, stock_obj=None):
     """
-    取得股票名稱：
-    - 台股：回傳中文名 (例如：台積電)
-    - 美股：回傳英文簡稱
+    雙重保險取得中文名稱
     """
+    display_name = ticker
+    
+    # 策略 1: 查表 (twstock)
     if region == 'TW':
-        # 移除 .TW 或 .TWO 後綴
         clean_code = ticker.split('.')[0]
         if clean_code in tw_stock_map:
-            return tw_stock_map[clean_code].name
-    # 若找不到或是美股，回傳代號即可 (稍後 yfinance 會嘗試補美股名)
-    return ticker
+            display_name = tw_stock_map[clean_code].name
+            return display_name
+            
+    # 策略 2: 問 Yahoo (longName 通常是中文全名)
+    if stock_obj:
+        try:
+            long_name = stock_obj.info.get('longName')
+            short_name = stock_obj.info.get('shortName')
+            if long_name: return long_name
+            if short_name: return short_name
+        except:
+            pass
+            
+    return display_name
 
 def get_tw_stock_list():
     twse = twstock.twse
@@ -59,11 +69,11 @@ def get_us_stock_list():
         return []
 
 def get_financial_details(stock_obj):
-    """抓取基本面 + 營收 YoY 資訊"""
+    """抓取基本面 + 營收 YoY + QoQ (雙保險)"""
     data = {
         "pe": 999, "growth": None, "roe": None,
-        "name_us": None, 
-        "rev_yoy": None,      # 營收年增率
+        "rev_yoy": None,      # 年增率
+        "rev_qoq": None,      # 季增率 (備用)
         "rev_last_year": None,# 去年同期營收 (推算)
         "quarters": []
     }
@@ -73,15 +83,13 @@ def get_financial_details(stock_obj):
         data['pe'] = info.get('trailingPE', 999)
         if data['pe'] is None: data['pe'] = 999
         
-        data['growth'] = info.get('earningsGrowth', None) # 獲利成長
+        data['growth'] = info.get('earningsGrowth', None)
         data['roe'] = info.get('returnOnEquity', None)
-        data['name_us'] = info.get('shortName', None)
         
-        # 抓取營收年增率 (Revenue Growth YoY)
-        # yfinance 的 revenueGrowth 通常是指最近一季與去年同期相比
+        # 1. 抓取年增率 (YoY)
         data['rev_yoy'] = info.get('revenueGrowth', None)
 
-        # 抓取季營收 (Income Statement)
+        # 2. 抓取季營收表 (計算 QoQ 和 歷史數據)
         q_stmt = stock_obj.quarterly_income_stmt
         if q_stmt is not None and not q_stmt.empty:
             rev_row = None
@@ -91,17 +99,26 @@ def get_financial_details(stock_obj):
                 rev_row = q_stmt.loc['Operating Revenue']
                 
             if rev_row is not None:
-                # 放入近四季資料
+                # 取最近 4 季
                 recent_quarters = rev_row.head(4)
                 
-                # 計算去年同期營收 (如果我們有年增率和這一季營收，可以反推)
-                # Last Year = Current / (1 + Growth)
+                # A. 嘗試推算去年同期營收 (Last Year Revenue)
+                # 公式: 現在營收 / (1 + YoY)
                 if data['rev_yoy'] is not None and len(recent_quarters) > 0:
                     current_rev = recent_quarters.iloc[0]
                     try:
                         data['rev_last_year'] = current_rev / (1 + data['rev_yoy'])
                     except:
-                        data['rev_last_year'] = 0
+                        pass
+                
+                # B. 計算季增率 (QoQ) - 這是備案，如果 YoY 抓不到就用這個
+                if len(recent_quarters) >= 2:
+                    q1 = recent_quarters.iloc[0]
+                    q2 = recent_quarters.iloc[1]
+                    try:
+                        data['rev_qoq'] = (q1 - q2) / q2
+                    except:
+                        pass
 
                 for date, revenue in recent_quarters.items():
                     data['quarters'].append({
@@ -130,15 +147,14 @@ def analyze_stock(stock_info, check_exit_stocks=None):
         curr_ma65 = ma65.iloc[-1]
         prev_ma65 = ma65.iloc[-2]
 
-        # 預先取得名稱
-        display_name = get_stock_name(ticker, region)
+        # 取得名稱 (傳入 stock 物件以啟用雙重保險)
+        display_name = get_stock_name(ticker, region, stock)
 
         # --- [模式 B] 掃描出場 ---
         if check_exit_stocks and ticker in check_exit_stocks:
             buy_price = check_exit_stocks[ticker]
             current_price = latest['Close']
             
-            # 停損
             loss_pct = (current_price - buy_price) / buy_price
             if loss_pct <= -STOP_LOSS_PCT:
                 return {
@@ -150,7 +166,6 @@ def analyze_stock(stock_info, check_exit_stocks=None):
                     "reason": f"觸發停損 (虧損 {loss_pct*100:.1f}%)"
                 }
 
-            # 趨勢出場
             is_ma_flattening = curr_ma65 <= prev_ma65
             if current_price < curr_ma65 and is_ma_flattening:
                 return {
@@ -181,10 +196,6 @@ def analyze_stock(stock_info, check_exit_stocks=None):
         if is_fresh_breakout and is_big_candle:
             
             fin_data = get_financial_details(stock)
-            
-            # 美股名稱補全
-            if region == 'US' and fin_data['name_us']:
-                display_name = fin_data['name_us']
 
             score = 3
             reasons = ["突破季線新高", "實體紅K"]
@@ -195,10 +206,12 @@ def analyze_stock(stock_info, check_exit_stocks=None):
                 score += 2
                 reasons.append("★突破兩年新高")
 
-            # 營收/獲利加分
-            if fin_data['rev_yoy'] is not None and fin_data['rev_yoy'] > 0.2:
-                 score += 1 # 營收成長 > 20%
-                 reasons.append("營收大爆發")
+            # 營收加分邏輯 (優先看 YoY，沒有則看 QoQ)
+            growth_rate = fin_data['rev_yoy'] if fin_data['rev_yoy'] is not None else fin_data['rev_qoq']
+            
+            if growth_rate is not None and growth_rate > 0.2:
+                 score += 1
+                 reasons.append("營收大增")
             
             if fin_data['growth'] is not None and fin_data['growth'] > 0.15:
                 score += 1
@@ -227,8 +240,9 @@ def analyze_stock(stock_info, check_exit_stocks=None):
                     "pe": "N/A" if pe_val==999 else f"{pe_val:.1f}",
                     "growth": "N/A" if fin_data['growth'] is None else f"{fin_data['growth']*100:.1f}%",
                     "roe": "N/A" if fin_data['roe'] is None else f"{fin_data['roe']*100:.1f}%",
-                    "rev_yoy": fin_data['rev_yoy'], # 新增: 營收年增率
-                    "rev_last_year": fin_data['rev_last_year'], # 新增: 去年同期營收
+                    "rev_yoy": fin_data['rev_yoy'], 
+                    "rev_qoq": fin_data['rev_qoq'],
+                    "rev_last_year": fin_data['rev_last_year'],
                     "quarters": fin_data['quarters']
                 },
                 "date": latest.name.strftime('%Y-%m-%d')
@@ -239,7 +253,7 @@ def analyze_stock(stock_info, check_exit_stocks=None):
         return None
 
 def main():
-    print("啟動動能策略 (Git修復 + 營收YoY版) 掃描...")
+    print("啟動動能策略 (Git修復 + 中文名V2 + 雙重營收) 掃描...")
     
     history_data = []
     if os.path.exists(DATA_FILE):
