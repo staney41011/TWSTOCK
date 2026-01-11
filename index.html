@@ -62,12 +62,12 @@
                 </ul>
             </div>
 
-            <div class="bg-gray-900/50 p-4 rounded border border-gray-600">
-                <h4 class="text-red-400 font-bold mb-3 border-b border-gray-600 pb-1">⭐ 加分項目 (越高越好)</h4>
+            <div class="bg-gray-900/50 p-4 rounded border border-gray-600 ring-1 ring-red-500">
+                <h4 class="text-red-400 font-bold mb-3 border-b border-gray-600 pb-1">👑 優先/加分項目</h4>
                 <ul class="space-y-2 text-gray-300">
-                    <li>📈 <b>兩年新高 (+2分)</b>：突破 500 日新高。</li>
-                    <li>💰 <b>營收爆發 (+2分)</b>：年增率 > 10%。</li>
-                    <li>🚀 <b>獲利高成長 (+2分)</b>：EPS 成長 > 20%。</li>
+                    <li class="font-bold text-white bg-red-900/40 px-2 py-1 rounded">🔥 營收年增 > 15% (+3分)</li>
+                    <li>📈 兩年新高 (+2分)</li>
+                    <li>🚀 EPS 成長 / ROE / PE合理 (+1分)</li>
                 </ul>
             </div>
 
@@ -121,14 +121,15 @@
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3 text-center bg-gray-700/40 p-2 rounded-lg text-sm">
                     <div>
-                        <div class="text-[10px] text-gray-400">獲利成長</div>
+                        <div class="text-[10px] text-gray-400">EPS成長</div>
                         <div class="font-bold" :class="isPositive(stock.fundamentals.growth) ? 'text-red-400' : 'text-green-400'">
                             {{ formatPercent(stock.fundamentals.growth) }}
                         </div>
                     </div>
-                    <div>
+                    <div :class="{'ring-1 ring-red-500 bg-red-900/20 rounded': isHighGrowth(stock.fundamentals.rev_yoy)}">
                         <div class="text-[10px] text-gray-400">營收 YoY</div>
                         <div class="font-bold" :class="isPositive(stock.fundamentals.rev_yoy) ? 'text-red-400' : 'text-green-400'">
+                            <span v-if="isHighGrowth(stock.fundamentals.rev_yoy)">🔥</span>
                             {{ formatPercent(stock.fundamentals.rev_yoy) }}
                         </div>
                     </div>
@@ -137,8 +138,8 @@
                         <div class="font-bold text-blue-300">{{ stock.fundamentals.pe }}x</div>
                     </div>
                     <div>
-                        <div class="text-[10px] text-gray-400">ROE</div>
-                        <div class="font-bold text-yellow-300">{{ formatPercent(stock.fundamentals.roe) }}</div>
+                        <div class="text-[10px] text-gray-400">去同期營收</div>
+                        <div class="font-bold text-gray-300">{{ formatBigNumber(stock.fundamentals.rev_last_year) }}</div>
                     </div>
                 </div>
             </div>
@@ -184,40 +185,38 @@
                     </ul>
                 </div>
 
+                <div v-if="selectedStock.fundamentals.rev_last_year" class="flex justify-between border-b border-gray-700 pb-2">
+                    <span class="text-gray-400">營收 YoY (年增率)</span>
+                    <div class="text-right">
+                         <span class="block font-bold text-2xl" :class="isHighGrowth(selectedStock.fundamentals.rev_yoy) ? 'text-red-500 animate-pulse' : (isPositive(selectedStock.fundamentals.rev_yoy) ? 'text-red-400' : 'text-green-400')">
+                             {{ formatPercent(selectedStock.fundamentals.rev_yoy) }}
+                         </span>
+                         <span class="text-xs text-gray-500">
+                             去年同期: {{ formatBigNumber(selectedStock.fundamentals.rev_last_year) }}
+                         </span>
+                    </div>
+                </div>
+
                 <div v-if="selectedStock.fundamentals && selectedStock.fundamentals.quarters && selectedStock.fundamentals.quarters.length > 0">
                     <h4 class="text-white font-bold mb-2 flex items-center">
-                        📊 近四季營收趨勢 (單位: 千元/USD)
+                        📊 營收細項
                     </h4>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left text-gray-300 border-collapse">
                             <thead class="text-xs text-gray-400 uppercase bg-gray-700 text-center">
                                 <tr>
                                     <th class="px-4 py-3 border border-gray-600">季度</th>
-                                    <th class="px-4 py-3 border border-gray-600">當季營收</th>
-                                    <th class="px-4 py-3 border border-gray-600">去年同期</th>
-                                    <th class="px-4 py-3 border border-gray-600">年增率 (YoY%)</th>
+                                    <th class="px-4 py-3 border border-gray-600">營收</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(q, index) in selectedStock.fundamentals.quarters" :key="index" class="border-b border-gray-700 hover:bg-gray-700/50 text-center">
                                     <td class="px-4 py-3 font-medium text-white border border-gray-600">{{ q.date }}</td>
                                     <td class="px-4 py-3 border border-gray-600">{{ formatBigNumber(q.revenue) }}</td>
-                                    <td class="px-4 py-3 border border-gray-600 text-gray-400">
-                                        {{ formatBigNumber(q.last_year_revenue) }}
-                                    </td>
-                                    <td class="px-4 py-3 border border-gray-600">
-                                        <span v-if="q.yoy" :class="isPositive(q.yoy) ? 'text-red-400 font-bold' : 'text-green-400 font-bold'">
-                                            {{ formatPercent(q.yoy) }}
-                                        </span>
-                                        <span v-else class="text-gray-500">-</span>
-                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
-                <div v-else-if="modalType === 'buy'" class="text-center text-gray-500 text-sm py-4 bg-gray-900/50 rounded">
-                    Yahoo 暫無詳細季度財報數據
                 </div>
 
                 <div class="pt-2">
@@ -225,7 +224,7 @@
                         ? `https://finance.yahoo.com/quote/${selectedStock.code}` 
                         : `https://tw.stock.yahoo.com/quote/${selectedStock.code.replace('.TW', '').replace('.TWO', '')}`" 
                        target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">
-                        前往 Yahoo Finance K 線
+                        前往 Yahoo Finance
                     </a>
                 </div>
             </div>
@@ -246,6 +245,7 @@
             openModal(stock, type) { this.selectedStock = stock; this.modalType = type; this.showModal = true; },
             formatPercent(val) { if (!val && val !== 0) return '-'; let n = typeof val === 'string' ? parseFloat(val) : val; if (isNaN(n)) return val; if (Math.abs(n) < 10) n = n * 100; return (n > 0 ? '+' : '') + n.toFixed(2) + '%'; },
             isPositive(val) { return val && parseFloat(val) > 0; },
+            isHighGrowth(val) { return val && parseFloat(val) > 0.15; }, // 判斷是否 > 15%
             formatBigNumber(num) { if (!num) return '-'; if (num >= 1e9) return (num / 1e9).toFixed(2) + ' B'; if (num >= 1e6) return (num / 1e6).toFixed(2) + ' M'; return (num / 1e3).toFixed(2) + ' K'; }
         },
         mounted() { this.loadData(); }
