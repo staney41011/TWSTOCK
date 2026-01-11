@@ -2,13 +2,13 @@ name: Daily Stock Scan
 
 on:
   schedule:
-    # 台灣時間 平日早上 05:00 = UTC 時間 週日~週四 晚上 21:00
-    # cron 格式: 分 時 日 月 星期 (0=週日, 4=週四)
-    - cron: '0 21 * * 0-4'
-  workflow_dispatch: # 允許手動按按鈕觸發
+    # 台灣時間：週二~週六 早上 06:00
+    # UTC 時間：週一~週五 晚上 22:00
+    - cron: '0 22 * * 1-5'
+  workflow_dispatch: # 手動觸發
 
 permissions:
-  contents: write  # 重要：給予機器人寫入權限，才能更新 data.json
+  contents: write
 
 jobs:
   build:
@@ -35,12 +35,6 @@ jobs:
       run: |
         git config --global user.name "GitHub Action"
         git config --global user.email "action@github.com"
-        
-        # 加入這兩行確保 data.json 被追蹤
         git add data.json
-        # 如果有 README 也可以加回來，看你的需求
-        # git add README.md 
-        
-        # 提交變更，如果沒有變更(例如假日沒開盤)則不報錯
         git commit -m "Auto update stock data [skip ci]" || exit 0
         git push
