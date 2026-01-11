@@ -1,14 +1,13 @@
 name: Daily Stock Scan
 
 on:
-  # 1. 自動排程：台灣時間 週二~週六 早上 06:00
   schedule:
+    # 台灣時間：週二~週六 早上 06:00 (UTC 22:00)
     - cron: '0 22 * * 1-5'
   
-  # 2. 手動按鈕
   workflow_dispatch:
 
-  # 3. 推送觸發 (雙保險：包含 main 和 master)
+  # 雙保險：推送代碼時自動跑一次
   push:
     branches:
       - main
@@ -43,5 +42,10 @@ jobs:
         git config --global user.name "GitHub Action"
         git config --global user.email "action@github.com"
         git add data.json
+        
+        # --- 關鍵修正：先拉取遠端更新，再推送 ---
+        git pull --rebase origin main || git pull --rebase origin master
+        # -----------------------------------
+
         git commit -m "Auto update stock data [skip ci]" || exit 0
         git push
