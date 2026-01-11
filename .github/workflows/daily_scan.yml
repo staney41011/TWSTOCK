@@ -36,24 +36,24 @@ jobs:
     - name: Run Scan Script
       run: |
         python main.py
-    
+
     - name: Commit and Push changes
       run: |
         git config --global user.name "GitHub Action"
         git config --global user.email "action@github.com"
         
-        # 1. 先抓取遠端最新狀態 (Fetch)
+        # --- 強制解決衝突的關鍵步驟 ---
+        # 1. 抓取遠端最新版
         git fetch origin main
         
-        # 2. 【關鍵一步】將歷史紀錄重置到遠端最新版，但保留現在的檔案變更 (Soft Reset)
-        # 這樣做會讓 Git 認為：我們是在最新的基礎上，修改了 data.json
+        # 2. 將本地指標重置到遠端，但保留剛跑出來的 data.json (Mixed/Soft reset)
         git reset --soft origin/main
         
-        # 3. 加入檔案
+        # 3. 重新加入檔案
         git add data.json
         
-        # 4. 提交 (如果沒有變更就不執行)
+        # 4. 提交
         git commit -m "Auto update stock data [skip ci]" || exit 0
         
-        # 5. 直接推送 (因為已經 Reset 過了，不會有衝突)
+        # 5. 推送 (因為已經 Reset 過，所以不會有衝突)
         git push origin main
