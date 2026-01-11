@@ -14,47 +14,55 @@ STOP_LOSS_PCT = 0.08   # 停損 8%
 
 # 基本面門檻
 MIN_ROE = 0.08         # ROE 至少 8%
-MAX_PE = 60            # 本益比濾網 (超過60視為太貴，僅供參考不強制剔除)
+MAX_PE = 60            # 本益比濾網
 
 DATA_FILE = "data.json"
 
 def get_tw_stock_list():
+    """取得台灣上市櫃股票代號"""
     twse = twstock.twse
     tpex = twstock.tpex
     stocks = []
-    # 過濾：只抓長度4碼的普通股
     for code in twse:
-        if len(code) == 4: stocks.append(f"{code}.TW")
+        if len(code) == 4: stocks.append({"code": f"{code}.TW", "region": "TW"})
     for code in tpex:
-        if len(code) == 4: stocks.append(f"{code}.TWO")
+        if len(code) == 4: stocks.append({"code": f"{code}.TWO", "region": "TW"})
     return stocks
 
+def get_us_stock_list():
+    """從 Wikipedia 取得 S&P 500 成分股"""
+    try:
+        print("正在抓取 S&P 500 成分股清單...")
+        table = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
+        df = table[0]
+        # 美股代號修正: BRK.B -> BRK-B (Yahoo Finance 格式)
+        symbols = df['Symbol'].values.tolist()
+        formatted_symbols = []
+        for s in symbols:
+            formatted_symbols.append({"code": s.replace('.', '-'), "region": "US"})
+        return formatted_symbols
+    except Exception as e:
+        print(f"抓取美股清單失敗: {e}")
+        return []
+
 def get_fundamentals(stock_obj):
-    """
-    抓取基本面資料 (這會花費額外時間，只針對技術面過關的股票執行)
-    """
     try:
         info = stock_obj.info
-        
-        # 抓取本益比 (如果虧損會是 None)
         pe = info.get('trailingPE')
-        if pe is None: pe = 999 # 虧損或無資料
-        
-        # 抓取獲利成長率 (Quarterly Earnings Growth YoY)
-        growth = info.get('earningsGrowth') # 例如 0.25 代表 25%
-        
-        # 抓取 ROE
+        if pe is None: pe = 999 
+        growth = info.get('earningsGrowth')
         roe = info.get('returnOnEquity')
-        
-        return {
-            "pe": pe,
-            "growth": growth,
-            "roe": roe
-        }
+        return {"pe": pe, "growth": growth, "roe": roe}
     except:
         return {"pe": 999, "growth": None, "roe": None}
 
-def analyze_stock(ticker, check_exit_stocks=None):
+def analyze_stock(stock_info, check_exit_stocks=None):
+    """
+    stock_info 是一個字典: {'code': 'AAPL', 'region': 'US'}
+    """
+    ticker = stock_info['code']
+    region = stock_info['region']
+    
     try:
         stock = yf.Ticker(ticker)
         df = stock.history(period="3y") 
@@ -78,6 +86,7 @@ def analyze_stock(ticker, check_exit_stocks=None):
             if loss_pct <= -STOP_LOSS_PCT:
                 return {
                     "code": ticker,
+                    "region": region,
                     "price": float(f"{current_price:.2f}"),
                     "date": latest.name.strftime('%Y-%m-%d'),
                     "reason": f"觸發停損 (虧損 {loss_pct*100:.1f}%)"
@@ -88,6 +97,7 @@ def analyze_stock(ticker, check_exit_stocks=None):
             if current_price < curr_ma65 and is_ma_flattening:
                 return {
                     "code": ticker,
+                    "region": region,
                     "price": float(f"{current_price:.2f}"),
                     "date": latest.name.strftime('%Y-%m-%d'),
                     "reason": "跌破13週線 且 趨勢轉弱"
@@ -96,9 +106,11 @@ def analyze_stock(ticker, check_exit_stocks=None):
 
         # --- [模式 A] 掃描進場 ---
         if check_exit_stocks is not None: return None
-        if latest['Volume'] < 500000: return None 
+        
+        # 美股成交量通常很大，稍微放寬濾網，台股維持 500張
+        min_vol = 500000 if region == 'TW' else 1000000
+        if latest['Volume'] < min_vol: return None 
 
-        # 1. 技術面篩選 (New High)
         window_high = df['Close'][-LOOKBACK_LONG-1:-1].max()
         is_new_high = latest['Close'] > window_high
         
@@ -106,56 +118,44 @@ def analyze_stock(ticker, check_exit_stocks=None):
         is_fresh_breakout = is_new_high and (not was_high_yesterday)
 
         open_price = latest['Open']
+        # 美股沒有漲跌幅限制，長紅棒標準可以稍微嚴格一點或維持 1.5%
         is_big_candle = (latest['Close'] - open_price) / open_price > 0.015
 
-        # 只有技術面通過，才去抓基本面 (節省時間與流量)
         if is_fresh_breakout and is_big_candle:
             
-            # 2. 基本面篩選 (Fundamentals)
             fund_data = get_fundamentals(stock)
             
-            # 評分系統
             score = 0
             reasons = ["突破2年新高", "實體紅K"]
             
-            # 檢查成長率
             if fund_data['growth'] is not None and fund_data['growth'] > 0.15:
                 score += 1
                 reasons.append(f"獲利成長猛 ({fund_data['growth']*100:.0f}%)")
             elif fund_data['growth'] is not None and fund_data['growth'] > 0:
                 reasons.append("獲利正成長")
-            else:
-                reasons.append("⚠️獲利衰退或無資料")
 
-            # 檢查本益比
             pe_val = fund_data['pe']
-            if pe_val < 25:
+            if pe_val < 30: # 美股本益比標準可稍微調整，這裡先統一
                 score += 1
                 reasons.append(f"本益比低 ({pe_val:.1f})")
             elif pe_val > MAX_PE:
                 reasons.append(f"⚠️本益比過高 ({pe_val:.1f})")
-            else:
-                reasons.append(f"本益比合理 ({pe_val:.1f})")
 
-            # 檢查 ROE
             if fund_data['roe'] is not None and fund_data['roe'] > MIN_ROE:
                 score += 1
                 reasons.append(f"ROE優 ({fund_data['roe']*100:.1f}%)")
 
-            # 成交量加分
             vol_ma20 = df['Volume'].rolling(window=20).mean().iloc[-1]
             if latest['Volume'] > vol_ma20 * 1.5:
                 score += 1
                 reasons.append("成交量爆發")
 
-            # 總分過低代表僅有炒作，無基本面支撐，可選擇是否過濾
-            # 這裡我們先全列出來，讓使用者自己看基本面標籤
-            
             return {
                 "code": ticker,
+                "region": region, # 標記地區
                 "name": ticker, 
                 "price": float(f"{latest['Close']:.2f}"),
-                "score": score, # 這裡的分數變成 綜合評分
+                "score": score,
                 "reasons": reasons,
                 "fundamentals": {
                     "pe": "N/A" if pe_val==999 else f"{pe_val:.1f}",
@@ -170,7 +170,7 @@ def analyze_stock(ticker, check_exit_stocks=None):
         return None
 
 def main():
-    print("啟動林則行策略 (基本面加強版) 掃描...")
+    print("啟動林則行策略 (台股 + 美股S&P500) 掃描...")
     
     history_data = []
     if os.path.exists(DATA_FILE):
@@ -186,31 +186,42 @@ def main():
             for stock in day_record.get('buy', []):
                 if stock['code'] not in holdings_map:
                     holdings_map[stock['code']] = stock['price']
-            
-    all_stocks = get_tw_stock_list()
-    # all_stocks = all_stocks[:50] # 測試用
+    
+    # --- 取得台股 + 美股清單 ---
+    tw_stocks = get_tw_stock_list()     # 台股
+    us_stocks = get_us_stock_list()     # 美股
+    
+    # 測試時可以用切片減少數量，例如: tw_stocks[:50] + us_stocks[:10]
+    all_stocks = tw_stocks + us_stocks 
     
     today_buys = []
     today_exits = []
 
-    print(f"正在掃描買點 ({len(all_stocks)} 檔)...")
-    # 因為抓基本面比較慢，這裡維持多執行緒
-    with ThreadPoolExecutor(max_workers=20) as executor:
-        futures = [executor.submit(analyze_stock, code, None) for code in all_stocks]
+    print(f"正在掃描買點 (共 {len(all_stocks)} 檔, 含台美股)...")
+    
+    # 增加 workers 數量以應付更多股票
+    with ThreadPoolExecutor(max_workers=25) as executor:
+        futures = [executor.submit(analyze_stock, stock_info, None) for stock_info in all_stocks]
         for future in futures:
             res = future.result()
             if res: today_buys.append(res)
 
     print(f"正在檢查持倉出場 ({len(holdings_map)} 檔)...")
     if holdings_map:
-        check_list = list(holdings_map.keys())
-        with ThreadPoolExecutor(max_workers=20) as executor:
-            futures = [executor.submit(analyze_stock, code, holdings_map) for code in check_list]
+        check_list = []
+        # 這邊需要重建 stock_info 物件給 analyze_stock 用
+        # 簡單判斷：有 .TW/.TWO 是台股，沒有是美股
+        for code in holdings_map.keys():
+            region = 'TW' if '.TW' in code or '.TWO' in code else 'US'
+            check_list.append({"code": code, "region": region})
+
+        with ThreadPoolExecutor(max_workers=25) as executor:
+            futures = [executor.submit(analyze_stock, stock, holdings_map) for stock in check_list]
             for future in futures:
                 res = future.result()
                 if res: today_exits.append(res)
 
-    today_buys.sort(key=lambda x: -x['score']) # 改用分數排序 (基本面好的排前面)
+    today_buys.sort(key=lambda x: -x['score'])
     
     today_str = datetime.now().strftime('%Y-%m-%d')
     new_record = {
