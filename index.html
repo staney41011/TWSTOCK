@@ -54,11 +54,11 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
             
             <div class="bg-gray-900/50 p-4 rounded border border-gray-600">
-                <h4 class="text-yellow-400 font-bold mb-3 border-b border-gray-600 pb-1">🎟️ 基礎門檻 (3分)</h4>
+                <h4 class="text-yellow-400 font-bold mb-3 border-b border-gray-600 pb-1">🎟️ 基礎門檻 (起跳 3分)</h4>
                 <ul class="space-y-2 text-gray-300">
                     <li>✅ <b>近一季新高</b>：股價創 60 日新高。</li>
-                    <li>✅ <b>首度突破</b>：昨天未創高。</li>
-                    <li>✅ <b>價漲量增</b>：成交量 > 1.2倍。</li>
+                    <li>✅ <b>首度突破</b>：昨天未創高，抓第一根。</li>
+                    <li>✅ <b>價漲量增</b>：成交量放大 > 1.2倍。</li>
                 </ul>
             </div>
 
@@ -67,7 +67,7 @@
                 <ul class="space-y-2 text-gray-300">
                     <li class="font-bold text-white bg-red-900/40 px-2 py-1 rounded">🔥 營收年增 > 15% (+3分)</li>
                     <li>📈 兩年新高 (+2分)</li>
-                    <li>🚀 EPS 成長 / 本益比合理 (+1分)</li>
+                    <li>🚀 EPS 成長 / ROE / PE合理 (+1分)</li>
                 </ul>
             </div>
 
@@ -138,7 +138,7 @@
                         <div class="font-bold text-blue-300">{{ stock.fundamentals.pe }}x</div>
                     </div>
                     <div>
-                        <div class="text-[10px] text-gray-400">去年同期</div>
+                        <div class="text-[10px] text-gray-400">去同期營收</div>
                         <div class="font-bold text-gray-300">{{ formatBigNumber(stock.fundamentals.rev_last_year) }}</div>
                     </div>
                 </div>
@@ -199,7 +199,7 @@
 
                 <div v-if="selectedStock.fundamentals && selectedStock.fundamentals.quarters && selectedStock.fundamentals.quarters.length > 0">
                     <h4 class="text-white font-bold mb-2 flex items-center">
-                        📊 近四季營收趨勢
+                        📊 營收細項
                     </h4>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left text-gray-300 border-collapse">
@@ -224,7 +224,7 @@
                         ? `https://finance.yahoo.com/quote/${selectedStock.code}` 
                         : `https://tw.stock.yahoo.com/quote/${selectedStock.code.replace('.TW', '').replace('.TWO', '')}`" 
                        target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">
-                        前往 Yahoo Finance K 線
+                        前往 Yahoo Finance
                     </a>
                 </div>
             </div>
@@ -245,7 +245,7 @@
             openModal(stock, type) { this.selectedStock = stock; this.modalType = type; this.showModal = true; },
             formatPercent(val) { if (!val && val !== 0) return '-'; let n = typeof val === 'string' ? parseFloat(val) : val; if (isNaN(n)) return val; if (Math.abs(n) < 10) n = n * 100; return (n > 0 ? '+' : '') + n.toFixed(2) + '%'; },
             isPositive(val) { return val && parseFloat(val) > 0; },
-            isHighGrowth(val) { return val && parseFloat(val) > 0.15; },
+            isHighGrowth(val) { return val && parseFloat(val) > 0.15; }, // 判斷是否 > 15%
             formatBigNumber(num) { if (!num) return '-'; if (num >= 1e9) return (num / 1e9).toFixed(2) + ' B'; if (num >= 1e6) return (num / 1e6).toFixed(2) + ' M'; return (num / 1e3).toFixed(2) + ' K'; }
         },
         mounted() { this.loadData(); }

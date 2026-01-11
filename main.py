@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 LOOKBACK_SHORT = 60     # 基礎: 近一季新高
 LOOKBACK_LONG = 500     # 加分: 兩年新高
 VOL_FACTOR = 1.2        # 基礎: 成交量 > 20日均量 1.2倍
-# GROWTH_REV = 0.10     # (已移除，改用下方的動態評分)
+GROWTH_REV_PRIORITY = 0.15 # [優先] 營收年增 > 15%
 SELL_RATIO_THRESHOLD = 1.16 # 出場: 賣壓比例 > 116%
 
 DATA_FILE = "data.json"
@@ -44,7 +44,7 @@ def get_tw_stock_list():
 
 def get_us_stock_list():
     try:
-        # print("正在抓取 S&P 500 成分股清單...") 
+        print("正在抓取 S&P 500 成分股清單...")
         table = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
         df = table[0]
         symbols = df['Symbol'].values.tolist()
@@ -57,7 +57,7 @@ def get_us_stock_list():
 
 def get_financial_details(stock_obj):
     """
-    抓取財務數據 (穩健版)
+    抓取財務數據 (含去年同期營收推算)
     """
     data = {
         "pe": 999, "growth": None, "rev_yoy": None, 
@@ -79,7 +79,7 @@ def get_financial_details(stock_obj):
                 # 放入最近 4 季
                 recent_quarters = rev_row.head(4)
                 
-                # 推算去年同期 (用於前端顯示)
+                # 推算去年同期 (最新一季 / (1+YoY))
                 if data['rev_yoy'] is not None and len(recent_quarters) > 0:
                     try:
                         data['rev_last_year'] = recent_quarters.iloc[0] / (1 + data['rev_yoy'])
@@ -173,37 +173,35 @@ def analyze_stock(stock_info, check_exit_stocks=None):
             score = 3
             reasons = ["(基礎) 創季新高 +3分"]
             
-            # 基礎: 量能
             vol_ma20 = df['Volume'].rolling(window=20).mean().iloc[-1]
             if latest['Volume'] > vol_ma20 * VOL_FACTOR:
                 reasons.append(f"(基礎) 量增{VOL_FACTOR}倍")
 
-            # 加分項 1: 兩年新高
+            # 加分項 1: 優先評分 (營收 > 15%)
+            fin_data = get_financial_details(stock)
+            
+            if fin_data['rev_yoy'] is not None and fin_data['rev_yoy'] > GROWTH_REV_PRIORITY:
+                score += 3  # 權重加重！
+                reasons.append(f"★(優先) 營收年增>15% +3分")
+            elif fin_data['rev_yoy'] is not None and fin_data['rev_yoy'] > 0:
+                score += 1
+                reasons.append(f"(加分) 營收正成長 +1分")
+
+            # 加分項 2: 兩年新高
             window_high_long = df['Close'][-LOOKBACK_LONG-1:-1].max()
             if latest['Close'] > window_high_long:
                 score += 2
                 reasons.append("(加分) 兩年新高 +2分")
-
-            # 加分項 2: 營收優先評分 (這裡是修改重點)
-            fin_data = get_financial_details(stock)
             
-            # --- 您的需求：單季營收年增逾 15% 列為優先 ---
-            if fin_data['rev_yoy'] is not None and fin_data['rev_yoy'] > 0.15:
-                score += 3  # 給予最高的 3 分
-                reasons.append(f"★營收年增>15% (+3分)")
-            elif fin_data['rev_yoy'] is not None and fin_data['rev_yoy'] > 0:
-                score += 1
-                reasons.append(f"(加分) 營收正成長 (+1分)")
-
-            # 加分項 3: 獲利成長
+            # 加分項 3: 其他基本面
             if fin_data['growth'] is not None and fin_data['growth'] > 0.15:
                 score += 1
-                reasons.append(f"(加分) EPS高成長 (+1分)")
+                reasons.append(f"(加分) EPS成長 +1分")
             
             pe = fin_data['pe']
             if pe < 30: 
                 score += 1
-                reasons.append("(加分) 本益比合理 (+1分)")
+                reasons.append("(加分) 本益比合理 +1分")
 
             return {
                 "type": "buy",
@@ -227,7 +225,7 @@ def analyze_stock(stock_info, check_exit_stocks=None):
         return None
 
 def main():
-    print("啟動動能爆發策略 (穩定版 + 優先15%營收)...")
+    print("啟動動能爆發策略 (優先權重版)...")
     
     history_data = []
     if os.path.exists(DATA_FILE):
