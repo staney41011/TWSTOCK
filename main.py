@@ -8,13 +8,26 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
 
 # --- 策略參數 ---
-LOOKBACK_LONG = 500    # 2年新高
-MA_W13 = 65            # 13週線
+LOOKBACK_SHORT = 60    # [修正] 基本門檻：近一季新高 (約60交易日)
+LOOKBACK_LONG = 500    # [加分] 超級門檻：近兩年新高
+MA_W13 = 65            # 13週線 (趨勢判斷)
 STOP_LOSS_PCT = 0.08   # 停損 8%
 MIN_ROE = 0.08         # ROE 8%
 MAX_PE = 60            # 本益比
 
 DATA_FILE = "data.json"
+
+# 建立台股代號轉中文名稱的字典
+tw_codes = twstock.codes
+def get_tw_name(code_full):
+    try:
+        # code_full 格式為 "2330.TW", 我們只要 "2330"
+        code = code_full.split('.')[0]
+        if code in tw_codes:
+            return tw_codes[code].name
+    except:
+        pass
+    return code_full # 抓不到就回傳代號
 
 def get_tw_stock_list():
     twse = twstock.twse
@@ -41,30 +54,25 @@ def get_us_stock_list():
         return []
 
 def get_financial_details(stock_obj):
-    """
-    抓取基本面 + 近四季營收 (僅針對通過技術面的股票執行)
-    """
+    """抓取基本面 + 近四季營收"""
     data = {
         "pe": 999, "growth": None, "roe": None,
-        "quarters": [] # 存放近四季資料
+        "name_us": None, # 美股名稱
+        "quarters": []
     }
     
     try:
-        # 1. 基本資訊
         info = stock_obj.info
         data['pe'] = info.get('trailingPE', 999)
         if data['pe'] is None: data['pe'] = 999
         
-        data['growth'] = info.get('earningsGrowth', None) # 獲利成長率
+        data['growth'] = info.get('earningsGrowth', None)
         data['roe'] = info.get('returnOnEquity', None)
+        data['name_us'] = info.get('shortName', None) # 抓取美股名稱
 
-        # 2. 抓取季營收 (Income Statement)
-        # yfinance 的 quarterly_income_stmt 通常包含最近 4-5 個季度
+        # 抓取季營收
         q_stmt = stock_obj.quarterly_income_stmt
-        
         if q_stmt is not None and not q_stmt.empty:
-            # 找到 "Total Revenue" 或 "Operating Revenue"
-            # 不同的會計準則名稱可能不同，嘗試抓取
             rev_row = None
             if 'Total Revenue' in q_stmt.index:
                 rev_row = q_stmt.loc['Total Revenue']
@@ -72,17 +80,12 @@ def get_financial_details(stock_obj):
                 rev_row = q_stmt.loc['Operating Revenue']
                 
             if rev_row is not None:
-                # 取最近 4 個季度 (由新到舊)
-                recent_quarters = rev_row.head(4)
-                
+                recent_quarters = rev_row.head(4) # 取最近4季
                 for date, revenue in recent_quarters.items():
-                    # 嘗試簡單計算 YoY (這裡因為 yfinance 免費版限制，有時抓不到去年同期)
-                    # 我們這裡先存原始數值，前端負責顯示
                     data['quarters'].append({
-                        "date": date.strftime('%Y-%m'), # 顯示 2024-09 這樣
+                        "date": date.strftime('%Y-%m'),
                         "revenue": revenue
                     })
-
     except Exception as e:
         print(f"財報抓取部分失敗: {e}")
     
@@ -94,6 +97,7 @@ def analyze_stock(stock_info, check_exit_stocks=None):
     
     try:
         stock = yf.Ticker(ticker)
+        # 抓取 3 年資料以確保長短週期都能計算
         df = stock.history(period="3y") 
         
         if len(df) < LOOKBACK_LONG + 10: return None
@@ -110,11 +114,16 @@ def analyze_stock(stock_info, check_exit_stocks=None):
             buy_price = check_exit_stocks[ticker]
             current_price = latest['Close']
             
+            # 中文名稱補全 (如果之前存的是代號)
+            display_name = ticker
+            if region == 'TW': display_name = get_tw_name(ticker)
+
             # 停損
             loss_pct = (current_price - buy_price) / buy_price
             if loss_pct <= -STOP_LOSS_PCT:
                 return {
                     "code": ticker,
+                    "name": display_name,
                     "region": region,
                     "price": float(f"{current_price:.2f}"),
                     "date": latest.name.strftime('%Y-%m-%d'),
@@ -126,6 +135,7 @@ def analyze_stock(stock_info, check_exit_stocks=None):
             if current_price < curr_ma65 and is_ma_flattening:
                 return {
                     "code": ticker,
+                    "name": display_name,
                     "region": region,
                     "price": float(f"{current_price:.2f}"),
                     "date": latest.name.strftime('%Y-%m-%d'),
@@ -139,36 +149,51 @@ def analyze_stock(stock_info, check_exit_stocks=None):
         min_vol = 500000 if region == 'TW' else 1000000
         if latest['Volume'] < min_vol: return None 
 
-        window_high = df['Close'][-LOOKBACK_LONG-1:-1].max()
-        is_new_high = latest['Close'] > window_high
+        # 1. 策略基礎：近一季新高 (60日)
+        window_high_short = df['Close'][-LOOKBACK_SHORT-1:-1].max()
+        is_new_high_short = latest['Close'] > window_high_short
         
-        was_high_yesterday = prev['Close'] > window_high
-        is_fresh_breakout = is_new_high and (not was_high_yesterday)
+        # 昨天不能創新高 (確保是第一根突破)
+        was_high_yesterday = prev['Close'] > window_high_short
+        is_fresh_breakout = is_new_high_short and (not was_high_yesterday)
 
+        # 實體紅K check
         open_price = latest['Open']
         is_big_candle = (latest['Close'] - open_price) / open_price > 0.015
 
         if is_fresh_breakout and is_big_candle:
             
-            # 通過技術面後，才去抓詳細財報
+            # 通過初步篩選，抓基本面
             fin_data = get_financial_details(stock)
             
-            score = 0
-            reasons = ["突破2年新高", "實體紅K"]
+            # 處理名稱
+            stock_name = ticker
+            if region == 'TW':
+                stock_name = get_tw_name(ticker)
+            elif fin_data['name_us']:
+                stock_name = fin_data['name_us']
+
+            score = 3 # 基礎分
+            reasons = ["突破季線新高", "實體紅K"]
             
-            # 評分邏輯 (顯示具體數字在前端處理)
+            # --- 加分項目 ---
+            
+            # 1. 兩年新高 (超級強勢股)
+            window_high_long = df['Close'][-LOOKBACK_LONG-1:-1].max()
+            if latest['Close'] > window_high_long:
+                score += 2
+                reasons.append("★突破兩年新高")
+
+            # 2. 基本面加分
             if fin_data['growth'] is not None and fin_data['growth'] > 0.15:
                 score += 1
                 reasons.append("獲利高成長")
-            elif fin_data['growth'] is not None and fin_data['growth'] > 0:
-                reasons.append("獲利正成長")
-
+            
             pe_val = fin_data['pe']
             if pe_val < 30: 
                 score += 1
-                reasons.append("本益比合理")
             elif pe_val > MAX_PE:
-                reasons.append("本益比過高")
+                reasons.append("本益比過高") # 扣分項或警示，這裡不減分但標註
 
             if fin_data['roe'] is not None and fin_data['roe'] > MIN_ROE:
                 score += 1
@@ -181,8 +206,8 @@ def analyze_stock(stock_info, check_exit_stocks=None):
 
             return {
                 "code": ticker,
+                "name": stock_name, # 這裡現在是中文名或美股全名
                 "region": region,
-                "name": ticker, 
                 "price": float(f"{latest['Close']:.2f}"),
                 "score": score,
                 "reasons": reasons,
@@ -190,7 +215,7 @@ def analyze_stock(stock_info, check_exit_stocks=None):
                     "pe": "N/A" if pe_val==999 else f"{pe_val:.1f}",
                     "growth": "N/A" if fin_data['growth'] is None else f"{fin_data['growth']*100:.1f}%",
                     "roe": "N/A" if fin_data['roe'] is None else f"{fin_data['roe']*100:.1f}%",
-                    "quarters": fin_data['quarters'] # 放入季營收資料
+                    "quarters": fin_data['quarters']
                 },
                 "date": latest.name.strftime('%Y-%m-%d')
             }
@@ -200,7 +225,7 @@ def analyze_stock(stock_info, check_exit_stocks=None):
         return None
 
 def main():
-    print("啟動動能策略 (含財報深挖) 掃描...")
+    print("啟動動能策略 (一季新高 + 兩年加分 + 中文名) 掃描...")
     
     history_data = []
     if os.path.exists(DATA_FILE):
@@ -246,7 +271,7 @@ def main():
 
     today_buys.sort(key=lambda x: -x['score'])
     
-    # 日期校正 (因為隔天早上跑)
+    # 日期校正
     market_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
     
     new_record = {
