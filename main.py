@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 LOOKBACK_SHORT = 60     # 基礎: 近一季新高
 LOOKBACK_LONG = 500     # 加分: 兩年新高
 VOL_FACTOR = 1.2        # 基礎: 成交量 > 20日均量 1.2倍
-# GROWTH_REV = 0.10     # (已移除，改用下方的動態評分)
+GROWTH_REV_PRIORITY = 0.15 # [優先] 營收年增 > 15%
 SELL_RATIO_THRESHOLD = 1.16 # 出場: 賣壓比例 > 116%
 
 DATA_FILE = "data.json"
@@ -44,7 +44,6 @@ def get_tw_stock_list():
 
 def get_us_stock_list():
     try:
-        # print("正在抓取 S&P 500 成分股清單...") 
         table = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
         df = table[0]
         symbols = df['Symbol'].values.tolist()
@@ -57,10 +56,10 @@ def get_us_stock_list():
 
 def get_financial_details(stock_obj):
     """
-    抓取財務數據 (穩健版)
+    抓取財務數據 (含 YoY 與 QoQ 計算)
     """
     data = {
-        "pe": 999, "growth": None, "rev_yoy": None, 
+        "pe": 999, "growth": None, "rev_yoy": None, "rev_qoq": None,
         "rev_last_year": None, "quarters": []
     }
     try:
@@ -79,7 +78,16 @@ def get_financial_details(stock_obj):
                 # 放入最近 4 季
                 recent_quarters = rev_row.head(4)
                 
-                # 推算去年同期 (用於前端顯示)
+                # 1. 計算 QoQ (季增率)
+                if len(recent_quarters) >= 2:
+                    q1 = recent_quarters.iloc[0] # 本季
+                    q2 = recent_quarters.iloc[1] # 上季
+                    try:
+                        data['rev_qoq'] = (q1 - q2) / q2
+                    except:
+                        pass
+
+                # 2. 推算去年同期 (用於 Modal 顯示)
                 if data['rev_yoy'] is not None and len(recent_quarters) > 0:
                     try:
                         data['rev_last_year'] = recent_quarters.iloc[0] / (1 + data['rev_yoy'])
@@ -184,12 +192,11 @@ def analyze_stock(stock_info, check_exit_stocks=None):
                 score += 2
                 reasons.append("(加分) 兩年新高 +2分")
 
-            # 加分項 2: 營收優先評分 (這裡是修改重點)
+            # 加分項 2: 營收優先評分
             fin_data = get_financial_details(stock)
             
-            # --- 您的需求：單季營收年增逾 15% 列為優先 ---
-            if fin_data['rev_yoy'] is not None and fin_data['rev_yoy'] > 0.15:
-                score += 3  # 給予最高的 3 分
+            if fin_data['rev_yoy'] is not None and fin_data['rev_yoy'] > GROWTH_REV_PRIORITY:
+                score += 3  
                 reasons.append(f"★營收年增>15% (+3分)")
             elif fin_data['rev_yoy'] is not None and fin_data['rev_yoy'] > 0:
                 score += 1
@@ -214,6 +221,7 @@ def analyze_stock(stock_info, check_exit_stocks=None):
                     "pe": "N/A" if pe==999 else f"{pe:.1f}",
                     "growth": "N/A" if fin_data['growth'] is None else f"{fin_data['growth']*100:.1f}%",
                     "rev_yoy": fin_data['rev_yoy'],
+                    "rev_qoq": fin_data['rev_qoq'], # 新增 QoQ
                     "rev_last_year": fin_data['rev_last_year'],
                     "quarters": fin_data['quarters']
                 },
@@ -227,7 +235,7 @@ def analyze_stock(stock_info, check_exit_stocks=None):
         return None
 
 def main():
-    print("啟動動能爆發策略 (穩定版 + 優先15%營收)...")
+    print("啟動動能爆發策略 (定版: 含QoQ)...")
     
     history_data = []
     if os.path.exists(DATA_FILE):
