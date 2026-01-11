@@ -10,9 +10,9 @@ from datetime import datetime, timedelta
 # --- 策略參數 ---
 LOOKBACK_SHORT = 60     # 基礎: 近一季新高
 LOOKBACK_LONG = 500     # 加分: 兩年新高
-VOL_FACTOR = 1.2        # 基礎: 量增 1.2倍
-GROWTH_REV_PRIORITY = 0.15 # 優先: 營收年增 > 15%
-SELL_RATIO_THRESHOLD = 1.16 # 出場: 賣壓 > 116%
+VOL_FACTOR = 1.2        # 基礎: 成交量 > 20日均量 1.2倍
+GROWTH_REV_PRIORITY = 0.15 # [優先] 營收年增 > 15%
+SELL_RATIO_THRESHOLD = 1.16 # 出場: 賣壓比例 > 116%
 
 DATA_FILE = "data.json"
 
@@ -56,11 +56,11 @@ def get_us_stock_list():
 
 def get_financial_details(stock_obj):
     """
-    抓取財務數據 (計算歷史 QoQ)
+    抓取財務數據 (含 YoY 與 QoQ 計算)
     """
     data = {
-        "pe": 999, "growth": None, "rev_yoy": None, 
-        "quarters": []
+        "pe": 999, "growth": None, "rev_yoy": None, "rev_qoq": None,
+        "rev_last_year": None, "quarters": []
     }
     try:
         info = stock_obj.info
@@ -75,30 +75,29 @@ def get_financial_details(stock_obj):
             elif 'Operating Revenue' in q_stmt.index: rev_row = q_stmt.loc['Operating Revenue']
             
             if rev_row is not None:
-                # 放入最近 5 季 (為了計算第4季的 QoQ，需要第5季的數據)
-                recent_quarters = rev_row.head(5) 
+                # 放入最近 4 季
+                recent_quarters = rev_row.head(4)
                 
-                dates = recent_quarters.index
-                values = recent_quarters.values
-                
-                # 我們只顯示最近 4 季
-                count = min(4, len(values))
-                
-                for i in range(count):
-                    current_val = values[i]
-                    qoq_val = None
-                    
-                    # 計算 QoQ: (本季 - 上季) / 上季
-                    # 因為資料是倒序 (新 -> 舊)，所以上季是 i+1
-                    if i + 1 < len(values):
-                        prev_val = values[i+1]
-                        if prev_val != 0:
-                            qoq_val = (current_val - prev_val) / prev_val
+                # 1. 計算 QoQ (季增率)
+                if len(recent_quarters) >= 2:
+                    q1 = recent_quarters.iloc[0] # 本季
+                    q2 = recent_quarters.iloc[1] # 上季
+                    try:
+                        data['rev_qoq'] = (q1 - q2) / q2
+                    except:
+                        pass
 
+                # 2. 推算去年同期 (用於 Modal 顯示)
+                if data['rev_yoy'] is not None and len(recent_quarters) > 0:
+                    try:
+                        data['rev_last_year'] = recent_quarters.iloc[0] / (1 + data['rev_yoy'])
+                    except:
+                        pass
+                
+                for date, revenue in recent_quarters.items():
                     data['quarters'].append({
-                        "date": dates[i].strftime('%Y-%m'),
-                        "revenue": current_val,
-                        "qoq": qoq_val # 存入 QoQ
+                        "date": date.strftime('%Y-%m'),
+                        "revenue": revenue
                     })
     except:
         pass
@@ -182,16 +181,18 @@ def analyze_stock(stock_info, check_exit_stocks=None):
             score = 3
             reasons = ["(基礎) 創季新高 +3分"]
             
+            # 基礎: 量能
             vol_ma20 = df['Volume'].rolling(window=20).mean().iloc[-1]
             if latest['Volume'] > vol_ma20 * VOL_FACTOR:
                 reasons.append(f"(基礎) 量增{VOL_FACTOR}倍")
 
+            # 加分項 1: 兩年新高
             window_high_long = df['Close'][-LOOKBACK_LONG-1:-1].max()
             if latest['Close'] > window_high_long:
                 score += 2
                 reasons.append("(加分) 兩年新高 +2分")
 
-            # 營收優先評分
+            # 加分項 2: 營收優先評分
             fin_data = get_financial_details(stock)
             
             if fin_data['rev_yoy'] is not None and fin_data['rev_yoy'] > GROWTH_REV_PRIORITY:
@@ -201,6 +202,7 @@ def analyze_stock(stock_info, check_exit_stocks=None):
                 score += 1
                 reasons.append(f"(加分) 營收正成長 (+1分)")
 
+            # 加分項 3: 獲利成長
             if fin_data['growth'] is not None and fin_data['growth'] > 0.15:
                 score += 1
                 reasons.append(f"(加分) EPS高成長 (+1分)")
@@ -219,6 +221,8 @@ def analyze_stock(stock_info, check_exit_stocks=None):
                     "pe": "N/A" if pe==999 else f"{pe:.1f}",
                     "growth": "N/A" if fin_data['growth'] is None else f"{fin_data['growth']*100:.1f}%",
                     "rev_yoy": fin_data['rev_yoy'],
+                    "rev_qoq": fin_data['rev_qoq'], # 新增 QoQ
+                    "rev_last_year": fin_data['rev_last_year'],
                     "quarters": fin_data['quarters']
                 },
                 "date": latest.name.strftime('%Y-%m-%d')
@@ -231,7 +235,7 @@ def analyze_stock(stock_info, check_exit_stocks=None):
         return None
 
 def main():
-    print("啟動動能爆發策略 (Card:3欄 / Modal:QoQ表格)...")
+    print("啟動動能爆發策略 (定版: 含QoQ)...")
     
     history_data = []
     if os.path.exists(DATA_FILE):
