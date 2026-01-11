@@ -2,7 +2,6 @@ name: Daily Stock Scan
 
 on:
   schedule:
-    # 台灣時間：週二~週六 早上 06:00
     - cron: '0 22 * * 1-5'
   
   workflow_dispatch:
