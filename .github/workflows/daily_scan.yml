@@ -2,12 +2,12 @@ name: Daily Stock Scan
 
 on:
   schedule:
-    # 台灣時間：週二~週六 早上 06:00 (UTC 22:00)
+    # 台灣時間：週二~週六 早上 06:00
     - cron: '0 22 * * 1-5'
   
   workflow_dispatch:
 
-  # 雙保險：推送代碼時自動跑一次
+  # 雙保險：推送時自動跑一次
   push:
     branches:
       - main
@@ -39,13 +39,18 @@ jobs:
 
     - name: Commit and Push changes
       run: |
+        # 1. 設定使用者
         git config --global user.name "GitHub Action"
         git config --global user.email "action@github.com"
-        git add data.json
         
-        # --- 關鍵修正：先拉取遠端更新，再推送 ---
-        git pull --rebase origin main || git pull --rebase origin master
-        # -----------------------------------
-
+        # 2. 先把新產生的 data.json 存檔 (Commit)
+        git add data.json
+        # 如果檔案沒變動，commit 會失敗，加上 || exit 0 讓它優雅結束不報錯
         git commit -m "Auto update stock data [skip ci]" || exit 0
+        
+        # 3. 存好檔後，再拉取遠端最新進度 (Rebase)
+        # 這樣就算有衝突，Git 也會試著把你的新 Commit 接在後面
+        git pull --rebase origin main || git pull --rebase origin master
+        
+        # 4. 最後推上去
         git push
