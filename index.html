@@ -17,43 +17,65 @@
 
 <div id="app" v-cloak class="min-h-screen p-4 md:p-8 max-w-6xl mx-auto pb-20">
     
-    <header class="mb-8 flex flex-col md:flex-row justify-between items-center border-b border-gray-700 pb-4">
+    <header class="mb-6 flex flex-col md:flex-row justify-between items-start border-b border-gray-700 pb-4">
         <div>
             <h1 class="text-3xl font-bold text-white mb-2">🌎 台美股 動能突破策略</h1>
-            <p class="text-gray-400 text-sm">
-                策略邏輯：2年新高突破 (動能) + 實體紅K (買氣) + 基本面檢核<br>
-                出場機制：趨勢轉弱 (跌破13週線) 或 觸發停損
-            </p>
-        </div>
-        
-        <div class="mt-4 md:mt-0 flex flex-col items-end gap-2">
-            <div class="text-yellow-400 font-bold text-lg" v-if="currentRecord">
-                📅 {{ currentRecord.date }} 盤後選股
-            </div>
-            
-            <div class="flex items-center gap-2">
-                <label class="text-gray-400 text-sm">歷史回顧:</label>
+            <div class="flex items-center gap-2 mt-2">
+                <span class="text-gray-400 text-sm">歷史回顧:</span>
                 <select v-model="selectedDateIndex" class="bg-gray-800 border border-gray-600 text-white rounded px-3 py-1 text-sm focus:outline-none focus:border-blue-500">
                     <option v-for="(record, index) in reversedHistory" :value="index">
-                        {{ record.date }} ({{ record.buy.length }} 進 / {{ record.sell.length }} 出)
+                        {{ record.date }} ({{ record.buy.length }} 檔)
                     </option>
                 </select>
             </div>
         </div>
+        
+        <div class="mt-4 md:mt-0 text-right">
+             <div class="text-yellow-400 font-bold text-2xl" v-if="currentRecord">
+                {{ currentRecord.date }}
+            </div>
+            <div class="text-gray-500 text-sm">盤後選股結果</div>
+        </div>
     </header>
 
+    <section class="mb-8 bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+        <h3 class="text-blue-400 font-bold mb-3 flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            策略執行邏輯 (完全公開)
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-300">
+            <div>
+                <h4 class="text-white font-bold mb-2 border-b border-gray-600 pb-1 inline-block">🚀 進場條件 (必須全部符合)</h4>
+                <ul class="list-disc list-inside space-y-1 pl-2">
+                    <li><span class="text-yellow-200">2年新高</span>：收盤價創下過去 500 個交易日新高。</li>
+                    <li><span class="text-yellow-200">首度突破</span>：昨日收盤價尚未創新高 (抓第一根)。</li>
+                    <li><span class="text-yellow-200">實體紅K</span>：當日 (收盤價 - 開盤價) > 1.5%，確認買氣。</li>
+                    <li><span class="text-yellow-200">成交量</span>：台股 > 500張，美股 > 1000張。</li>
+                    <li><span class="text-gray-400 text-xs ml-4">* 額外加分：成交量爆發、基本面成長 (ROE, EPS)。</span></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-2 border-b border-gray-600 pb-1 inline-block">🛑 出場/停損機制</h4>
+                <ul class="list-disc list-inside space-y-1 pl-2">
+                    <li><span class="text-red-300">硬性停損</span>：虧損達到 8% 無條件賣出。</li>
+                    <li><span class="text-red-300">趨勢反轉</span>：跌破 13週移動平均線 (65MA) 且 均線下彎。</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
     <div v-if="loading" class="text-center text-gray-500 py-20">
-        <p class="text-xl animate-pulse">正在讀取台股與美股資料...</p>
+        <p class="text-xl animate-pulse">正在讀取歷史回測資料...</p>
     </div>
 
     <div v-else>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-red-500">
-                <div class="text-gray-400 text-sm">買進訊號 ({{ currentRecord.date }})</div>
+                <div class="text-gray-400 text-sm">買進訊號</div>
                 <div class="text-3xl font-bold text-red-400">{{ currentRecord.buy.length }} <span class="text-sm text-gray-500">檔</span></div>
             </div>
             <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-green-500">
-                <div class="text-gray-400 text-sm">出場訊號 ({{ currentRecord.date }})</div>
+                <div class="text-gray-400 text-sm">出場訊號</div>
                 <div class="text-3xl font-bold text-green-400">{{ currentRecord.sell.length }} <span class="text-sm text-gray-500">檔</span></div>
             </div>
         </div>
@@ -69,16 +91,21 @@
 
         <div v-if="viewMode === 'buy'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div v-if="currentRecord.buy.length === 0" class="col-span-full text-center text-gray-500 py-10">
-                {{ currentRecord.date }} 無符合條件的股票
+                當日無符合條件的股票
             </div>
             
             <div v-for="stock in currentRecord.buy" :key="stock.code" @click="openModal(stock, 'buy')" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 relative overflow-hidden group">
-                <div class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg"
+                
+                <div v-if="stock.roi !== undefined" class="absolute top-0 right-0 text-xs px-2 py-1 rounded-bl-lg font-bold"
+                     :class="stock.roi > 0 ? 'bg-red-600 text-white' : 'bg-green-600 text-white'">
+                    至今: {{ stock.roi > 0 ? '+' : '' }}{{ stock.roi }}%
+                </div>
+                <div v-else class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg"
                      :class="stock.score >= 3 ? 'bg-red-600' : 'bg-gray-600'">
                     {{ stock.score }}分
                 </div>
 
-                <div class="flex justify-between items-end mb-3">
+                <div class="flex justify-between items-end mb-3 mt-2">
                     <div>
                         <div class="flex items-center gap-2">
                             <span v-if="stock.region === 'US'" class="bg-blue-900 text-blue-200 text-xs px-1 rounded border border-blue-700">US</span>
@@ -88,18 +115,17 @@
                             </h3>
                         </div>
                         <p class="text-gray-400 text-sm">
-                             {{ stock.region === 'US' ? '美股代號' : '台股代號' }}
+                             {{ stock.region === 'US' ? '美股' : '台股' }} | ${{ stock.price }}
                         </p>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-xl font-bold text-red-400">
-                            {{ stock.region === 'US' ? '$' : 'NT$' }}{{ stock.price }}
-                        </div>
-                        <div class="text-xs text-gray-500">{{ stock.date }}</div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-3 gap-2 mb-3 text-center bg-gray-700/30 p-2 rounded-lg">
+                <div v-if="stock.status" class="mb-3 text-center p-1 rounded text-sm font-bold"
+                    :class="stock.status === '停損出場' ? 'bg-green-900 text-green-300' : 'bg-gray-700 text-gray-300'">
+                    狀態: {{ stock.status }}
+                </div>
+
+                <div v-if="stock.fundamentals.pe !== '-'" class="grid grid-cols-3 gap-2 mb-3 text-center bg-gray-700/30 p-2 rounded-lg">
                     <div>
                         <div class="text-xs text-gray-400">獲利成長</div>
                         <div class="font-bold" :class="parseFloat(stock.fundamentals.growth) > 0 ? 'text-red-300' : 'text-green-300'">
@@ -126,7 +152,7 @@
 
         <div v-if="viewMode === 'sell'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div v-if="currentRecord.sell.length === 0" class="col-span-full text-center text-gray-500 py-10">
-                {{ currentRecord.date }} 無觸發出場的股票
+                無出場訊號
             </div>
 
             <div v-for="stock in currentRecord.sell" :key="stock.code" @click="openModal(stock, 'sell')" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700">
@@ -143,7 +169,6 @@
                         <div class="text-xl font-bold text-green-400">
                             {{ stock.region === 'US' ? '$' : 'NT$' }}{{ stock.price }}
                         </div>
-                        <div class="text-xs text-gray-500">{{ stock.date }}</div>
                     </div>
                 </div>
                 <div class="bg-gray-700/50 p-2 rounded text-sm text-gray-300">
@@ -169,30 +194,20 @@
         <div class="bg-gray-800 rounded-xl max-w-md w-full p-6 border border-gray-600 shadow-2xl relative">
             <button @click="showModal = false" class="absolute top-4 right-4 text-gray-400 hover:text-white">✕</button>
             <h2 class="text-3xl font-bold mb-1">{{ selectedStock.code.replace('.TW', '').replace('.TWO', '') }}</h2>
-            <div class="text-gray-400 text-sm mb-6">詳細資訊</div>
-
+            
             <div class="space-y-4">
                 <div class="flex justify-between border-b border-gray-700 pb-2">
-                    <span class="text-gray-400">訊號日期</span>
-                    <span class="text-white font-mono">{{ selectedStock.date }}</span>
-                </div>
-                <div class="flex justify-between border-b border-gray-700 pb-2">
                     <span class="text-gray-400">訊號價格</span>
-                    <span :class="modalType === 'buy' ? 'text-red-400' : 'text-green-400'" class="font-bold text-xl">
+                    <span class="text-white font-bold text-xl">
                         {{ selectedStock.region === 'US' ? '$' : 'NT$' }}{{ selectedStock.price }}
                     </span>
                 </div>
                 
-                <div v-if="modalType === 'buy'">
-                    <p class="text-gray-400 mb-2">入選理由：</p>
-                    <ul class="list-disc list-inside text-gray-300 space-y-1">
-                        <li v-for="r in selectedStock.reasons">{{ r }}</li>
-                    </ul>
-                </div>
-                
-                <div v-if="modalType === 'sell'">
-                    <p class="text-gray-400 mb-2">出場原因：</p>
-                    <p class="text-green-300 bg-green-900/30 p-2 rounded">{{ selectedStock.reason }}</p>
+                <div v-if="selectedStock.roi !== undefined" class="flex justify-between border-b border-gray-700 pb-2">
+                    <span class="text-gray-400">回測績效</span>
+                    <span :class="selectedStock.roi > 0 ? 'text-red-400' : 'text-green-400'" class="font-bold">
+                        {{ selectedStock.roi }}% ({{ selectedStock.status }})
+                    </span>
                 </div>
 
                 <div class="pt-4">
@@ -200,7 +215,7 @@
                         ? `https://finance.yahoo.com/quote/${selectedStock.code}` 
                         : `https://tw.stock.yahoo.com/quote/${selectedStock.code.replace('.TW', '').replace('.TWO', '')}`" 
                        target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">
-                        {{ selectedStock.region === 'US' ? '前往 Yahoo Finance (US)' : '前往 Yahoo 股市 (TW)' }}
+                        {{ selectedStock.region === 'US' ? '前往 Yahoo Finance' : '前往 Yahoo 股市' }}
                     </a>
                 </div>
             </div>
@@ -219,12 +234,12 @@
                 selectedDateIndex: 0,
                 viewMode: 'buy', 
                 showModal: false,
-                selectedStock: null,
-                modalType: 'buy'
+                selectedStock: null
             }
         },
         computed: {
             reversedHistory() {
+                // 回測資料已經按日期排序，這裡反轉讓最新的在前面
                 return [...this.history].reverse();
             },
             currentRecord() {
@@ -241,18 +256,13 @@
                     this.history = data;
                 } catch (error) {
                     console.error(error);
-                    this.history = [{
-                        date: "暫無資料", 
-                        buy: [], 
-                        sell: [] 
-                    }];
+                    this.history = [{ date: "暫無資料", buy: [], sell: [] }];
                 } finally {
                     this.loading = false;
                 }
             },
             openModal(stock, type) {
                 this.selectedStock = stock;
-                this.modalType = type;
                 this.showModal = true;
             }
         },
