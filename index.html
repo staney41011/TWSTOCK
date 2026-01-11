@@ -125,9 +125,11 @@
                         </div>
                     </div>
                     <div>
-                        <div class="text-[10px] text-gray-400">營收 YoY</div>
-                        <div class="font-bold" :class="isPositive(stock.fundamentals.rev_yoy) ? 'text-red-400' : 'text-green-400'">
-                            {{ formatPercent(stock.fundamentals.rev_yoy) }}
+                        <div class="text-[10px] text-gray-400">
+                            {{ stock.fundamentals.rev_yoy ? '營收 YoY' : '營收 QoQ' }}
+                        </div>
+                        <div class="font-bold" :class="isPositive(getGrowth(stock)) ? 'text-red-400' : 'text-green-400'">
+                            {{ formatPercent(getGrowth(stock)) }}
                         </div>
                     </div>
                     <div>
@@ -192,9 +194,15 @@
                              {{ formatPercent(selectedStock.fundamentals.rev_yoy) }}
                          </span>
                          <span class="text-xs text-gray-500">
-                             去年同期: {{ formatBigNumber(selectedStock.fundamentals.rev_last_year) }}
+                             去年同期推算: {{ formatBigNumber(selectedStock.fundamentals.rev_last_year) }}
                          </span>
                     </div>
+                </div>
+                <div v-else-if="selectedStock.fundamentals.rev_qoq" class="flex justify-between border-b border-gray-700 pb-2">
+                     <span class="text-gray-400">營收 QoQ (季增率)</span>
+                     <span class="font-bold text-lg" :class="isPositive(selectedStock.fundamentals.rev_qoq) ? 'text-red-400' : 'text-green-400'">
+                         {{ formatPercent(selectedStock.fundamentals.rev_qoq) }}
+                     </span>
                 </div>
 
                 <div v-if="selectedStock.fundamentals && selectedStock.fundamentals.quarters && selectedStock.fundamentals.quarters.length > 0">
@@ -287,15 +295,15 @@
                 this.modalType = type;
                 this.showModal = true;
             },
+            getGrowth(stock) {
+                // 優先回傳 YoY，沒有則回傳 QoQ
+                return stock.fundamentals.rev_yoy ? stock.fundamentals.rev_yoy : stock.fundamentals.rev_qoq;
+            },
             formatPercent(valStr) {
                 if (!valStr && valStr !== 0) return '-'; 
                 if (typeof valStr === 'string' && valStr.includes('%')) return valStr;
                 let num = parseFloat(valStr);
                 if (isNaN(num)) return valStr;
-                // 注意：yfinance 的 revenueGrowth 若為 0.25 (小數)，需 *100
-                // 但這裡為了保險，先判斷數值大小，若 < 5 通常是小數 (因為不太可能一年成長500%)
-                // 不過 500% 成長也是有的，所以這只是個大概的防呆，最好的方式是看原始數據
-                // yfinance info['revenueGrowth'] 回傳的是小數 (例如 0.58)
                 if (Math.abs(num) < 10) num = num * 100; 
                 return (num > 0 ? '+' : '') + num.toFixed(1) + '%'; 
             },
