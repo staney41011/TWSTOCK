@@ -17,11 +17,22 @@
 
 <div id="app" v-cloak class="min-h-screen p-4 md:p-8 max-w-6xl mx-auto pb-20">
     
-    <header class="mb-6 flex flex-col md:flex-row justify-between items-start border-b border-gray-700 pb-4">
+    <header class="mb-8 flex flex-col md:flex-row justify-between items-center border-b border-gray-700 pb-4">
         <div>
             <h1 class="text-3xl font-bold text-white mb-2">🌎 台美股 動能突破策略</h1>
-            <div class="flex items-center gap-2 mt-2">
-                <span class="text-gray-400 text-sm">歷史回顧:</span>
+            <p class="text-gray-400 text-sm">
+                策略邏輯：2年新高 + 實體紅K + 財報基本面<br>
+                出場機制：趨勢轉弱 (跌破13週線) 或 觸發停損
+            </p>
+        </div>
+        
+        <div class="mt-4 md:mt-0 flex flex-col items-end gap-2">
+            <div class="text-yellow-400 font-bold text-lg" v-if="currentRecord">
+                📅 {{ currentRecord.date }} 盤後選股
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <label class="text-gray-400 text-sm">歷史回顧:</label>
                 <select v-model="selectedDateIndex" class="bg-gray-800 border border-gray-600 text-white rounded px-3 py-1 text-sm focus:outline-none focus:border-blue-500">
                     <option v-for="(record, index) in reversedHistory" :value="index">
                         {{ record.date }} ({{ record.buy.length }} 檔)
@@ -29,47 +40,14 @@
                 </select>
             </div>
         </div>
-        
-        <div class="mt-4 md:mt-0 text-right">
-             <div class="text-yellow-400 font-bold text-2xl" v-if="currentRecord">
-                {{ currentRecord.date }}
-            </div>
-            <div class="text-gray-500 text-sm">盤後選股結果</div>
-        </div>
     </header>
 
-    <section class="mb-8 bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-        <h3 class="text-blue-400 font-bold mb-3 flex items-center">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            策略執行邏輯 (完全公開)
-        </h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-300">
-            <div>
-                <h4 class="text-white font-bold mb-2 border-b border-gray-600 pb-1 inline-block">🚀 進場條件 (必須全部符合)</h4>
-                <ul class="list-disc list-inside space-y-1 pl-2">
-                    <li><span class="text-yellow-200">2年新高</span>：收盤價創下過去 500 個交易日新高。</li>
-                    <li><span class="text-yellow-200">首度突破</span>：昨日收盤價尚未創新高 (抓第一根)。</li>
-                    <li><span class="text-yellow-200">實體紅K</span>：當日 (收盤價 - 開盤價) > 1.5%，確認買氣。</li>
-                    <li><span class="text-yellow-200">成交量</span>：台股 > 500張，美股 > 1000張。</li>
-                    <li><span class="text-gray-400 text-xs ml-4">* 額外加分：成交量爆發、基本面成長 (ROE, EPS)。</span></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-white font-bold mb-2 border-b border-gray-600 pb-1 inline-block">🛑 出場/停損機制</h4>
-                <ul class="list-disc list-inside space-y-1 pl-2">
-                    <li><span class="text-red-300">硬性停損</span>：虧損達到 8% 無條件賣出。</li>
-                    <li><span class="text-red-300">趨勢反轉</span>：跌破 13週移動平均線 (65MA) 且 均線下彎。</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
     <div v-if="loading" class="text-center text-gray-500 py-20">
-        <p class="text-xl animate-pulse">正在讀取歷史回測資料...</p>
+        <p class="text-xl animate-pulse">正在深入分析財報數據...</p>
     </div>
 
     <div v-else>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-red-500">
                 <div class="text-gray-400 text-sm">買進訊號</div>
                 <div class="text-3xl font-bold text-red-400">{{ currentRecord.buy.length }} <span class="text-sm text-gray-500">檔</span></div>
@@ -91,21 +69,16 @@
 
         <div v-if="viewMode === 'buy'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div v-if="currentRecord.buy.length === 0" class="col-span-full text-center text-gray-500 py-10">
-                當日無符合條件的股票
+                無符合條件的股票
             </div>
             
             <div v-for="stock in currentRecord.buy" :key="stock.code" @click="openModal(stock, 'buy')" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 relative overflow-hidden group">
-                
-                <div v-if="stock.roi !== undefined" class="absolute top-0 right-0 text-xs px-2 py-1 rounded-bl-lg font-bold"
-                     :class="stock.roi > 0 ? 'bg-red-600 text-white' : 'bg-green-600 text-white'">
-                    至今: {{ stock.roi > 0 ? '+' : '' }}{{ stock.roi }}%
-                </div>
-                <div v-else class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg"
-                     :class="stock.score >= 3 ? 'bg-red-600' : 'bg-gray-600'">
-                    {{ stock.score }}分
+                <div class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg font-bold"
+                     :class="stock.score >= 4 ? 'bg-red-600' : 'bg-gray-600'">
+                    評分: {{ stock.score }}
                 </div>
 
-                <div class="flex justify-between items-end mb-3 mt-2">
+                <div class="flex justify-between items-end mb-4 mt-2">
                     <div>
                         <div class="flex items-center gap-2">
                             <span v-if="stock.region === 'US'" class="bg-blue-900 text-blue-200 text-xs px-1 rounded border border-blue-700">US</span>
@@ -120,25 +93,20 @@
                     </div>
                 </div>
 
-                <div v-if="stock.status" class="mb-3 text-center p-1 rounded text-sm font-bold"
-                    :class="stock.status === '停損出場' ? 'bg-green-900 text-green-300' : 'bg-gray-700 text-gray-300'">
-                    狀態: {{ stock.status }}
-                </div>
-
-                <div v-if="stock.fundamentals.pe !== '-'" class="grid grid-cols-3 gap-2 mb-3 text-center bg-gray-700/30 p-2 rounded-lg">
+                <div class="grid grid-cols-3 gap-2 mb-3 text-center bg-gray-700/40 p-2 rounded-lg text-sm">
                     <div>
                         <div class="text-xs text-gray-400">獲利成長</div>
-                        <div class="font-bold" :class="parseFloat(stock.fundamentals.growth) > 0 ? 'text-red-300' : 'text-green-300'">
-                            {{ stock.fundamentals.growth }}
+                        <div class="font-bold" :class="isPositive(stock.fundamentals.growth) ? 'text-red-400' : 'text-green-400'">
+                            {{ formatPercent(stock.fundamentals.growth) }}
                         </div>
                     </div>
                     <div>
                         <div class="text-xs text-gray-400">本益比</div>
-                        <div class="font-bold text-blue-300">{{ stock.fundamentals.pe }}</div>
+                        <div class="font-bold text-blue-300">{{ stock.fundamentals.pe }}x</div>
                     </div>
                     <div>
                         <div class="text-xs text-gray-400">ROE</div>
-                        <div class="font-bold text-yellow-300">{{ stock.fundamentals.roe }}</div>
+                        <div class="font-bold text-yellow-300">{{ formatPercent(stock.fundamentals.roe) }}</div>
                     </div>
                 </div>
 
@@ -154,7 +122,6 @@
             <div v-if="currentRecord.sell.length === 0" class="col-span-full text-center text-gray-500 py-10">
                 無出場訊號
             </div>
-
             <div v-for="stock in currentRecord.sell" :key="stock.code" @click="openModal(stock, 'sell')" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700">
                 <div class="flex justify-between items-end mb-4">
                     <div>
@@ -180,42 +147,65 @@
 
     <footer class="mt-12 pt-6 border-t border-gray-700 text-center text-gray-500 text-sm">
         <div class="bg-yellow-900/20 border border-yellow-700/50 p-4 rounded max-w-2xl mx-auto mb-4">
-            <h4 class="text-yellow-500 font-bold mb-1">⚠️ 免責聲明 (Disclaimer)</h4>
-            <p>
-                本網站僅為程式自動篩選結果，不代表任何投資建議或買賣邀約。<br>
-                所有數據皆來自網路公開資訊，可能會有延遲或錯誤。<br>
-                投資一定有風險，股票投資有賺有賠，申購前應詳閱公開說明書，請使用者自行判斷並承擔風險。
-            </p>
+            <h4 class="text-yellow-500 font-bold mb-1">⚠️ 免責聲明</h4>
+            <p>本網站數據僅供參考，不代表任何投資建議。投資有風險，請自行判斷。</p>
         </div>
-        <p>&copy; 2025 Stock Momentum Scanner. All rights reserved.</p>
+        <p>&copy; 2025 Stock Momentum Scanner.</p>
     </footer>
 
     <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4" @click.self="showModal = false">
-        <div class="bg-gray-800 rounded-xl max-w-md w-full p-6 border border-gray-600 shadow-2xl relative">
+        <div class="bg-gray-800 rounded-xl max-w-lg w-full p-6 border border-gray-600 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button @click="showModal = false" class="absolute top-4 right-4 text-gray-400 hover:text-white">✕</button>
             <h2 class="text-3xl font-bold mb-1">{{ selectedStock.code.replace('.TW', '').replace('.TWO', '') }}</h2>
-            
-            <div class="space-y-4">
+            <div class="text-gray-400 text-sm mb-6">{{ selectedStock.name }}</div>
+
+            <div class="space-y-6">
                 <div class="flex justify-between border-b border-gray-700 pb-2">
                     <span class="text-gray-400">訊號價格</span>
                     <span class="text-white font-bold text-xl">
                         {{ selectedStock.region === 'US' ? '$' : 'NT$' }}{{ selectedStock.price }}
                     </span>
                 </div>
-                
-                <div v-if="selectedStock.roi !== undefined" class="flex justify-between border-b border-gray-700 pb-2">
-                    <span class="text-gray-400">回測績效</span>
-                    <span :class="selectedStock.roi > 0 ? 'text-red-400' : 'text-green-400'" class="font-bold">
-                        {{ selectedStock.roi }}% ({{ selectedStock.status }})
-                    </span>
+
+                <div v-if="selectedStock.fundamentals && selectedStock.fundamentals.quarters && selectedStock.fundamentals.quarters.length > 0">
+                    <h4 class="text-white font-bold mb-2 flex items-center">
+                        📊 近四季營收趨勢
+                    </h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-300">
+                            <thead class="text-xs text-gray-400 uppercase bg-gray-700">
+                                <tr>
+                                    <th class="px-4 py-2">季度</th>
+                                    <th class="px-4 py-2">營收 (Revenue)</th>
+                                    <th class="px-4 py-2">狀態</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(q, index) in selectedStock.fundamentals.quarters" :key="index" class="border-b border-gray-700 hover:bg-gray-700/50">
+                                    <td class="px-4 py-2 font-medium text-white">{{ q.date }}</td>
+                                    <td class="px-4 py-2">{{ formatBigNumber(q.revenue) }}</td>
+                                    <td class="px-4 py-2">
+                                        <span v-if="index < selectedStock.fundamentals.quarters.length - 1">
+                                            <span v-if="q.revenue > selectedStock.fundamentals.quarters[index+1].revenue" class="text-red-400 font-bold">↑ 成長</span>
+                                            <span v-else class="text-green-400 font-bold">↓ 衰退</span>
+                                        </span>
+                                        <span v-else class="text-gray-500">-</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div v-else-if="modalType === 'buy'" class="text-center text-gray-500 text-sm py-4 bg-gray-900/50 rounded">
+                    暫無季度財報數據
                 </div>
 
-                <div class="pt-4">
+                <div class="pt-2">
                     <a :href="selectedStock.region === 'US' 
                         ? `https://finance.yahoo.com/quote/${selectedStock.code}` 
                         : `https://tw.stock.yahoo.com/quote/${selectedStock.code.replace('.TW', '').replace('.TWO', '')}`" 
                        target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">
-                        {{ selectedStock.region === 'US' ? '前往 Yahoo Finance' : '前往 Yahoo 股市' }}
+                        前往 Yahoo Finance 查看完整 K 線
                     </a>
                 </div>
             </div>
@@ -234,12 +224,12 @@
                 selectedDateIndex: 0,
                 viewMode: 'buy', 
                 showModal: false,
-                selectedStock: null
+                selectedStock: null,
+                modalType: 'buy'
             }
         },
         computed: {
             reversedHistory() {
-                // 回測資料已經按日期排序，這裡反轉讓最新的在前面
                 return [...this.history].reverse();
             },
             currentRecord() {
@@ -263,7 +253,41 @@
             },
             openModal(stock, type) {
                 this.selectedStock = stock;
+                this.modalType = type;
                 this.showModal = true;
+            },
+            // 格式化百分比 (+25%, -10%)
+            formatPercent(valStr) {
+                if (!valStr || valStr === 'N/A' || valStr === '-') return '-';
+                // 如果已經是字串含%，直接回傳
+                if (typeof valStr === 'string' && valStr.includes('%')) return valStr;
+                
+                // 嘗試轉數字
+                let num = parseFloat(valStr);
+                if (isNaN(num)) return valStr;
+                
+                let sign = num > 0 ? '+' : '';
+                return sign + num + '%'; 
+                // 注意: 後端傳來的如果是 0.25 (小數)，需先 *100。
+                // 但目前後端傳來的是已經格式化好的字串 "25.0%" 或 "N/A"
+                // 這裡做個防呆
+            },
+            // 判斷是否為正成長 (決定顏色)
+            isPositive(valStr) {
+                if (!valStr) return false;
+                if (typeof valStr === 'string') {
+                    if (valStr.includes('-')) return false; // 負號
+                    if (valStr === 'N/A') return false;
+                }
+                return true; 
+            },
+            // 格式化大數字 (營收)
+            formatBigNumber(num) {
+                if (!num) return '-';
+                if (num >= 1e9) return (num / 1e9).toFixed(2) + ' B'; // 十億
+                if (num >= 1e6) return (num / 1e6).toFixed(2) + ' M'; // 百萬
+                if (num >= 1e3) return (num / 1e3).toFixed(2) + ' K'; // 千
+                return num;
             }
         },
         mounted() {
