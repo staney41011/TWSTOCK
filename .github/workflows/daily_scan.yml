@@ -7,7 +7,6 @@ on:
   
   workflow_dispatch:
 
-  # 雙保險：推送時自動跑一次
   push:
     branches:
       - main
@@ -42,18 +41,10 @@ jobs:
         git config --global user.name "GitHub Action"
         git config --global user.email "action@github.com"
         
-        # --- 強制解決衝突的關鍵步驟 ---
-        # 1. 抓取遠端最新版
+        # --- 強制解決衝突：重置並覆蓋 ---
         git fetch origin main
-        
-        # 2. 將本地指標重置到遠端，但保留剛跑出來的 data.json (Mixed/Soft reset)
         git reset --soft origin/main
         
-        # 3. 重新加入檔案
         git add data.json
-        
-        # 4. 提交
         git commit -m "Auto update stock data [skip ci]" || exit 0
-        
-        # 5. 推送 (因為已經 Reset 過，所以不會有衝突)
         git push origin main
