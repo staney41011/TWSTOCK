@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>台股動能突破儀表板</title>
+    <title>台美股動能突破儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
@@ -19,10 +19,10 @@
     
     <header class="mb-8 flex flex-col md:flex-row justify-between items-center border-b border-gray-700 pb-4">
         <div>
-            <h1 class="text-3xl font-bold text-white mb-2">📈 台股大漲訊號篩選</h1>
+            <h1 class="text-3xl font-bold text-white mb-2">🌎 台美股 大漲訊號篩選</h1>
             <p class="text-gray-400 text-sm">
-                進場：突破2年新高 + 實體紅K棒 (甦醒) + 基本面檢核<br>
-                出場：跌破13週線且趨勢下彎 (轉折) 或 虧損8% (停損)
+                範圍：台股上市櫃 + 美股 S&P 500<br>
+                策略：林則行 2年新高突破 + 基本面濾網
             </p>
         </div>
         
@@ -37,7 +37,7 @@
     </header>
 
     <div v-if="loading" class="text-center text-gray-500 py-20">
-        <p class="text-xl animate-pulse">正在讀取最新股市資料...</p>
+        <p class="text-xl animate-pulse">正在掃描台股與美股資料...</p>
     </div>
 
     <div v-else>
@@ -69,16 +69,27 @@
             <div v-for="stock in currentRecord.buy" :key="stock.code" @click="openModal(stock, 'buy')" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 relative overflow-hidden group">
                 <div class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg"
                      :class="stock.score >= 3 ? 'bg-red-600' : 'bg-gray-600'">
-                    綜合評分: {{ stock.score }}
+                    {{ stock.score }}分
                 </div>
 
                 <div class="flex justify-between items-end mb-3">
                     <div>
-                        <h3 class="text-2xl font-bold text-white">{{ stock.code.replace('.TW', '').replace('.TWO', '') }}</h3>
-                        <p class="text-gray-400 text-sm">台股代號</p>
+                        <div class="flex items-center gap-2">
+                            <span v-if="stock.region === 'US'" class="bg-blue-900 text-blue-200 text-xs px-1 rounded border border-blue-700">US</span>
+                            <span v-else class="bg-green-900 text-green-200 text-xs px-1 rounded border border-green-700">TW</span>
+                            
+                            <h3 class="text-2xl font-bold text-white">
+                                {{ stock.code.replace('.TW', '').replace('.TWO', '') }}
+                            </h3>
+                        </div>
+                        <p class="text-gray-400 text-sm">
+                             {{ stock.region === 'US' ? '美股代號' : '台股代號' }}
+                        </p>
                     </div>
                     <div class="text-right">
-                        <div class="text-xl font-bold text-red-400">${{ stock.price }}</div>
+                        <div class="text-xl font-bold text-red-400">
+                            {{ stock.region === 'US' ? '$' : 'NT$' }}{{ stock.price }}
+                        </div>
                         <div class="text-xs text-gray-500">{{ stock.date }}</div>
                     </div>
                 </div>
@@ -105,9 +116,6 @@
                         {{ reason }}
                     </span>
                 </div>
-                <div class="mt-4 text-center text-blue-400 text-sm opacity-0 group-hover:opacity-100 transition">
-                    點擊查看詳情
-                </div>
             </div>
         </div>
 
@@ -119,11 +127,17 @@
             <div v-for="stock in currentRecord.sell" :key="stock.code" @click="openModal(stock, 'sell')" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700">
                 <div class="flex justify-between items-end mb-4">
                     <div>
-                        <h3 class="text-2xl font-bold text-white">{{ stock.code.replace('.TW', '').replace('.TWO', '') }}</h3>
+                        <div class="flex items-center gap-2">
+                            <span v-if="stock.region === 'US'" class="bg-blue-900 text-blue-200 text-xs px-1 rounded border border-blue-700">US</span>
+                            <span v-else class="bg-green-900 text-green-200 text-xs px-1 rounded border border-green-700">TW</span>
+                            <h3 class="text-2xl font-bold text-white">{{ stock.code.replace('.TW', '').replace('.TWO', '') }}</h3>
+                        </div>
                         <p class="text-gray-400 text-sm">出場訊號</p>
                     </div>
                     <div class="text-right">
-                        <div class="text-xl font-bold text-green-400">${{ stock.price }}</div>
+                        <div class="text-xl font-bold text-green-400">
+                            {{ stock.region === 'US' ? '$' : 'NT$' }}{{ stock.price }}
+                        </div>
                         <div class="text-xs text-gray-500">{{ stock.date }}</div>
                     </div>
                 </div>
@@ -149,7 +163,7 @@
                 <div class="flex justify-between border-b border-gray-700 pb-2">
                     <span class="text-gray-400">訊號價格</span>
                     <span :class="modalType === 'buy' ? 'text-red-400' : 'text-green-400'" class="font-bold text-xl">
-                        ${{ selectedStock.price }}
+                        {{ selectedStock.region === 'US' ? '$' : 'NT$' }}{{ selectedStock.price }}
                     </span>
                 </div>
                 
@@ -166,8 +180,11 @@
                 </div>
 
                 <div class="pt-4">
-                    <a :href="`https://tw.stock.yahoo.com/quote/${selectedStock.code.replace('.TW', '').replace('.TWO', '')}`" target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">
-                        前往 Yahoo 股市查看 K 線
+                    <a :href="selectedStock.region === 'US' 
+                        ? `https://finance.yahoo.com/quote/${selectedStock.code}` 
+                        : `https://tw.stock.yahoo.com/quote/${selectedStock.code.replace('.TW', '').replace('.TWO', '')}`" 
+                       target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">
+                        {{ selectedStock.region === 'US' ? '前往 Yahoo Finance (US)' : '前往 Yahoo 股市 (TW)' }}
                     </a>
                 </div>
             </div>
@@ -185,7 +202,7 @@
                 loading: true,
                 history: [],
                 selectedDateIndex: 0,
-                viewMode: 'buy', // 'buy' or 'sell'
+                viewMode: 'buy', 
                 showModal: false,
                 selectedStock: null,
                 modalType: 'buy'
@@ -193,7 +210,6 @@
         },
         computed: {
             reversedHistory() {
-                // 將資料反轉，讓最新的日期排在第一個
                 return [...this.history].reverse();
             },
             currentRecord() {
