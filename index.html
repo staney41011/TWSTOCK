@@ -47,16 +47,13 @@
             <div>
                 <h4 class="text-white font-bold mb-3 border-b border-gray-600 pb-2 inline-block">🚀 進場條件 (買入)</h4>
                 <ul class="list-none space-y-2 text-sm">
-                    <li>✅ <span class="font-bold text-yellow-200">近一季新高 (基礎)</span>：股價突破 60 日新高，確認短期動能轉強。</li>
-                    <li>✅ <span class="font-bold text-yellow-200">實體紅K</span>：當日漲幅強勁，收盤明顯高於開盤，確認買氣。</li>
-                    <li>✅ <span class="font-bold text-yellow-200">首度突破</span>：昨日尚未創高，捕捉起漲第一根。</li>
+                    <li>✅ <span class="font-bold text-yellow-200">近一季新高 (基礎)</span>：突破60日新高，確認短期動能。</li>
+                    <li>✅ <span class="font-bold text-yellow-200">實體紅K</span>：當日大漲且收高，確認買氣。</li>
                     <li class="mt-2 pt-2 border-t border-gray-700">
                         <span class="bg-red-900 text-red-200 px-2 py-1 rounded text-xs">加分項目</span>
-                        <span class="text-gray-400 ml-1">若符合分數更高：</span>
                         <ul class="list-disc list-inside pl-4 mt-1 text-gray-400">
-                            <li>突破 <span class="text-white">兩年新高</span> (超級黑馬特徵)</li>
-                            <li>成交量爆發 (量增價漲)</li>
-                            <li>基本面優良 (高成長、高ROE)</li>
+                            <li>突破 <span class="text-white">兩年新高</span> (超級黑馬)</li>
+                            <li>營收/獲利高成長</li>
                         </ul>
                     </li>
                 </ul>
@@ -64,8 +61,8 @@
             <div>
                 <h4 class="text-white font-bold mb-3 border-b border-gray-600 pb-2 inline-block">🛑 出場條件 (賣出)</h4>
                 <ul class="list-none space-y-2 text-sm">
-                    <li>👋 <span class="font-bold text-red-300">趨勢轉弱</span>：收盤價跌破 13週線 (65MA) 且均線下彎，代表中期波段結束。</li>
-                    <li>🛡️ <span class="font-bold text-red-300">硬性停損</span>：買入後虧損達 8%，無條件執行停損保護本金。</li>
+                    <li>👋 <span class="font-bold text-red-300">趨勢轉弱</span>：跌破13週線(65MA)且下彎。</li>
+                    <li>🛡️ <span class="font-bold text-red-300">硬性停損</span>：虧損達 8% 無條件賣出。</li>
                 </ul>
             </div>
         </div>
@@ -113,28 +110,32 @@
                             <span v-if="stock.region === 'US'" class="bg-blue-900 text-blue-200 text-xs px-1 rounded border border-blue-700">US</span>
                             <span v-else class="bg-green-900 text-green-200 text-xs px-1 rounded border border-green-700">TW</span>
                         </div>
-                        <h3 class="text-2xl font-bold text-white tracking-wide">
-                            {{ stock.name }}
-                        </h3>
+                        <h3 class="text-2xl font-bold text-white tracking-wide">{{ stock.name }}</h3>
                         <p class="text-gray-400 text-sm font-mono mt-1">
                              {{ stock.code.replace('.TW', '').replace('.TWO', '') }} | ${{ stock.price }}
                         </p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-3 gap-2 mb-3 text-center bg-gray-700/40 p-2 rounded-lg text-sm">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3 text-center bg-gray-700/40 p-2 rounded-lg text-sm">
                     <div>
-                        <div class="text-xs text-gray-400">獲利成長</div>
+                        <div class="text-[10px] text-gray-400">獲利成長</div>
                         <div class="font-bold" :class="isPositive(stock.fundamentals.growth) ? 'text-red-400' : 'text-green-400'">
                             {{ formatPercent(stock.fundamentals.growth) }}
                         </div>
                     </div>
                     <div>
-                        <div class="text-xs text-gray-400">本益比</div>
+                        <div class="text-[10px] text-gray-400">營收 YoY</div>
+                        <div class="font-bold" :class="isPositive(stock.fundamentals.rev_yoy) ? 'text-red-400' : 'text-green-400'">
+                            {{ formatPercent(stock.fundamentals.rev_yoy) }}
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] text-gray-400">本益比</div>
                         <div class="font-bold text-blue-300">{{ stock.fundamentals.pe }}x</div>
                     </div>
                     <div>
-                        <div class="text-xs text-gray-400">ROE</div>
+                        <div class="text-[10px] text-gray-400">ROE</div>
                         <div class="font-bold text-yellow-300">{{ formatPercent(stock.fundamentals.roe) }}</div>
                     </div>
                 </div>
@@ -183,6 +184,18 @@
                         {{ selectedStock.region === 'US' ? '$' : 'NT$' }}{{ selectedStock.price }}
                     </span>
                 </div>
+                
+                <div v-if="selectedStock.fundamentals.rev_last_year" class="flex justify-between border-b border-gray-700 pb-2">
+                    <span class="text-gray-400">營收 YoY (年增率)</span>
+                    <div class="text-right">
+                         <span class="block font-bold text-lg" :class="isPositive(selectedStock.fundamentals.rev_yoy) ? 'text-red-400' : 'text-green-400'">
+                             {{ formatPercent(selectedStock.fundamentals.rev_yoy) }}
+                         </span>
+                         <span class="text-xs text-gray-500">
+                             去年同期: {{ formatBigNumber(selectedStock.fundamentals.rev_last_year) }}
+                         </span>
+                    </div>
+                </div>
 
                 <div v-if="selectedStock.fundamentals && selectedStock.fundamentals.quarters && selectedStock.fundamentals.quarters.length > 0">
                     <h4 class="text-white font-bold mb-2 flex items-center">
@@ -193,7 +206,7 @@
                             <thead class="text-xs text-gray-400 uppercase bg-gray-700">
                                 <tr>
                                     <th class="px-4 py-2">季度</th>
-                                    <th class="px-4 py-2">營收 (Revenue)</th>
+                                    <th class="px-4 py-2">營收</th>
                                     <th class="px-4 py-2">季增率 (QoQ)</th>
                                 </tr>
                             </thead>
@@ -216,9 +229,6 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-                <div v-else-if="modalType === 'buy'" class="text-center text-gray-500 text-sm py-4 bg-gray-900/50 rounded">
-                    暫無季度財報數據
                 </div>
 
                 <div class="pt-2">
@@ -278,19 +288,21 @@
                 this.showModal = true;
             },
             formatPercent(valStr) {
-                if (!valStr || valStr === 'N/A' || valStr === '-') return '-';
+                if (!valStr && valStr !== 0) return '-'; 
                 if (typeof valStr === 'string' && valStr.includes('%')) return valStr;
                 let num = parseFloat(valStr);
                 if (isNaN(num)) return valStr;
-                return (num > 0 ? '+' : '') + num + '%'; 
+                // 注意：yfinance 的 revenueGrowth 若為 0.25 (小數)，需 *100
+                // 但這裡為了保險，先判斷數值大小，若 < 5 通常是小數 (因為不太可能一年成長500%)
+                // 不過 500% 成長也是有的，所以這只是個大概的防呆，最好的方式是看原始數據
+                // yfinance info['revenueGrowth'] 回傳的是小數 (例如 0.58)
+                if (Math.abs(num) < 10) num = num * 100; 
+                return (num > 0 ? '+' : '') + num.toFixed(1) + '%'; 
             },
             isPositive(valStr) {
-                if (!valStr) return false;
-                if (typeof valStr === 'string') {
-                    if (valStr.includes('-')) return false;
-                    if (valStr === 'N/A') return false;
-                }
-                return true; 
+                if (!valStr && valStr !== 0) return false;
+                let num = parseFloat(valStr);
+                return num > 0;
             },
             formatBigNumber(num) {
                 if (!num) return '-';
@@ -299,7 +311,6 @@
                 if (num >= 1e3) return (num / 1e3).toFixed(2) + ' K';
                 return num;
             },
-            // 前端動態計算成長率
             calcGrowth(curr, prev) {
                 if (!prev || prev === 0) return 0;
                 let g = ((curr - prev) / prev) * 100;
