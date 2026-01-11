@@ -57,12 +57,10 @@ def get_us_stock_list():
         return []
 
 def get_financial_details(stock_obj):
-    """
-    抓取完整營收表：包含 當季、去年同期、YoY
-    """
+    """抓取營收與獲利成長"""
     data = {
         "pe": 999, "growth": None, "rev_yoy": None, 
-        "quarters": [] # 存放詳細表格資料
+        "rev_last_year": None, "quarters": []
     }
     try:
         info = stock_obj.info
@@ -77,52 +75,14 @@ def get_financial_details(stock_obj):
             elif 'Operating Revenue' in q_stmt.index: rev_row = q_stmt.loc['Operating Revenue']
             
             if rev_row is not None:
-                # 這裡我們要嘗試計算每一季的 YoY
-                # yfinance 的 columns 是日期 (DatetimeIndex)，且通常是由新到舊
-                dates = rev_row.index
-                values = rev_row.values
-                
-                # 我們只取最近 4 季來顯示
-                limit = min(4, len(values))
-                
-                for i in range(limit):
-                    current_date = dates[i]
-                    current_val = values[i]
-                    
-                    last_year_val = None
-                    yoy_val = None
-                    
-                    # 嘗試尋找去年同期的數據 (大約 365 天前)
-                    # 由於免費版資料長度有限，可能找不到去年的
-                    # 我們嘗試在剩下的資料中找 "日期差約一年" 的
-                    for j in range(i + 1, len(dates)):
-                        prev_date = dates[j]
-                        days_diff = (current_date - prev_date).days
-                        # 365天左右 (容許誤差 350~380)
-                        if 350 <= days_diff <= 380:
-                            last_year_val = values[j]
-                            break
-                    
-                    # 如果找不到實際數據，但這是最新一季，可以用 global 的 rev_yoy 反推
-                    if last_year_val is None and i == 0 and data['rev_yoy'] is not None:
-                        try:
-                            last_year_val = current_val / (1 + data['rev_yoy'])
-                        except:
-                            pass
-                    
-                    # 計算 YoY %
-                    if last_year_val and last_year_val != 0:
-                        yoy_val = (current_val - last_year_val) / last_year_val
-
-                    data['quarters'].append({
-                        "date": current_date.strftime('%Y-%m'), # 2025-Q1
-                        "revenue": current_val,
-                        "last_year_revenue": last_year_val,
-                        "yoy": yoy_val
-                    })
-                    
-    except Exception as e:
-        print(f"財報抓取部分失敗: {e}")
+                recent_quarters = rev_row.head(4)
+                if data['rev_yoy'] is not None and len(recent_quarters) > 0:
+                    try: data['rev_last_year'] = recent_quarters.iloc[0] / (1 + data['rev_yoy'])
+                    except: pass
+                for date, revenue in recent_quarters.items():
+                    data['quarters'].append({"date": date.strftime('%Y-%m'), "revenue": revenue})
+    except:
+        pass
     return data
 
 def calculate_sell_pressure(df):
@@ -171,29 +131,36 @@ def analyze_stock(stock_info, check_exit_stocks=None):
         if check_exit_stocks and ticker in check_exit_stocks:
             buy_price = check_exit_stocks[ticker]
             current_price = latest['Close']
+            
             sell_ratio = calculate_sell_pressure(df)
             
             if sell_ratio > SELL_RATIO_THRESHOLD:
                 return {
-                    "type": "sell", "code": ticker, "name": display_name, "region": region,
-                    "price": float(f"{current_price:.2f}"), "date": latest.name.strftime('%Y-%m-%d'),
+                    "type": "sell",
+                    "code": ticker, "name": display_name, "region": region,
+                    "price": float(f"{current_price:.2f}"),
+                    "date": latest.name.strftime('%Y-%m-%d'),
                     "reason": f"賣壓比例過高 ({sell_ratio*100:.1f}%)"
                 }
 
             loss_pct = (current_price - buy_price) / buy_price
             if loss_pct <= -0.08:
                 return {
-                    "type": "sell", "code": ticker, "name": display_name, "region": region,
-                    "price": float(f"{current_price:.2f}"), "date": latest.name.strftime('%Y-%m-%d'),
+                    "type": "sell",
+                    "code": ticker, "name": display_name, "region": region,
+                    "price": float(f"{current_price:.2f}"),
+                    "date": latest.name.strftime('%Y-%m-%d'),
                     "reason": f"觸發停損 (虧損 {loss_pct*100:.1f}%)"
                 }
             return None
 
         # --- [進場檢查] ---
         if check_exit_stocks is not None: return None
+        
         min_vol = 500000 if region == 'TW' else 1000000
         if latest['Volume'] < min_vol: return None 
 
+        # 基礎: 季新高 + 首度突破
         window_high_short = df['Close'][-LOOKBACK_SHORT-1:-1].max()
         is_new_high_short = latest['Close'] > window_high_short
         was_high_yesterday = prev['Close'] > window_high_short
@@ -201,17 +168,24 @@ def analyze_stock(stock_info, check_exit_stocks=None):
 
         if is_fresh_breakout:
             score = 3
+            # 將基礎分列入明細，方便 Modal 顯示
             reasons = ["(基礎) 創季新高 +3分"]
             
+            # 基礎: 量能檢查
             vol_ma20 = df['Volume'].rolling(window=20).mean().iloc[-1]
             if latest['Volume'] > vol_ma20 * VOL_FACTOR:
                 reasons.append(f"(基礎) 量增{VOL_FACTOR}倍")
+            else:
+                # 若無量，雖創新高但扣分或不列入理由(視策略而定，這裡保留但沒加分)
+                pass
 
+            # 加分項 1: 兩年新高
             window_high_long = df['Close'][-LOOKBACK_LONG-1:-1].max()
             if latest['Close'] > window_high_long:
                 score += 2
                 reasons.append("(加分) 兩年新高 +2分")
 
+            # 加分項 2: 基本面
             fin_data = get_financial_details(stock)
             
             if fin_data['rev_yoy'] is not None and fin_data['rev_yoy'] > GROWTH_REV:
@@ -222,15 +196,20 @@ def analyze_stock(stock_info, check_exit_stocks=None):
                 score += 2
                 reasons.append(f"(加分) 獲利增{fin_data['growth']*100:.0f}% +2分")
             
+            # 加分項 3: 風險控制 (原振幅濾網改為加分項? 或者直接拿掉。使用者說拿掉篩選，這裡就不扣分也不擋)
+            # 這裡可以改成: 若振幅適中給分，若漲停鎖死(振幅小)也給分，故不特別處理
+            
             return {
                 "type": "buy",
                 "code": ticker, "name": display_name, "region": region,
                 "price": float(f"{latest['Close']:.2f}"),
-                "score": score, "reasons": reasons,
+                "score": score,
+                "reasons": reasons,
                 "fundamentals": {
                     "pe": "N/A" if fin_data['pe']==999 else f"{fin_data['pe']:.1f}",
                     "growth": "N/A" if fin_data['growth'] is None else f"{fin_data['growth']*100:.1f}%",
                     "rev_yoy": fin_data['rev_yoy'],
+                    "rev_last_year": fin_data['rev_last_year'],
                     "quarters": fin_data['quarters']
                 },
                 "date": latest.name.strftime('%Y-%m-%d')
@@ -243,7 +222,7 @@ def analyze_stock(stock_info, check_exit_stocks=None):
         return None
 
 def main():
-    print("啟動動能爆發策略 (Yahoo財報加強版)...")
+    print("啟動動能爆發策略 (無振幅濾網版)...")
     
     history_data = []
     if os.path.exists(DATA_FILE):
