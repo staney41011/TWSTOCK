@@ -5,16 +5,14 @@ import time
 import json
 import os
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime
+from datetime import datetime, timedelta # <--- 新增 timedelta
 
 # --- 策略參數 ---
 LOOKBACK_LONG = 500    # 2年新高
 MA_W13 = 65            # 13週線
 STOP_LOSS_PCT = 0.08   # 停損 8%
-
-# 基本面門檻
-MIN_ROE = 0.08         # ROE 至少 8%
-MAX_PE = 60            # 本益比濾網
+MIN_ROE = 0.08         # ROE 8%
+MAX_PE = 60            # 本益比
 
 DATA_FILE = "data.json"
 
@@ -30,12 +28,11 @@ def get_tw_stock_list():
     return stocks
 
 def get_us_stock_list():
-    """從 Wikipedia 取得 S&P 500 成分股"""
+    """取得 S&P 500 成分股"""
     try:
         print("正在抓取 S&P 500 成分股清單...")
         table = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
         df = table[0]
-        # 美股代號修正: BRK.B -> BRK-B (Yahoo Finance 格式)
         symbols = df['Symbol'].values.tolist()
         formatted_symbols = []
         for s in symbols:
@@ -57,9 +54,6 @@ def get_fundamentals(stock_obj):
         return {"pe": 999, "growth": None, "roe": None}
 
 def analyze_stock(stock_info, check_exit_stocks=None):
-    """
-    stock_info 是一個字典: {'code': 'AAPL', 'region': 'US'}
-    """
     ticker = stock_info['code']
     region = stock_info['region']
     
@@ -107,7 +101,6 @@ def analyze_stock(stock_info, check_exit_stocks=None):
         # --- [模式 A] 掃描進場 ---
         if check_exit_stocks is not None: return None
         
-        # 美股成交量通常很大，稍微放寬濾網，台股維持 500張
         min_vol = 500000 if region == 'TW' else 1000000
         if latest['Volume'] < min_vol: return None 
 
@@ -118,7 +111,6 @@ def analyze_stock(stock_info, check_exit_stocks=None):
         is_fresh_breakout = is_new_high and (not was_high_yesterday)
 
         open_price = latest['Open']
-        # 美股沒有漲跌幅限制，長紅棒標準可以稍微嚴格一點或維持 1.5%
         is_big_candle = (latest['Close'] - open_price) / open_price > 0.015
 
         if is_fresh_breakout and is_big_candle:
@@ -135,7 +127,7 @@ def analyze_stock(stock_info, check_exit_stocks=None):
                 reasons.append("獲利正成長")
 
             pe_val = fund_data['pe']
-            if pe_val < 30: # 美股本益比標準可稍微調整，這裡先統一
+            if pe_val < 30: 
                 score += 1
                 reasons.append(f"本益比低 ({pe_val:.1f})")
             elif pe_val > MAX_PE:
@@ -152,7 +144,7 @@ def analyze_stock(stock_info, check_exit_stocks=None):
 
             return {
                 "code": ticker,
-                "region": region, # 標記地區
+                "region": region,
                 "name": ticker, 
                 "price": float(f"{latest['Close']:.2f}"),
                 "score": score,
@@ -170,7 +162,7 @@ def analyze_stock(stock_info, check_exit_stocks=None):
         return None
 
 def main():
-    print("啟動林則行策略 (台股 + 美股S&P500) 掃描...")
+    print("啟動動能策略 (台美股) 掃描...")
     
     history_data = []
     if os.path.exists(DATA_FILE):
@@ -187,19 +179,15 @@ def main():
                 if stock['code'] not in holdings_map:
                     holdings_map[stock['code']] = stock['price']
     
-    # --- 取得台股 + 美股清單 ---
-    tw_stocks = get_tw_stock_list()     # 台股
-    us_stocks = get_us_stock_list()     # 美股
+    tw_stocks = get_tw_stock_list()
+    us_stocks = get_us_stock_list()
     
-    # 測試時可以用切片減少數量，例如: tw_stocks[:50] + us_stocks[:10]
     all_stocks = tw_stocks + us_stocks 
     
     today_buys = []
     today_exits = []
 
-    print(f"正在掃描買點 (共 {len(all_stocks)} 檔, 含台美股)...")
-    
-    # 增加 workers 數量以應付更多股票
+    print(f"正在掃描買點 (共 {len(all_stocks)} 檔)...")
     with ThreadPoolExecutor(max_workers=25) as executor:
         futures = [executor.submit(analyze_stock, stock_info, None) for stock_info in all_stocks]
         for future in futures:
@@ -209,8 +197,6 @@ def main():
     print(f"正在檢查持倉出場 ({len(holdings_map)} 檔)...")
     if holdings_map:
         check_list = []
-        # 這邊需要重建 stock_info 物件給 analyze_stock 用
-        # 簡單判斷：有 .TW/.TWO 是台股，沒有是美股
         for code in holdings_map.keys():
             region = 'TW' if '.TW' in code or '.TWO' in code else 'US'
             check_list.append({"code": code, "region": region})
@@ -223,14 +209,18 @@ def main():
 
     today_buys.sort(key=lambda x: -x['score'])
     
-    today_str = datetime.now().strftime('%Y-%m-%d')
+    # --- 重要：日期校正 ---
+    # 因為我們是隔天早上 06:00 執行，所以資料是屬於 "前一天" 的盤後資訊
+    # 這樣顯示在網頁上才是正確的 "Market Date"
+    market_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+    
     new_record = {
-        "date": today_str,
+        "date": market_date,
         "buy": today_buys,
         "sell": today_exits
     }
     
-    if history_data and history_data[-1]['date'] == today_str:
+    if history_data and history_data[-1]['date'] == market_date:
         history_data[-1] = new_record
     else:
         history_data.append(new_record)
@@ -238,7 +228,7 @@ def main():
     with open(DATA_FILE, 'w', encoding='utf-8') as f:
         json.dump(history_data, f, ensure_ascii=False, indent=2)
 
-    print(f"掃描完成！資料已更新至 {DATA_FILE}")
+    print(f"掃描完成！資料已更新至 {DATA_FILE} (Date: {market_date})")
 
 if __name__ == "__main__":
     main()
