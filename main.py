@@ -4,36 +4,30 @@ import twstock
 import time
 import json
 import os
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 
-# --- 策略參數 ---
-LOOKBACK_SHORT = 60    # 近一季新高
-LOOKBACK_LONG = 500    # 兩年新高 (加分)
-MA_W13 = 65            # 13週線
-STOP_LOSS_PCT = 0.08   # 停損 8%
-MIN_ROE = 0.08         # ROE 8%
-MAX_PE = 60            # 本益比
+# --- 策略參數 (林則行設定) ---
+LOOKBACK_SHORT = 60     # 訊號1: 近一季新高
+LOOKBACK_LONG = 500     # 訊號5: 兩年新高 (輔助判斷)
+VOL_FACTOR = 1.2        # 訊號4: 成交量 > 20日均量 1.2倍
+AMP_LOW_RISK = 0.04     # 訊號4: 振幅 < 4% (低風險)
+AMP_MED_RISK = 0.06     # 訊號4: 振幅 4%~6% (中風險)
+GROWTH_REV = 0.10       # 訊號3: 營收成長 > 10%
+GROWTH_EPS = 0.20       # 訊號3: 獲利成長 > 20%
+SELL_RATIO_THRESHOLD = 1.16 # 賣壓比例 > 116% 出場
 
 DATA_FILE = "data.json"
 
-# --- 預先載入台股代號對照表 ---
+# 預先載入台股代號表
 tw_stock_map = twstock.codes 
 
 def get_stock_name(ticker, region, stock_obj=None):
-    """
-    雙重保險取得中文名稱
-    """
     display_name = ticker
-    
-    # 策略 1: 查表 (twstock)
     if region == 'TW':
         clean_code = ticker.split('.')[0]
         if clean_code in tw_stock_map:
-            display_name = tw_stock_map[clean_code].name
-            return display_name
-            
-    # 策略 2: 問 Yahoo (longName 通常是中文全名)
+            return tw_stock_map[clean_code].name
     if stock_obj:
         try:
             long_name = stock_obj.info.get('longName')
@@ -42,16 +36,13 @@ def get_stock_name(ticker, region, stock_obj=None):
             if short_name: return short_name
         except:
             pass
-            
     return display_name
 
 def get_tw_stock_list():
-    twse = twstock.twse
-    tpex = twstock.tpex
     stocks = []
-    for code in twse:
+    for code in twstock.twse:
         if len(code) == 4: stocks.append({"code": f"{code}.TW", "region": "TW"})
-    for code in tpex:
+    for code in twstock.tpex:
         if len(code) == 4: stocks.append({"code": f"{code}.TWO", "region": "TW"})
     return stocks
 
@@ -69,66 +60,85 @@ def get_us_stock_list():
         return []
 
 def get_financial_details(stock_obj):
-    """抓取基本面 + 營收 YoY + QoQ (雙保險)"""
+    """抓取訊號2 & 3: 營收與獲利成長"""
     data = {
-        "pe": 999, "growth": None, "roe": None,
-        "rev_yoy": None,      # 年增率
-        "rev_qoq": None,      # 季增率 (備用)
-        "rev_last_year": None,# 去年同期營收 (推算)
-        "quarters": []
+        "pe": 999, "growth": None, "rev_yoy": None, 
+        "rev_last_year": None, "quarters": []
     }
-    
     try:
         info = stock_obj.info
         data['pe'] = info.get('trailingPE', 999)
-        if data['pe'] is None: data['pe'] = 999
-        
-        data['growth'] = info.get('earningsGrowth', None)
-        data['roe'] = info.get('returnOnEquity', None)
-        
-        # 1. 抓取年增率 (YoY)
-        data['rev_yoy'] = info.get('revenueGrowth', None)
+        data['growth'] = info.get('earningsGrowth', None) # EPS成長 (對應訊號3: >20%)
+        data['rev_yoy'] = info.get('revenueGrowth', None) # 營收成長 (對應訊號3: >10%)
 
-        # 2. 抓取季營收表 (計算 QoQ 和 歷史數據)
+        # 抓取季營收細節
         q_stmt = stock_obj.quarterly_income_stmt
         if q_stmt is not None and not q_stmt.empty:
             rev_row = None
-            if 'Total Revenue' in q_stmt.index:
-                rev_row = q_stmt.loc['Total Revenue']
-            elif 'Operating Revenue' in q_stmt.index:
-                rev_row = q_stmt.loc['Operating Revenue']
-                
+            if 'Total Revenue' in q_stmt.index: rev_row = q_stmt.loc['Total Revenue']
+            elif 'Operating Revenue' in q_stmt.index: rev_row = q_stmt.loc['Operating Revenue']
+            
             if rev_row is not None:
-                # 取最近 4 季
                 recent_quarters = rev_row.head(4)
-                
-                # A. 嘗試推算去年同期營收 (Last Year Revenue)
-                # 公式: 現在營收 / (1 + YoY)
                 if data['rev_yoy'] is not None and len(recent_quarters) > 0:
-                    current_rev = recent_quarters.iloc[0]
-                    try:
-                        data['rev_last_year'] = current_rev / (1 + data['rev_yoy'])
-                    except:
-                        pass
-                
-                # B. 計算季增率 (QoQ) - 這是備案，如果 YoY 抓不到就用這個
-                if len(recent_quarters) >= 2:
-                    q1 = recent_quarters.iloc[0]
-                    q2 = recent_quarters.iloc[1]
-                    try:
-                        data['rev_qoq'] = (q1 - q2) / q2
-                    except:
-                        pass
-
+                    try: data['rev_last_year'] = recent_quarters.iloc[0] / (1 + data['rev_yoy'])
+                    except: pass
                 for date, revenue in recent_quarters.items():
-                    data['quarters'].append({
-                        "date": date.strftime('%Y-%m'),
-                        "revenue": revenue
-                    })
-    except Exception as e:
-        print(f"財報抓取部分失敗: {e}")
-    
+                    data['quarters'].append({"date": date.strftime('%Y-%m'), "revenue": revenue})
+    except:
+        pass
     return data
+
+def calculate_sell_pressure(df):
+    """
+    計算林則行獨創「賣壓比例」
+    統計過去 20 日的買盤與賣盤量
+    """
+    if len(df) < 22: return 0 # 資料不足
+    
+    # 只取最後 20 天 (要包含前一日以計算 PrevClose)
+    # 實際上我們需要 iterrows 來跑每一天的邏輯
+    subset = df.iloc[-21:] 
+    
+    total_buy_vol = 0
+    total_sell_vol = 0
+    
+    # 從第 2 筆資料開始 (因為第 1 筆是拿來當 PrevClose 的)
+    for i in range(1, len(subset)):
+        today = subset.iloc[i]
+        prev = subset.iloc[i-1]
+        
+        high = today['High']
+        low = today['Low']
+        close = today['Close']
+        prev_close = prev['Close']
+        vol = today['Volume']
+        
+        # 林則行公式：
+        # 上漲波 (Up Power) = (High - PrevClose [若>0]) + (Close - Low [若>0])
+        up_power = max(0, high - prev_close) + max(0, close - low)
+        
+        # 下跌波 (Down Power) = High - Low (當日全振幅視為潛在賣壓區間?) 
+        # 依書中範例: 930(High)跌至905(Low)共下跌25 -> Down = High - Low
+        down_power = high - low
+        
+        total_power = up_power + down_power
+        
+        if total_power == 0:
+            buy_part = vol * 0.5
+            sell_part = vol * 0.5
+        else:
+            buy_part = (up_power / total_power) * vol
+            sell_part = (down_power / total_power) * vol
+            
+        total_buy_vol += buy_part
+        total_sell_vol += sell_part
+        
+    if total_buy_vol == 0: return 999 # 避免除以零
+    
+    # 賣壓比例 = 賣出總量 / 買進總量
+    ratio = total_sell_vol / total_buy_vol
+    return ratio
 
 def analyze_stock(stock_info, check_exit_stocks=None):
     ticker = stock_info['code']
@@ -137,27 +147,39 @@ def analyze_stock(stock_info, check_exit_stocks=None):
     try:
         stock = yf.Ticker(ticker)
         df = stock.history(period="3y") 
-        
         if len(df) < LOOKBACK_LONG + 10: return None
         
         latest = df.iloc[-1]
         prev = df.iloc[-2]
         
-        ma65 = df['Close'].rolling(window=MA_W13).mean()
-        curr_ma65 = ma65.iloc[-1]
-        prev_ma65 = ma65.iloc[-2]
-
-        # 取得名稱 (傳入 stock 物件以啟用雙重保險)
+        # 取得名稱
         display_name = get_stock_name(ticker, region, stock)
 
-        # --- [模式 B] 掃描出場 ---
+        # --- [模式 B] 掃描出場 (賣壓比例) ---
         if check_exit_stocks and ticker in check_exit_stocks:
             buy_price = check_exit_stocks[ticker]
             current_price = latest['Close']
             
-            loss_pct = (current_price - buy_price) / buy_price
-            if loss_pct <= -STOP_LOSS_PCT:
+            # 計算賣壓比例
+            sell_ratio = calculate_sell_pressure(df)
+            
+            # 1. 賣壓比例出場
+            if sell_ratio > SELL_RATIO_THRESHOLD:
                 return {
+                    "type": "sell",
+                    "code": ticker,
+                    "name": display_name,
+                    "region": region,
+                    "price": float(f"{current_price:.2f}"),
+                    "date": latest.name.strftime('%Y-%m-%d'),
+                    "reason": f"賣壓比例過高 ({sell_ratio*100:.1f}%)"
+                }
+
+            # 2. 停損 (原本策略保留)
+            loss_pct = (current_price - buy_price) / buy_price
+            if loss_pct <= -0.08: # 8% 停損
+                return {
+                    "type": "sell",
                     "code": ticker,
                     "name": display_name,
                     "region": region,
@@ -165,71 +187,67 @@ def analyze_stock(stock_info, check_exit_stocks=None):
                     "date": latest.name.strftime('%Y-%m-%d'),
                     "reason": f"觸發停損 (虧損 {loss_pct*100:.1f}%)"
                 }
-
-            is_ma_flattening = curr_ma65 <= prev_ma65
-            if current_price < curr_ma65 and is_ma_flattening:
-                return {
-                    "code": ticker,
-                    "name": display_name,
-                    "region": region,
-                    "price": float(f"{current_price:.2f}"),
-                    "date": latest.name.strftime('%Y-%m-%d'),
-                    "reason": "跌破13週線 且 趨勢轉弱"
-                }
             return None
 
         # --- [模式 A] 掃描進場 ---
         if check_exit_stocks is not None: return None
         
+        # 成交量濾網 (訊號4: 有量)
         min_vol = 500000 if region == 'TW' else 1000000
         if latest['Volume'] < min_vol: return None 
 
+        # 訊號1: 創近一季(60日)新高
         window_high_short = df['Close'][-LOOKBACK_SHORT-1:-1].max()
         is_new_high_short = latest['Close'] > window_high_short
         
+        # 濾網: 首度突破
         was_high_yesterday = prev['Close'] > window_high_short
         is_fresh_breakout = is_new_high_short and (not was_high_yesterday)
 
-        open_price = latest['Open']
-        is_big_candle = (latest['Close'] - open_price) / open_price > 0.015
-
-        if is_fresh_breakout and is_big_candle:
+        if is_fresh_breakout:
+            # 進入詳細檢查
             
-            fin_data = get_financial_details(stock)
-
             score = 3
-            reasons = ["突破季線新高", "實體紅K"]
+            reasons = ["訊號1:創季新高"]
             
-            # 加分項
+            # 訊號4: 價量同步 (成交量 > 20日均量 1.2倍)
+            vol_ma20 = df['Volume'].rolling(window=20).mean().iloc[-1]
+            if latest['Volume'] > vol_ma20 * VOL_FACTOR:
+                score += 1
+                reasons.append(f"訊號4:量增{VOL_FACTOR}倍")
+            
+            # 訊號4: 振幅檢查 (Risk Check)
+            # 振幅 = (High - Low) / Open
+            amplitude = (latest['High'] - latest['Low']) / latest['Open']
+            if amplitude < AMP_LOW_RISK:
+                score += 1
+                reasons.append("訊號4:低風險(振幅<4%)")
+            elif amplitude < AMP_MED_RISK:
+                reasons.append("中風險(振幅4~6%)")
+            else:
+                reasons.append("⚠️高風險(振幅>6%)")
+
+            # 訊號2 & 3: 基本面檢查
+            fin_data = get_financial_details(stock)
+            
+            # 訊號3: 營收成長 > 10%
+            if fin_data['rev_yoy'] is not None and fin_data['rev_yoy'] > GROWTH_REV:
+                score += 2
+                reasons.append(f"訊號3:營收增{fin_data['rev_yoy']*100:.0f}%")
+            
+            # 訊號3: 獲利成長 > 20%
+            if fin_data['growth'] is not None and fin_data['growth'] > GROWTH_EPS:
+                score += 2
+                reasons.append(f"訊號3:獲利增{fin_data['growth']*100:.0f}%")
+            
+            # 訊號5: 兩年新高 (加分項)
             window_high_long = df['Close'][-LOOKBACK_LONG-1:-1].max()
             if latest['Close'] > window_high_long:
-                score += 2
-                reasons.append("★突破兩年新高")
-
-            # 營收加分邏輯 (優先看 YoY，沒有則看 QoQ)
-            growth_rate = fin_data['rev_yoy'] if fin_data['rev_yoy'] is not None else fin_data['rev_qoq']
-            
-            if growth_rate is not None and growth_rate > 0.2:
-                 score += 1
-                 reasons.append("營收大增")
-            
-            if fin_data['growth'] is not None and fin_data['growth'] > 0.15:
                 score += 1
-                reasons.append("EPS高成長")
-            
-            pe_val = fin_data['pe']
-            if pe_val < 30: score += 1
-
-            if fin_data['roe'] is not None and fin_data['roe'] > MIN_ROE:
-                score += 1
-                reasons.append("ROE優秀")
-
-            vol_ma20 = df['Volume'].rolling(window=20).mean().iloc[-1]
-            if latest['Volume'] > vol_ma20 * 1.5:
-                score += 1
-                reasons.append("成交量爆發")
+                reasons.append("訊號5:兩年新高")
 
             return {
+                "type": "buy",
                 "code": ticker,
                 "name": display_name,
                 "region": region,
@@ -237,23 +255,26 @@ def analyze_stock(stock_info, check_exit_stocks=None):
                 "score": score,
                 "reasons": reasons,
                 "fundamentals": {
-                    "pe": "N/A" if pe_val==999 else f"{pe_val:.1f}",
+                    "pe": "N/A" if fin_data['pe']==999 else f"{fin_data['pe']:.1f}",
                     "growth": "N/A" if fin_data['growth'] is None else f"{fin_data['growth']*100:.1f}%",
-                    "roe": "N/A" if fin_data['roe'] is None else f"{fin_data['roe']*100:.1f}%",
-                    "rev_yoy": fin_data['rev_yoy'], 
-                    "rev_qoq": fin_data['rev_qoq'],
+                    "rev_yoy": fin_data['rev_yoy'],
                     "rev_last_year": fin_data['rev_last_year'],
                     "quarters": fin_data['quarters']
                 },
                 "date": latest.name.strftime('%Y-%m-%d')
             }
-        return None
+            
+        # 即使沒入選，如果是創新高，也要回傳一個標記供統計市場寬度
+        if is_new_high_short:
+             return {"type": "stat_only", "is_new_high": True}
+             
+        return {"type": "stat_only", "is_new_high": False}
 
-    except Exception:
+    except:
         return None
 
 def main():
-    print("啟動動能策略 (Git修復 + 中文名V2 + 雙重營收) 掃描...")
+    print("啟動林則行完全攻略掃描 (含賣壓比例)...")
     
     history_data = []
     if os.path.exists(DATA_FILE):
@@ -276,14 +297,26 @@ def main():
     
     today_buys = []
     today_exits = []
+    
+    # 訊號5: 市場寬度統計
+    stat_total_scanned = 0
+    stat_new_high_count = 0
 
-    print(f"正在掃描買點 (共 {len(all_stocks)} 檔)...")
+    print(f"正在掃描 ({len(all_stocks)} 檔)...")
     with ThreadPoolExecutor(max_workers=25) as executor:
         futures = [executor.submit(analyze_stock, stock_info, None) for stock_info in all_stocks]
-        for future in futures:
+        for future in as_completed(futures):
             res = future.result()
-            if res: today_buys.append(res)
+            if res:
+                stat_total_scanned += 1
+                if res.get('type') == 'buy':
+                    today_buys.append(res)
+                    stat_new_high_count += 1
+                elif res.get('type') == 'stat_only':
+                    if res['is_new_high']:
+                        stat_new_high_count += 1
 
+    # 檢查出場
     print(f"正在檢查持倉出場 ({len(holdings_map)} 檔)...")
     if holdings_map:
         check_list = []
@@ -295,14 +328,21 @@ def main():
             futures = [executor.submit(analyze_stock, stock, holdings_map) for stock in check_list]
             for future in futures:
                 res = future.result()
-                if res: today_exits.append(res)
+                if res and res['type'] == 'sell': 
+                    today_exits.append(res)
 
     today_buys.sort(key=lambda x: -x['score'])
     
     market_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
     
+    # 計算市場寬度 %
+    market_breadth_pct = 0
+    if stat_total_scanned > 0:
+        market_breadth_pct = round((stat_new_high_count / stat_total_scanned) * 100, 2)
+    
     new_record = {
         "date": market_date,
+        "market_breadth": market_breadth_pct, # 存入 JSON
         "buy": today_buys,
         "sell": today_exits
     }
@@ -315,7 +355,7 @@ def main():
     with open(DATA_FILE, 'w', encoding='utf-8') as f:
         json.dump(history_data, f, ensure_ascii=False, indent=2)
 
-    print(f"掃描完成！資料已更新至 {DATA_FILE} (Date: {market_date})")
+    print(f"掃描完成！新高家數佔比: {market_breadth_pct}%")
 
 if __name__ == "__main__":
     main()
