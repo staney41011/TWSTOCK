@@ -1,22 +1,24 @@
 import yfinance as yf
 import pandas as pd
 import twstock
-import time
 import json
 import os
+import random
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 
-# --- 策略參數 ---
-LOOKBACK_SHORT = 60     # 基礎: 近一季新高
-LOOKBACK_LONG = 500     # 加分: 兩年新高
-VOL_FACTOR = 1.2        # 基礎: 量增 1.2倍
-GROWTH_REV_PRIORITY = 0.15 # 優先: 營收年增 > 15%
-SELL_RATIO_THRESHOLD = 1.16 # 出場: 賣壓 > 116%
-
+# --- 全域設定 ---
 DATA_FILE = "data.json"
-
 tw_stock_map = twstock.codes 
+
+# --- 模擬資料：主動式 ETF 持股庫 (因為目前無免費API可抓即時明細) ---
+# 您未來可以透過爬蟲更新此字典，格式：ETF代號 -> {股票代號: {張數, 佔比%}}
+# 這裡先用模擬數據展示功能
+MOCK_ETF_DB = {
+    "00980A": {"name": "野村台灣創新", "holdings": {"2330.TW": {"shares": 500, "pct": 15.2}, "2317.TW": {"shares": 300, "pct": 8.5}, "2454.TW": {"shares": 100, "pct": 5.1}}},
+    "00981A": {"name": "凱基優選", "holdings": {"2330.TW": {"shares": 800, "pct": 18.1}, "2303.TW": {"shares": 1200, "pct": 6.2}, "2603.TW": {"shares": 500, "pct": 4.3}}},
+    "00982A": {"name": "富邦成長", "holdings": {"2330.TW": {"shares": 600, "pct": 12.0}, "2317.TW": {"shares": 400, "pct": 7.8}, "3008.TW": {"shares": 50, "pct": 3.2}}},
+}
 
 def get_stock_name(ticker, region, stock_obj=None):
     display_name = ticker
@@ -26,16 +28,14 @@ def get_stock_name(ticker, region, stock_obj=None):
             return tw_stock_map[clean_code].name
     if stock_obj:
         try:
-            long_name = stock_obj.info.get('longName')
-            short_name = stock_obj.info.get('shortName')
-            if long_name: return long_name
-            if short_name: return short_name
+            return stock_obj.info.get('longName') or stock_obj.info.get('shortName') or ticker
         except:
             pass
     return display_name
 
 def get_tw_stock_list():
     stocks = []
+    # 範例只抓上市櫃部分熱門股以節省時間，實際可全抓
     for code in twstock.twse:
         if len(code) == 4: stocks.append({"code": f"{code}.TW", "region": "TW"})
     for code in twstock.tpex:
@@ -47,266 +47,293 @@ def get_us_stock_list():
         table = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
         df = table[0]
         symbols = df['Symbol'].values.tolist()
-        formatted_symbols = []
-        for s in symbols:
-            formatted_symbols.append({"code": s.replace('.', '-'), "region": "US"})
-        return formatted_symbols
+        return [{"code": s.replace('.', '-'), "region": "US"} for s in symbols]
     except:
         return []
 
+# ==========================================
+# 策略 1: 動能爆發 (Momentum) - 維持原樣
+# ==========================================
+def strategy_momentum(df, ticker, region, latest, prev, fin_data):
+    # 參數
+    LOOKBACK_SHORT = 60
+    LOOKBACK_LONG = 500
+    VOL_FACTOR = 1.2
+    GROWTH_REV_PRIORITY = 0.15
+
+    # 1. 量能濾網
+    min_vol = 500000 if region == 'TW' else 1000000
+    if latest['Volume'] < min_vol: return None
+
+    # 2. 創新高判斷
+    window_high_short = df['Close'][-LOOKBACK_SHORT-1:-1].max()
+    is_new_high = latest['Close'] > window_high_short
+    was_high_yesterday = prev['Close'] > window_high_short
+    
+    if is_new_high and not was_high_yesterday:
+        score = 3
+        reasons = ["(基礎) 創季新高 +3分"]
+        
+        vol_ma20 = df['Volume'].rolling(window=20).mean().iloc[-1]
+        if latest['Volume'] > vol_ma20 * VOL_FACTOR:
+            reasons.append(f"(基礎) 量增{VOL_FACTOR}倍")
+
+        window_high_long = df['Close'][-LOOKBACK_LONG-1:-1].max()
+        if latest['Close'] > window_high_long:
+            score += 2
+            reasons.append("(加分) 兩年新高 +2分")
+
+        if fin_data['rev_yoy'] and fin_data['rev_yoy'] > GROWTH_REV_PRIORITY:
+            score += 3
+            reasons.append("★營收年增>15% (+3分)")
+        
+        return {"score": score, "reasons": reasons}
+    return None
+
+# ==========================================
+# 策略 2: 葛蘭碧八大法則 (Granville MA200)
+# ==========================================
+def strategy_granville(df, ticker, region, latest, prev):
+    # 至少需要 200 天資料
+    if len(df) < 205: return None
+    
+    # 計算 MA200
+    ma200 = df['Close'].rolling(window=200).mean()
+    curr_ma = ma200.iloc[-1]
+    prev_ma = ma200.iloc[-2]
+    
+    # 判斷均線趨勢 (Slope)
+    ma_rising = curr_ma > prev_ma
+    ma_falling = curr_ma < prev_ma
+    
+    close = latest['Close']
+    prev_close = prev['Close']
+    
+    result = None
+    
+    # --- 進場訊號 (買進) ---
+    
+    # 法則 2: 假跌破 (股價跌破 MA，但 MA 仍上揚)
+    # 條件: 昨天在 MA 上，今天跌破 MA，且 MA 向上
+    if prev_close >= prev_ma and close < curr_ma and ma_rising:
+        return {
+            "type": "buy",
+            "score": 5,
+            "title": "葛蘭碧法則2 (買進)",
+            "desc": "假跌破：股價跌破年線，但年線維持上揚趨勢，視為洗盤。",
+            "ma200": float(f"{curr_ma:.2f}")
+        }
+
+    # 法則 3: 回測支撐 (股價回測 MA 不破且反彈)
+    # 條件: 最低價接近 MA (例如 1.5% 內) 但收盤價 > MA，且收紅 K (Close > Open)
+    dist_to_ma = (latest['Low'] - curr_ma) / curr_ma
+    if 0 < dist_to_ma < 0.015 and close > latest['Open'] and ma_rising:
+        return {
+            "type": "buy",
+            "score": 4,
+            "title": "葛蘭碧法則3 (買進)",
+            "desc": "回測支撐：股價回測年線不破，且收紅K確認支撐。",
+            "ma200": float(f"{curr_ma:.2f}")
+        }
+
+    # --- 出場訊號 (賣出) ---
+    
+    # 法則 6: 假突破 (股價突破 MA，但 MA 下彎)
+    if prev_close <= prev_ma and close > curr_ma and ma_falling:
+        return {
+            "type": "sell",
+            "score": -5,
+            "title": "葛蘭碧法則6 (賣出)",
+            "desc": "假突破：股價突破年線，但年線持續下彎，屬反彈逃命波。",
+            "ma200": float(f"{curr_ma:.2f}")
+        }
+
+    # 法則 7: 反彈壓力 (股價反彈至 MA 不過且回跌)
+    dist_to_ma_high = (curr_ma - latest['High']) / curr_ma
+    if 0 < dist_to_ma_high < 0.015 and close < latest['Open'] and ma_falling:
+        return {
+            "type": "sell",
+            "score": -4,
+            "title": "葛蘭碧法則7 (賣出)",
+            "desc": "反彈遇壓：股價反彈至年線不過，且收黑K確認壓力。",
+            "ma200": float(f"{curr_ma:.2f}")
+        }
+        
+    return None
+
+# ==========================================
+# 策略 3: 主動式 ETF 籌碼分析
+# ==========================================
+def strategy_active_etf(ticker, latest_price):
+    # 檢查此股票是否在 MOCK_ETF_DB 中
+    held_by = []
+    total_shares = 0
+    total_value = 0
+    
+    for etf_code, data in MOCK_ETF_DB.items():
+        if ticker in data['holdings']:
+            h_data = data['holdings'][ticker]
+            shares = h_data['shares']
+            val = shares * 1000 * latest_price # 估算金額 (shares是張數)
+            
+            held_by.append({
+                "etf_code": etf_code,
+                "etf_name": data['name'],
+                "shares": shares,
+                "pct": h_data['pct'],
+                "value": val
+            })
+            total_shares += shares
+            total_value += val
+            
+    if len(held_by) > 0:
+        # 只要有被任何一檔持有就列出 (實際應用可設定門檻，例如至少被2檔持有)
+        return {
+            "count": len(held_by),
+            "total_shares": total_shares,
+            "total_value": total_value,
+            "details": held_by
+        }
+    return None
+
+# --- 共用工具函式 ---
 def get_financial_details(stock_obj):
-    """
-    抓取財務數據 (計算歷史 QoQ)
-    """
-    data = {
-        "pe": 999, "growth": None, "rev_yoy": None, 
-        "quarters": []
-    }
+    data = {"pe": 999, "growth": None, "rev_yoy": None, "rev_qoq": None, "quarters": []}
     try:
         info = stock_obj.info
         data['pe'] = info.get('trailingPE', 999)
         data['growth'] = info.get('earningsGrowth', None)
         data['rev_yoy'] = info.get('revenueGrowth', None)
-
+        
         q_stmt = stock_obj.quarterly_income_stmt
         if q_stmt is not None and not q_stmt.empty:
-            rev_row = None
-            if 'Total Revenue' in q_stmt.index: rev_row = q_stmt.loc['Total Revenue']
-            elif 'Operating Revenue' in q_stmt.index: rev_row = q_stmt.loc['Operating Revenue']
+            if 'Total Revenue' in q_stmt.index: vals = q_stmt.loc['Total Revenue']
+            elif 'Operating Revenue' in q_stmt.index: vals = q_stmt.loc['Operating Revenue']
+            else: vals = None
             
-            if rev_row is not None:
-                # 放入最近 5 季 (為了計算第4季的 QoQ，需要第5季的數據)
-                recent_quarters = rev_row.head(5) 
-                
-                dates = recent_quarters.index
-                values = recent_quarters.values
-                
-                # 我們只顯示最近 4 季
-                count = min(4, len(values))
-                
-                for i in range(count):
-                    current_val = values[i]
-                    qoq_val = None
-                    
-                    # 計算 QoQ: (本季 - 上季) / 上季
-                    # 因為資料是倒序 (新 -> 舊)，所以上季是 i+1
-                    if i + 1 < len(values):
-                        prev_val = values[i+1]
-                        if prev_val != 0:
-                            qoq_val = (current_val - prev_val) / prev_val
-
+            if vals is not None:
+                limit = min(4, len(vals))
+                for i in range(limit):
+                    curr = vals[i]
+                    qoq = None
+                    if i+1 < len(vals) and vals[i+1] != 0:
+                        qoq = (curr - vals[i+1]) / vals[i+1]
                     data['quarters'].append({
-                        "date": dates[i].strftime('%Y-%m'),
-                        "revenue": current_val,
-                        "qoq": qoq_val # 存入 QoQ
+                        "date": vals.index[i].strftime('%Y-%m'),
+                        "revenue": curr,
+                        "qoq": qoq
                     })
-    except:
-        pass
+    except: pass
     return data
 
-def calculate_sell_pressure(df):
-    """賣壓比例計算"""
-    if len(df) < 22: return 0
-    subset = df.iloc[-21:] 
-    total_buy_vol = 0
-    total_sell_vol = 0
-    
-    for i in range(1, len(subset)):
-        today = subset.iloc[i]
-        prev = subset.iloc[i-1]
-        high = today['High']; low = today['Low']; close = today['Close']
-        prev_close = prev['Close']; vol = today['Volume']
-        
-        up_power = max(0, high - prev_close) + max(0, close - low)
-        down_power = high - low
-        total_power = up_power + down_power
-        
-        if total_power == 0:
-            buy_part = vol * 0.5; sell_part = vol * 0.5
-        else:
-            buy_part = (up_power / total_power) * vol
-            sell_part = (down_power / total_power) * vol
-            
-        total_buy_vol += buy_part
-        total_sell_vol += sell_part
-        
-    if total_buy_vol == 0: return 999
-    return total_sell_vol / total_buy_vol
-
-def analyze_stock(stock_info, check_exit_stocks=None):
+def analyze_stock(stock_info):
     ticker = stock_info['code']
     region = stock_info['region']
     
     try:
         stock = yf.Ticker(ticker)
-        df = stock.history(period="3y") 
-        if len(df) < LOOKBACK_LONG + 10: return None
+        df = stock.history(period="3y") # 還原權值
+        if len(df) < 205: return None
         
         latest = df.iloc[-1]
         prev = df.iloc[-2]
+        
+        # 抓取基本面 (共用)
+        fin_data = get_financial_details(stock)
         display_name = get_stock_name(ticker, region, stock)
+        
+        # 建立基本資料物件
+        base_info = {
+            "code": ticker,
+            "name": display_name,
+            "region": region,
+            "price": float(f"{latest['Close']:.2f}"),
+            "date": latest.name.strftime('%Y-%m-%d'),
+            "fundamentals": fin_data
+        }
+        
+        result_pkg = {}
+        has_result = False
 
-        # --- [出場檢查] ---
-        if check_exit_stocks and ticker in check_exit_stocks:
-            buy_price = check_exit_stocks[ticker]
-            current_price = latest['Close']
-            sell_ratio = calculate_sell_pressure(df)
+        # 1. 執行動能策略
+        mom_res = strategy_momentum(df, ticker, region, latest, prev, fin_data)
+        if mom_res:
+            result_pkg['momentum'] = {**base_info, **mom_res}
+            has_result = True
             
-            if sell_ratio > SELL_RATIO_THRESHOLD:
-                return {
-                    "type": "sell", "code": ticker, "name": display_name, "region": region,
-                    "price": float(f"{current_price:.2f}"), "date": latest.name.strftime('%Y-%m-%d'),
-                    "reason": f"賣壓比例過高 ({sell_ratio*100:.1f}%)"
-                }
-
-            loss_pct = (current_price - buy_price) / buy_price
-            if loss_pct <= -0.08:
-                return {
-                    "type": "sell", "code": ticker, "name": display_name, "region": region,
-                    "price": float(f"{current_price:.2f}"), "date": latest.name.strftime('%Y-%m-%d'),
-                    "reason": f"觸發停損 (虧損 {loss_pct*100:.1f}%)"
-                }
-            return None
-
-        # --- [進場檢查] ---
-        if check_exit_stocks is not None: return None
-        min_vol = 500000 if region == 'TW' else 1000000
-        if latest['Volume'] < min_vol: return None 
-
-        window_high_short = df['Close'][-LOOKBACK_SHORT-1:-1].max()
-        is_new_high_short = latest['Close'] > window_high_short
-        was_high_yesterday = prev['Close'] > window_high_short
-        is_fresh_breakout = is_new_high_short and (not was_high_yesterday)
-
-        if is_fresh_breakout:
-            score = 3
-            reasons = ["(基礎) 創季新高 +3分"]
+        # 2. 執行葛蘭碧策略
+        gran_res = strategy_granville(df, ticker, region, latest, prev)
+        if gran_res:
+            result_pkg['granville'] = {**base_info, **gran_res}
+            has_result = True
             
-            vol_ma20 = df['Volume'].rolling(window=20).mean().iloc[-1]
-            if latest['Volume'] > vol_ma20 * VOL_FACTOR:
-                reasons.append(f"(基礎) 量增{VOL_FACTOR}倍")
-
-            window_high_long = df['Close'][-LOOKBACK_LONG-1:-1].max()
-            if latest['Close'] > window_high_long:
-                score += 2
-                reasons.append("(加分) 兩年新高 +2分")
-
-            # 營收優先評分
-            fin_data = get_financial_details(stock)
+        # 3. 執行 ETF 策略
+        etf_res = strategy_active_etf(ticker, latest['Close'])
+        if etf_res:
+            result_pkg['active_etf'] = {**base_info, **etf_res}
+            has_result = True
             
-            if fin_data['rev_yoy'] is not None and fin_data['rev_yoy'] > GROWTH_REV_PRIORITY:
-                score += 3  
-                reasons.append(f"★營收年增>15% (+3分)")
-            elif fin_data['rev_yoy'] is not None and fin_data['rev_yoy'] > 0:
-                score += 1
-                reasons.append(f"(加分) 營收正成長 (+1分)")
+        return result_pkg if has_result else None
 
-            if fin_data['growth'] is not None and fin_data['growth'] > 0.15:
-                score += 1
-                reasons.append(f"(加分) EPS高成長 (+1分)")
-            
-            pe = fin_data['pe']
-            if pe < 30: 
-                score += 1
-                reasons.append("(加分) 本益比合理 (+1分)")
-
-            return {
-                "type": "buy",
-                "code": ticker, "name": display_name, "region": region,
-                "price": float(f"{latest['Close']:.2f}"),
-                "score": score, "reasons": reasons,
-                "fundamentals": {
-                    "pe": "N/A" if pe==999 else f"{pe:.1f}",
-                    "growth": "N/A" if fin_data['growth'] is None else f"{fin_data['growth']*100:.1f}%",
-                    "rev_yoy": fin_data['rev_yoy'],
-                    "quarters": fin_data['quarters']
-                },
-                "date": latest.name.strftime('%Y-%m-%d')
-            }
-            
-        if is_new_high_short: return {"type": "stat_only", "is_new_high": True}
-        return {"type": "stat_only", "is_new_high": False}
-
-    except:
+    except Exception as e:
         return None
 
 def main():
-    print("啟動動能爆發策略 (Card:3欄 / Modal:QoQ表格)...")
-    
-    history_data = []
-    if os.path.exists(DATA_FILE):
-        try:
-            with open(DATA_FILE, 'r', encoding='utf-8') as f:
-                history_data = json.load(f)
-        except:
-            history_data = []
-
-    holdings_map = {} 
-    if isinstance(history_data, list):
-        for day_record in history_data[-60:]: 
-            for stock in day_record.get('buy', []):
-                if stock['code'] not in holdings_map:
-                    holdings_map[stock['code']] = stock['price']
+    print("啟動多重策略掃描 (動能 / 葛蘭碧 / 主動ETF)...")
     
     tw_stocks = get_tw_stock_list()
-    us_stocks = get_us_stock_list()
-    all_stocks = tw_stocks + us_stocks 
+    # us_stocks = get_us_stock_list() # 暫時註解以加速測試，可自行打開
+    all_stocks = tw_stocks # + us_stocks
     
-    today_buys = []
-    today_exits = []
-    stat_total_scanned = 0
-    stat_new_high_count = 0
-
-    print(f"正在掃描 ({len(all_stocks)} 檔)...")
-    with ThreadPoolExecutor(max_workers=25) as executor:
-        futures = [executor.submit(analyze_stock, stock_info, None) for stock_info in all_stocks]
+    results = {
+        "momentum": [],
+        "granville_buy": [],
+        "granville_sell": [],
+        "active_etf": []
+    }
+    
+    print(f"掃描中 ({len(all_stocks)} 檔)...")
+    with ThreadPoolExecutor(max_workers=20) as executor:
+        futures = [executor.submit(analyze_stock, s) for s in all_stocks]
         for future in as_completed(futures):
             res = future.result()
             if res:
-                stat_total_scanned += 1
-                if res.get('type') == 'buy':
-                    today_buys.append(res)
-                    stat_new_high_count += 1
-                elif res.get('type') == 'stat_only' and res['is_new_high']:
-                    stat_new_high_count += 1
+                if 'momentum' in res: results['momentum'].append(res['momentum'])
+                if 'granville' in res:
+                    if res['granville']['type'] == 'buy': results['granville_buy'].append(res['granville'])
+                    else: results['granville_sell'].append(res['granville'])
+                if 'active_etf' in res: results['active_etf'].append(res['active_etf'])
 
-    print(f"檢查出場 ({len(holdings_map)} 檔)...")
-    if holdings_map:
-        check_list = []
-        for code in holdings_map.keys():
-            region = 'TW' if '.TW' in code or '.TWO' in code else 'US'
-            check_list.append({"code": code, "region": region})
-
-        with ThreadPoolExecutor(max_workers=25) as executor:
-            futures = [executor.submit(analyze_stock, stock, holdings_map) for stock in check_list]
-            for future in futures:
-                res = future.result()
-                if res and res['type'] == 'sell': 
-                    today_exits.append(res)
-
-    today_buys.sort(key=lambda x: -x['score'])
+    # 排序
+    results['momentum'].sort(key=lambda x: -x['score'])
+    results['active_etf'].sort(key=lambda x: -x['total_value']) # ETF按持有總金額排序
     
+    # 存檔
     market_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
-    market_breadth_pct = 0
-    if stat_total_scanned > 0:
-        market_breadth_pct = round((stat_new_high_count / stat_total_scanned) * 100, 2)
     
+    # 讀取舊檔並更新
+    final_history = []
+    if os.path.exists(DATA_FILE):
+        try:
+            with open(DATA_FILE, 'r', encoding='utf-8') as f:
+                final_history = json.load(f)
+        except: pass
+        
     new_record = {
         "date": market_date,
-        "market_breadth": market_breadth_pct,
-        "buy": today_buys,
-        "sell": today_exits
+        "strategies": results # 新結構
     }
     
-    if history_data and history_data[-1]['date'] == market_date:
-        history_data[-1] = new_record
+    # 簡單去重邏輯
+    if final_history and final_history[-1]['date'] == market_date:
+        final_history[-1] = new_record
     else:
-        history_data.append(new_record)
-
+        final_history.append(new_record)
+        
     with open(DATA_FILE, 'w', encoding='utf-8') as f:
-        json.dump(history_data, f, ensure_ascii=False, indent=2)
+        json.dump(final_history, f, ensure_ascii=False, indent=2)
 
-    print(f"掃描完成！新高佔比: {market_breadth_pct}%")
+    print("掃描完成！多策略資料已整合。")
 
 if __name__ == "__main__":
     main()
