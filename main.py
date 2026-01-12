@@ -138,66 +138,113 @@ def strategy_day_trading(df, ticker, region, latest):
     return {"drop_pct": round(body_pct * 100, 2), "rise_20d": round(rise_20d * 100, 2), "vol_lots": int(vol / 1000), "amount_yi": round(amount / 100000000, 2)}
 
 # ==========================================
-# 策略 4: 十字星主升起漲 (Doji Rise) - New!
+# 策略 4: 十字星主升起漲 (阿嶽版) - V2 Update
 # ==========================================
 def strategy_doji_rise(df, ticker, region, latest):
-    # 需要足夠資料計算 MA60, MA20
     if len(df) < 65: return None
     
-    # 1. 趨勢條件
-    # MA20
-    ma20 = df['Close'].rolling(window=20).mean()
-    curr_ma20 = ma20.iloc[-1]
-    
-    # MA60 (季線) 走平或上彎
-    ma60 = df['Close'].rolling(window=60).mean()
-    curr_ma60 = ma60.iloc[-1]
-    prev_ma60 = ma60.iloc[-2] # 簡單判斷斜率
-    
-    # 股價必須站上月線，且季線不準明顯下彎
-    if latest['Close'] < curr_ma20: return None
-    if curr_ma60 < prev_ma60 * 0.999: return None # 允許極微幅波動，但大致要平或上
-    
-    # 2. 十字星型態定義
-    open_p = latest['Open']
-    close_p = latest['Close']
-    high_p = latest['High']
-    low_p = latest['Low']
-    
-    # 實體極小 (絕對漲跌幅 < 0.75%)
-    body_size_pct = abs(close_p - open_p) / open_p
-    if body_size_pct > 0.0075: return None 
-    
-    # 必須有影線 (High - Low > 實體) -> 排除極小波動的一字線
-    total_range = high_p - low_p
-    if total_range == 0 or total_range < (abs(close_p - open_p) * 1.5): return None
-
-    # 3. 量能條件 (量縮)
-    # 成交量小於近 5 日均量
+    # 資料準備
+    close = latest['Close']
     vol = latest['Volume']
-    vol_ma5 = df['Volume'].rolling(window=5).mean().iloc[-1]
-    if vol >= vol_ma5: return None
     
-    # 4. 結構條件 (橫盤整理)
-    # 檢查過去 5 天的最高與最低，波動幅度收斂
-    # 簡單邏輯：過去 5 天的 (Max High - Min Low) / Avg Price 不應過大，且沒有創波段新高
-    past_5_days = df.iloc[-6:-1] # 不含今天
-    recent_high = past_5_days['High'].max()
-    # recent_low = past_5_days['Low'].min()
+    # 計算均線
+    ma5_vol = df['Volume'].rolling(window=5).mean().iloc[-1]
+    ma20 = df['Close'].rolling(window=20).mean().iloc[-1]
+    ma60 = df['Close'].rolling(window=60).mean().iloc[-1]
+    ma60_prev = df['Close'].rolling(window=60).mean().iloc[-2]
     
-    # 今天收盤沒有突破過去 5 天最高 (確保是整理區)
-    if close_p > recent_high * 1.02: return None 
+    # ----------------------------------
+    # 【一、流動性濾網】(Hard Stop)
+    # 1. 5日均量 >= 5000 張 (5,000,000股)
+    # 2. 或 5日均值 >= 10 億 (1,000,000,000)
+    # ----------------------------------
+    avg_price_5d = df['Close'][-5:].mean()
+    avg_value_5d = ma5_vol * avg_price_5d
     
-    # 確保前面有一段漲幅 (第一段拉升) -> 簡單判斷: 現在價格 > 20天前價格 5% 以上
-    price_20_ago = df['Close'].iloc[-21]
-    if close_p < price_20_ago * 1.05: return None
+    is_liquid_vol = ma5_vol >= 5000000 
+    is_liquid_val = avg_value_5d >= 1000000000
+    
+    if not (is_liquid_vol or is_liquid_val): return None # 流動性不足直接剔除
+
+    # ----------------------------------
+    # 【二、趨勢結構】(Hard Stop)
+    # 1. 股價 > 20MA & 60MA
+    # 2. 60MA 走平或上彎
+    # ----------------------------------
+    if close < ma20 or close < ma60: return None
+    if ma60 < ma60_prev: return None # 季線下彎剔除
+
+    # ----------------------------------
+    # 【三、整理型態】
+    # 檢查過去 10 天是否暴漲 (避免主升段追高)
+    # 簡單定義：過去 10 天漲幅不應超過 30% (若是噴出段通常很陡)
+    price_10_ago = df['Close'].iloc[-11]
+    if (close - price_10_ago) / price_10_ago > 0.30: return None # 漲太兇先避開
+
+    # ----------------------------------
+    # 【四、十字星條件】
+    # 實體極小 (< 0.6%)
+    open_p = latest['Open']
+    body_pct = abs(close - open_p) / open_p
+    if body_pct > 0.006: return None 
+    
+    # 必須有影線 (高低差 > 實體)
+    high_p = latest['High']; low_p = latest['Low']
+    range_pct = (high_p - low_p) / open_p
+    if range_pct < 0.01: return None # 波動太小(一字線)也不要
+
+    # ----------------------------------
+    # 【五、量能結構】
+    # 理想：今日量約為 5日均量 ±20% (0.8 ~ 1.2 倍)
+    # 濾網：禁止極端爆量 (>1.5倍) 或 極端縮量 (<0.5倍)
+    vol_ratio = vol / ma5_vol
+    if vol_ratio > 1.5: return None # 爆量剔除
+    if vol_ratio < 0.5: return None # 無量剔除
+
+    # ----------------------------------
+    # 【八、評分邏輯】(Score)
+    # 基礎分 60
+    # ----------------------------------
+    score = 60
+    reasons = ["結構+十字星成立 (60分)"]
+
+    # 加分項
+    if ma5_vol >= 10000000: # 萬張以上大熱門
+        score += 5
+        reasons.append("成交量大 (+5)")
+    
+    # 量能漂亮 (0.8 ~ 1.2)
+    if 0.8 <= vol_ratio <= 1.2:
+        score += 5
+        reasons.append("量能穩健整理 (+5)")
+        
+    # 族群同步 (這裡用簡單的均線多頭排列代替族群轉強)
+    ma5 = df['Close'].rolling(window=5).mean().iloc[-1]
+    ma10 = df['Close'].rolling(window=10).mean().iloc[-1]
+    if ma5 > ma10 > ma20 > ma60:
+        score += 5
+        reasons.append("均線多頭排列 (+5)")
+
+    # 扣分項
+    # 量能在門檻邊緣 (例如剛好 5000 張)
+    if ma5_vol < 6000000:
+        score -= 5
+        reasons.append("流動性邊緣 (-5)")
+    
+    if vol_ratio > 1.3: # 雖然沒爆量但稍微偏大
+        score -= 5
+        reasons.append("量能稍大 (-5)")
+
+    # 篩選結果 (只回傳 60分以上)
+    if score < 60: return None
 
     return {
+        "score": score,
         "pattern": "量縮十字星",
+        "vol_ratio": round(vol_ratio * 100, 1),
+        "vol_avg_val": round(avg_value_5d / 100000000, 1), # 5日均值(億)
         "trend": "多頭整理",
-        "vol_ratio": round((vol / vol_ma5) * 100, 1), # 成交量/均量 %
-        "ma20": float(f"{curr_ma20:.2f}"),
-        "ma60_trend": "上揚" if curr_ma60 >= prev_ma60 else "走平"
+        "reasons": reasons
     }
 
 # ==========================================
@@ -239,7 +286,7 @@ def analyze_stock(stock_info):
     region = stock_info['region']
     try:
         stock = yf.Ticker(ticker)
-        # 維持還原權值 (auto_adjust=True) 以符合大部分策略需求
+        # 預設還原權值
         df = stock.history(period="3y") 
         if len(df) < 205: return None
         
@@ -258,19 +305,14 @@ def analyze_stock(stock_info):
         pkg = {}
         has_res = False
 
-        # 1. 動能
         if res := strategy_momentum(df, ticker, region, latest, prev, fin_data):
             pkg['momentum'] = {**base, **res}; has_res = True
-        # 2. 葛蘭碧
         if res := strategy_granville(df, ticker, region, latest, prev):
             pkg['granville'] = {**base, **res}; has_res = True
-        # 3. 隔日沖
         if res := strategy_day_trading(df, ticker, region, latest):
             pkg['day_trading'] = {**base, **res}; has_res = True
-        # 4. 十字星 (New)
         if res := strategy_doji_rise(df, ticker, region, latest):
             pkg['doji_rise'] = {**base, **res}; has_res = True
-        # 5. ETF
         if res := strategy_active_etf(ticker, latest['Close']):
             pkg['active_etf'] = {**base, **res}; has_res = True
             
@@ -278,7 +320,7 @@ def analyze_stock(stock_info):
     except: return None
 
 def main():
-    print("啟動全策略掃描 (含十字星主升)...")
+    print("啟動全策略掃描 (十字星V2版)...")
     stocks = get_tw_stock_list() # + get_us_stock_list()
     res = {
         "momentum": [], "granville_buy": [], "granville_sell": [], 
@@ -300,8 +342,8 @@ def main():
 
     res['momentum'].sort(key=lambda x: -x['score'])
     res['day_trading'].sort(key=lambda x: -x['rise_20d'])
-    # 十字星可以按量縮程度排序 (成交量/均量 越小越好)
-    res['doji_rise'].sort(key=lambda x: x['vol_ratio']) 
+    # 十字星按分數排序 (越高分越好)
+    res['doji_rise'].sort(key=lambda x: -x['score']) 
     
     final = []
     market_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
