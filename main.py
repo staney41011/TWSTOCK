@@ -41,7 +41,7 @@ def get_tw_stock_list():
     return stocks
 
 # ==========================================
-# 策略 1: 動能爆發 (Momentum) - 原始邏輯
+# 策略 1: 動能爆發 (Momentum)
 # ==========================================
 def strategy_momentum(df, ticker, region, latest, prev, fin_data):
     LOOKBACK_SHORT = 60
@@ -52,7 +52,7 @@ def strategy_momentum(df, ticker, region, latest, prev, fin_data):
     min_vol = 500000 if region == 'TW' else 1000000
     if latest['Volume'] < min_vol: return None
 
-    # 創新高判斷 (還原權值 Close)
+    # 還原權值 Close 判斷
     window_high_short = df['Close'][-LOOKBACK_SHORT-1:-1].max()
     is_new_high = latest['Close'] > window_high_short
     was_high_yesterday = prev['Close'] > window_high_short
@@ -118,46 +118,66 @@ def strategy_granville(df, ticker, region, latest, prev):
     return None
 
 # ==========================================
-# 策略 3: 隔日沖 - 強勢回檔
+# 策略 3: 隔日沖 - 漲停回檔 (New Logic)
 # ==========================================
 def strategy_day_trading(df, ticker, region, latest):
     if len(df) < 50: return None
-    open_p = latest['Open']; close_p = latest['Close']
-    if close_p >= open_p: return None
-    body_pct = (open_p - close_p) / open_p
-    if body_pct <= 0.035: return None
     
-    vol = latest['Volume']
-    if vol < 300000: return None
-    amount = close_p * vol
-    if amount < 50000000: return None
-    
-    price_20_ago = df['Close'].iloc[-21]
-    rise_20d = (close_p - price_20_ago) / price_20_ago
-    if rise_20d <= 0.20: return None
-    
-    price_3_ago = df['Close'].iloc[-4]
-    rise_3d = (close_p - price_3_ago) / price_3_ago
-    if rise_3d <= 0.10: return None
-    
+    # 1. 均線排列條件
+    # MA3 > MA4 (極短線多頭) 且 MA45 > MA46 (中長線多頭)
+    ma3 = df['Close'].rolling(window=3).mean().iloc[-1]
+    ma4 = df['Close'].rolling(window=4).mean().iloc[-1]
     ma45 = df['Close'].rolling(window=45).mean().iloc[-1]
     ma46 = df['Close'].rolling(window=46).mean().iloc[-1]
-    if ma45 <= ma46: return None
     
-    return {"drop_pct": round(body_pct * 100, 2), "rise_20d": round(rise_20d * 100, 2), "vol_lots": int(vol / 1000), "amount_yi": round(amount / 100000000, 2)}
+    if not (ma3 > ma4 and ma45 > ma46): return None
+    
+    # 2. K線型態 (前三日檢查)
+    # Day 0 (Today): 收黑 K
+    today = df.iloc[-1]
+    if today['Close'] >= today['Open']: return None # 必須收黑
+    
+    # Day -1 (Yesterday): 漲停 (漲幅 > 9.5%)
+    day_prev = df.iloc[-2]
+    day_prev_2 = df.iloc[-3]
+    
+    # 計算昨天漲幅 (昨日收盤 / 前天收盤 - 1)
+    prev_change = (day_prev['Close'] - day_prev_2['Close']) / day_prev_2['Close']
+    if prev_change < 0.095: return None # 昨天必須漲停
+    
+    # Day -2 (Two days ago): 收紅 K
+    day_prev_3 = df.iloc[-4]
+    if day_prev_2['Close'] <= day_prev_2['Open']: return None # 前天必須收紅
+    
+    # 3. 趨勢條件 (維持強勢股邏輯)
+    # 近 20 日漲幅 > 20%
+    price_20_ago = df['Close'].iloc[-21]
+    rise_20d = (today['Close'] - price_20_ago) / price_20_ago
+    if rise_20d <= 0.20: return None
+    
+    # 4. 成交量濾網
+    vol = today['Volume']
+    if vol < 300000: return None # 300張
+    amount = today['Close'] * vol
+    if amount < 50000000: return None # 0.5億
+    
+    # 計算今日跌幅供顯示
+    drop_pct = (today['Open'] - today['Close']) / today['Open']
+    
+    return {
+        "drop_pct": round(drop_pct * 100, 2),
+        "rise_20d": round(rise_20d * 100, 2),
+        "vol_lots": int(vol / 1000),
+        "amount_yi": round(amount / 100000000, 2),
+        "pattern": "連紅漲停後黑K"
+    }
 
 # ==========================================
-# 策略 4: 十字星主升起漲 (完整濾網版)
+# 策略 4: 十字星主升起漲 (完整濾網)
 # ==========================================
 def strategy_doji_rise(df, ticker, region, latest):
     if len(df) < 65: return None
-    
-    close = latest['Close']
-    open_p = latest['Open']
-    high_p = latest['High']
-    low_p = latest['Low']
-    vol = latest['Volume']
-    
+    close = latest['Close']; open_p = latest['Open']; high_p = latest['High']; low_p = latest['Low']; vol = latest['Volume']
     ma5_vol = df['Volume'].rolling(window=5).mean().iloc[-1]
     ma20 = df['Close'].rolling(window=20).mean().iloc[-1]
     ma60 = df['Close'].rolling(window=60).mean().iloc[-1]
@@ -172,15 +192,13 @@ def strategy_doji_rise(df, ticker, region, latest):
     if close < ma20 or close < ma60: return None
     if ma60 < ma60_prev: return None
 
-    # 3. 整理型態 (乖離率濾網)
+    # 3. 整理
     if close / ma20 > 1.15: return None 
 
     # 4. 十字星
     body_pct = abs(close - open_p) / open_p
     if body_pct > 0.006: return None 
-    
-    total_range = high_p - low_p
-    body_range = abs(close - open_p)
+    total_range = high_p - low_p; body_range = abs(close - open_p)
     if total_range < body_range * 2: return None
     if total_range == 0: return None
 
@@ -192,39 +210,16 @@ def strategy_doji_rise(df, ticker, region, latest):
     # 評分
     score = 60
     reasons = ["結構+十字星成立 (60分)"]
-
-    if ma5_vol >= 10000000 or avg_value_5d >= 2000000000:
-        score += 5
-        reasons.append("流動性極佳 (+5)")
-    
-    if 0.8 <= vol_ratio <= 1.2:
-        score += 5
-        reasons.append("量能平穩 (+5)")
-        
+    if ma5_vol >= 10000000 or avg_value_5d >= 2000000000: score += 5; reasons.append("流動性極佳 (+5)")
+    if 0.8 <= vol_ratio <= 1.2: score += 5; reasons.append("量能平穩 (+5)")
     ma5 = df['Close'].rolling(window=5).mean().iloc[-1]
     ma10 = df['Close'].rolling(window=10).mean().iloc[-1]
-    if ma5 > ma10 > ma20 > ma60:
-        score += 5
-        reasons.append("均線多頭排列 (+5)")
-
-    if ma5_vol < 6000000 and avg_value_5d < 1200000000:
-        score -= 10
-        reasons.append("流動性邊緣 (-10)")
-    
-    if vol_ratio > 1.3:
-        score -= 5
-        reasons.append("量能稍大 (-5)")
+    if ma5 > ma10 > ma20 > ma60: score += 5; reasons.append("均線多頭排列 (+5)")
+    if ma5_vol < 6000000 and avg_value_5d < 1200000000: score -= 10; reasons.append("流動性邊緣 (-10)")
+    if vol_ratio > 1.3: score -= 5; reasons.append("量能稍大 (-5)")
 
     if score < 60: return None
-
-    return {
-        "score": score,
-        "pattern": "標準十字星",
-        "vol_ratio": round(vol_ratio * 100, 1),
-        "vol_avg_val": round(avg_value_5d / 100000000, 1),
-        "trend": "多頭整理",
-        "reasons": reasons
-    }
+    return {"score": score, "pattern": "標準十字星", "vol_ratio": round(vol_ratio * 100, 1), "vol_avg_val": round(avg_value_5d / 100000000, 1), "trend": "多頭整理", "reasons": reasons}
 
 # ==========================================
 # 策略 5: 主動式 ETF
@@ -265,13 +260,14 @@ def analyze_stock(stock_info):
     region = stock_info['region']
     try:
         stock = yf.Ticker(ticker)
+        # 還原權值 auto_adjust=True
         df = stock.history(period="3y") 
         if len(df) < 205: return None
         
         latest = df.iloc[-1]
         prev = df.iloc[-2]
         
-        # 1. 統計用：檢查是否創60日新高 (不管策略如何都檢查)
+        # 統計用: 創新高
         window_high_short = df['Close'][-61:-1].max()
         is_60d_high = latest['Close'] > window_high_short
         
@@ -300,11 +296,10 @@ def analyze_stock(stock_info):
             pkg['active_etf'] = {**base, **res}; has_res = True
             
         return {"result": pkg if has_res else None, "is_60d_high": is_60d_high}
-        
     except: return None
 
 def main():
-    print("啟動全策略掃描 (含創新高佔比統計)...")
+    print("啟動全策略掃描 (含漲停回檔)...")
     stocks = get_tw_stock_list() # + get_us_stock_list()
     res = {
         "momentum": [], "granville_buy": [], "granville_sell": [], 
@@ -321,7 +316,6 @@ def main():
             if ret:
                 stat_total += 1
                 if ret['is_60d_high']: stat_new_high += 1
-                
                 r = ret['result']
                 if r:
                     if 'momentum' in r: res['momentum'].append(r['momentum'])
@@ -336,10 +330,8 @@ def main():
     res['day_trading'].sort(key=lambda x: -x['rise_20d'])
     res['doji_rise'].sort(key=lambda x: -x['score']) 
     
-    # 計算市場寬度
     market_breadth = 0
-    if stat_total > 0:
-        market_breadth = round((stat_new_high / stat_total) * 100, 2)
+    if stat_total > 0: market_breadth = round((stat_new_high / stat_total) * 100, 2)
     
     final = []
     market_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
@@ -347,12 +339,7 @@ def main():
         try: final = json.load(open(DATA_FILE))
         except: pass
         
-    rec = {
-        "date": market_date, 
-        "market_breadth": market_breadth, # 存入創新高佔比
-        "strategies": res
-    }
-    
+    rec = {"date": market_date, "market_breadth": market_breadth, "strategies": res}
     if final and final[-1]['date'] == market_date: final[-1] = rec
     else: final.append(rec)
         
