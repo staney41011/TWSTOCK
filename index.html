@@ -38,25 +38,19 @@
     <div v-if="currentRecord.market_breadth !== undefined" 
          class="mb-8 p-4 rounded-lg flex items-center justify-between border"
          :class="currentRecord.market_breadth > 2 ? 'bg-red-900/30 border-red-700' : 'bg-blue-900/30 border-blue-700'">
-        
         <div class="flex items-center gap-4">
             <div class="p-3 rounded-full" :class="currentRecord.market_breadth > 2 ? 'bg-red-600' : 'bg-blue-600'">
                 <svg v-if="currentRecord.market_breadth > 2" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                 <svg v-else class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
             </div>
             <div>
-                <h3 class="text-sm font-bold" :class="currentRecord.market_breadth > 2 ? 'text-red-300' : 'text-blue-300'">全市場創新高佔比 (60日)</h3>
+                <h3 class="text-sm font-bold" :class="currentRecord.market_breadth > 2 ? 'text-red-300' : 'text-blue-300'">全市場創新高佔比</h3>
                 <div class="text-3xl font-bold text-white mt-1">
                     {{ currentRecord.market_breadth }}%
                     <span v-if="currentRecord.market_breadth > 2" class="text-sm bg-red-600 text-white px-2 py-1 rounded ml-2 animate-pulse">🔥 多頭強盛 (>2%)</span>
                     <span v-else class="text-sm text-gray-400 ml-2">🧊 市場冷靜中</span>
                 </div>
             </div>
-        </div>
-        
-        <div class="text-right text-gray-400 text-xs hidden md:block max-w-xs">
-            統計今日收盤價創下過去 60 日新高的股票數量佔全市場比例。
-            <br>通常 > 2% 代表多頭氣氛熱絡，易有追價買盤。
         </div>
     </div>
 
@@ -83,7 +77,7 @@
             <span class="mr-2">💡</span> 
             <span v-if="currentStrategy === 'momentum'">動能爆發 - 篩選邏輯</span>
             <span v-if="currentStrategy === 'doji_rise'">十字星主升起漲 (完整濾網版) - 篩選邏輯</span>
-            <span v-if="currentStrategy === 'day_trading'">隔日沖 (強勢回檔) - 篩選邏輯</span>
+            <span v-if="currentStrategy === 'day_trading'">隔日沖 (漲停回檔) - 篩選邏輯</span>
             <span v-if="currentStrategy === 'granville'">葛蘭碧八大法則 - 篩選邏輯</span>
             <span v-if="currentStrategy === 'etf'">主動式 ETF - 篩選邏輯</span>
         </h3>
@@ -96,16 +90,16 @@
             </ul>
 
             <ul v-if="currentStrategy === 'doji_rise'" class="space-y-1 list-disc list-inside">
-                <li><b class="text-yellow-400">流動性 (硬性)</b>：5日均量 > 5000張 或 均值 > 10億。</li>
-                <li><b class="text-red-400">趨勢結構</b>：股價 > 20MA & 60MA，且 60MA 走平或上彎。</li>
-                <li><b>形態</b>：整理區上緣、實體極小十字星。</li>
-                <li><b class="text-green-400">量能關鍵</b>：量縮整理 (0.5~1.5倍均量)，禁止爆量。</li>
+                <li><b class="text-yellow-400">流動性</b>：5日均量 > 5000張 或 均值 > 10億。</li>
+                <li><b class="text-red-400">趨勢</b>：股價 > 20MA & 60MA，且 60MA 上揚。</li>
+                <li><b>型態</b>：整理區上緣、實體極小十字星。</li>
+                <li><b class="text-green-400">量能</b>：量縮整理 (0.5~1.5倍均量)。</li>
             </ul>
 
             <ul v-if="currentStrategy === 'day_trading'" class="space-y-1 list-disc list-inside">
-                <li><b class="text-green-400">長黑灌殺</b>：實體黑K跌幅 > 3.5%。</li>
-                <li><b class="text-red-400">強勢趨勢</b>：近20日漲 > 20% 且 近3日漲 > 10%。</li>
-                <li><b>均線</b>：MA45 > MA46 (多頭排列)。</li>
+                <li><b class="text-red-400">關鍵型態</b>：前天紅K → 昨天漲停(>9.5%) → 今天收黑K。</li>
+                <li><b class="text-yellow-400">均線架構</b>：MA3 > MA4 且 MA45 > MA46。</li>
+                <li><b>強勢背景</b>：近20日漲幅 > 20%。</li>
             </ul>
 
             <ul v-if="currentStrategy === 'granville'" class="space-y-1 list-disc list-inside">
@@ -130,18 +124,13 @@
                 <div v-for="stock in strategyData.momentum" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 relative overflow-hidden group">
                     <div class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg font-bold" :class="stock.score >= 5 ? 'bg-red-600' : 'bg-gray-600'">{{ stock.score }}分</div>
                     <div class="flex justify-between items-end mb-4">
-                        <div>
-                            <h3 class="text-xl font-bold text-white">{{ stock.name }}</h3>
-                            <p class="text-gray-400 text-sm">{{ stock.code.split('.')[0] }} | ${{ stock.price }}</p>
-                        </div>
+                        <div><h3 class="text-xl font-bold text-white">{{ stock.name }}</h3><p class="text-gray-400 text-sm">{{ stock.code.split('.')[0] }} | ${{ stock.price }}</p></div>
                     </div>
                     <div class="grid grid-cols-3 gap-2 text-center bg-gray-700/40 p-2 rounded text-sm">
                         <div><div class="text-[10px] text-gray-400">EPS成長</div><div class="font-bold text-green-300">{{ formatPercent(stock.fundamentals.growth) }}</div></div>
                         <div :class="{'ring-1 ring-red-500 bg-red-900/20 rounded': isHighGrowth(stock.fundamentals.rev_yoy)}">
                             <div class="text-[10px] text-gray-400">營收 YoY</div>
-                            <div class="font-bold" :class="isPositive(stock.fundamentals.rev_yoy) ? 'text-red-400' : 'text-green-400'">
-                                <span v-if="isHighGrowth(stock.fundamentals.rev_yoy)">🔥</span>{{ formatPercent(stock.fundamentals.rev_yoy) }}
-                            </div>
+                            <div class="font-bold" :class="isPositive(stock.fundamentals.rev_yoy) ? 'text-red-400' : 'text-green-400'"><span v-if="isHighGrowth(stock.fundamentals.rev_yoy)">🔥</span>{{ formatPercent(stock.fundamentals.rev_yoy) }}</div>
                         </div>
                         <div><div class="text-[10px] text-gray-400">PE</div><div class="font-bold text-blue-300">{{ stock.fundamentals.pe }}x</div></div>
                     </div>
@@ -153,24 +142,24 @@
         <div v-if="currentStrategy === 'doji_rise'">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div v-for="stock in strategyData.doji_rise" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 border-l-4 border-l-yellow-500 relative">
-                    <div class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg font-bold" 
-                         :class="stock.score >= 80 ? 'bg-purple-600' : (stock.score >= 70 ? 'bg-red-600' : 'bg-yellow-600')">{{ stock.score }}分</div>
+                    <div class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg font-bold" :class="stock.score >= 80 ? 'bg-purple-600' : 'bg-red-600'">{{ stock.score }}分</div>
                     <div class="flex justify-between items-start mb-4">
                         <div><h3 class="text-xl font-bold text-white">{{ stock.name }}</h3><p class="text-gray-400 text-sm">{{ stock.code.split('.')[0] }} | ${{ stock.price }}</p></div>
                     </div>
                     <div class="grid grid-cols-2 gap-2 text-center bg-gray-700/40 p-2 rounded text-sm mb-2">
-                        <div><div class="text-[10px] text-gray-400">量能比</div><div class="font-bold" :class="(stock.vol_ratio >= 80 && stock.vol_ratio <= 120) ? 'text-green-400' : 'text-yellow-300'">{{ stock.vol_ratio }}% <span v-if="stock.vol_ratio >= 80 && stock.vol_ratio <= 120">✅</span></div></div>
+                        <div><div class="text-[10px] text-gray-400">量能比</div><div class="font-bold" :class="(stock.vol_ratio >= 80 && stock.vol_ratio <= 120) ? 'text-green-400' : 'text-yellow-300'">{{ stock.vol_ratio }}%</div></div>
                         <div><div class="text-[10px] text-gray-400">5日均值</div><div class="font-bold text-blue-300">{{ stock.vol_avg_val }}億</div></div>
                     </div>
                     <div class="text-xs text-center text-gray-400 mt-1"><span class="bg-gray-700 px-2 py-1 rounded">{{ stock.trend }}</span></div>
                 </div>
-                <div v-if="!strategyData.doji_rise?.length" class="col-span-full text-center text-gray-500 py-10">今日無符合「量縮十字星」整理個股</div>
+                <div v-if="!strategyData.doji_rise?.length" class="col-span-full text-center text-gray-500 py-10">無符合標的</div>
             </div>
         </div>
 
         <div v-if="currentStrategy === 'day_trading'">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div v-for="stock in strategyData.day_trading" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 border-l-4 border-l-green-500">
+                <div v-for="stock in strategyData.day_trading" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 border-l-4 border-l-green-500 relative">
+                    <div class="absolute top-0 right-0 bg-green-600 text-white text-xs px-2 py-1 rounded-bl-lg font-bold">漲停回檔</div>
                     <div class="flex justify-between items-start mb-4">
                         <div><h3 class="text-xl font-bold text-white">{{ stock.name }}</h3><p class="text-gray-400 text-sm">{{ stock.code.split('.')[0] }} | ${{ stock.price }}</p></div>
                         <div class="text-right"><div class="text-xs text-gray-400">實體跌幅</div><div class="text-xl font-bold text-green-400">▼ {{ stock.drop_pct }}%</div></div>
