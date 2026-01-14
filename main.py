@@ -6,7 +6,7 @@ import os
 import random
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime, timedelta, timezone  # <--- 新增 timezone
+from datetime import datetime, timedelta, timezone
 
 # --- 全域設定 ---
 DATA_FILE = "data.json"
@@ -41,7 +41,7 @@ def get_tw_stock_list():
     return stocks
 
 # ==========================================
-# 策略 1: 動能爆發 (Momentum) - 邏輯回復版
+# 策略 1: 動能爆發 (Momentum)
 # ==========================================
 def strategy_momentum(df, ticker, region, latest, prev, fin_data):
     LOOKBACK_SHORT = 60
@@ -323,10 +323,19 @@ def main():
     
     final = []
     
-    # --- 關鍵修正：強制使用 UTC+8 台灣時間 ---
+    # ----------------------------------------------------
+    # 【關鍵修正】：如果現在(台灣時間)是 14:00 以前，就算成昨天
+    # ----------------------------------------------------
     tw_tz = timezone(timedelta(hours=8))
-    market_date = datetime.now(tw_tz).strftime('%Y-%m-%d')
-    # ------------------------------------
+    now = datetime.now(tw_tz)
+    
+    if now.hour < 14:
+        # 下午2點前執行，算昨天的盤
+        market_date = (now - timedelta(days=1)).strftime('%Y-%m-%d')
+    else:
+        # 下午2點後執行，算今天的盤
+        market_date = now.strftime('%Y-%m-%d')
+    # ----------------------------------------------------
     
     if os.path.exists(DATA_FILE):
         try: final = json.load(open(DATA_FILE))
@@ -334,7 +343,7 @@ def main():
         
     rec = {"date": market_date, "market_breadth": market_breadth, "strategies": res}
     
-    # 檢查是否已存在當天資料，若有則覆蓋，無則新增
+    # 覆蓋或新增
     existing_idx = -1
     for i, r in enumerate(final):
         if r['date'] == market_date:
@@ -342,12 +351,12 @@ def main():
             break
             
     if existing_idx != -1:
-        final[existing_idx] = rec # 覆蓋當天資料
+        final[existing_idx] = rec
     else:
-        final.append(rec) # 新增
+        final.append(rec)
         
     with open(DATA_FILE, 'w', encoding='utf-8') as f: json.dump(final, f, ensure_ascii=False, indent=2)
-    print(f"掃描完成。日期: {market_date} / 新高佔比: {market_breadth}%")
+    print(f"掃描完成。歸檔日期: {market_date} / 新高佔比: {market_breadth}%")
 
 if __name__ == "__main__":
     main()
