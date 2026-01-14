@@ -6,7 +6,7 @@ import os
 import random
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone  # <--- 新增 timezone
 
 # --- 全域設定 ---
 DATA_FILE = "data.json"
@@ -41,7 +41,7 @@ def get_tw_stock_list():
     return stocks
 
 # ==========================================
-# 策略 1: 動能爆發 (Momentum)
+# 策略 1: 動能爆發 (Momentum) - 邏輯回復版
 # ==========================================
 def strategy_momentum(df, ticker, region, latest, prev, fin_data):
     LOOKBACK_SHORT = 60
@@ -52,6 +52,7 @@ def strategy_momentum(df, ticker, region, latest, prev, fin_data):
     min_vol = 500000 if region == 'TW' else 1000000
     if latest['Volume'] < min_vol: return None
 
+    # 還原權值 Close
     window_high_short = df['Close'][-LOOKBACK_SHORT-1:-1].max()
     is_new_high = latest['Close'] > window_high_short
     was_high_yesterday = prev['Close'] > window_high_short
@@ -76,6 +77,14 @@ def strategy_momentum(df, ticker, region, latest, prev, fin_data):
             score += 1
             reasons.append("(加分) 營收正成長 (+1分)")
             
+        if fin_data['growth'] and fin_data['growth'] > 0.15:
+            score += 1
+            reasons.append("(加分) EPS高成長 (+1分)")
+        
+        if fin_data['pe'] != 999 and fin_data['pe'] < 30:
+            score += 1
+            reasons.append("(加分) 本益比合理 (+1分)")
+
         return {"score": score, "reasons": reasons}
     return None
 
@@ -113,139 +122,92 @@ def strategy_granville(df, ticker, region, latest, prev):
 # ==========================================
 def strategy_day_trading(df, ticker, region, latest):
     if len(df) < 50: return None
-    open_p = latest['Open']; close_p = latest['Close']
-    if close_p >= open_p: return None
-    body_pct = (open_p - close_p) / open_p
-    if body_pct <= 0.035: return None
     
-    vol = latest['Volume']
-    if vol < 300000: return None
-    amount = close_p * vol
-    if amount < 50000000: return None
-    
-    price_20_ago = df['Close'].iloc[-21]
-    rise_20d = (close_p - price_20_ago) / price_20_ago
-    if rise_20d <= 0.20: return None
-    
-    price_3_ago = df['Close'].iloc[-4]
-    rise_3d = (close_p - price_3_ago) / price_3_ago
-    if rise_3d <= 0.10: return None
-    
+    # 均線排列
+    ma3 = df['Close'].rolling(window=3).mean().iloc[-1]
+    ma4 = df['Close'].rolling(window=4).mean().iloc[-1]
     ma45 = df['Close'].rolling(window=45).mean().iloc[-1]
     ma46 = df['Close'].rolling(window=46).mean().iloc[-1]
-    if ma45 <= ma46: return None
+    if not (ma3 > ma4 and ma45 > ma46): return None
     
-    return {"drop_pct": round(body_pct * 100, 2), "rise_20d": round(rise_20d * 100, 2), "vol_lots": int(vol / 1000), "amount_yi": round(amount / 100000000, 2)}
+    # K線組合
+    today = df.iloc[-1]
+    if today['Close'] >= today['Open']: return None # 今日黑K
+    
+    day_prev = df.iloc[-2]; day_prev_2 = df.iloc[-3]
+    prev_change = (day_prev['Close'] - day_prev_2['Close']) / day_prev_2['Close']
+    if prev_change < 0.095: return None # 昨日漲停
+    
+    if day_prev_2['Close'] <= day_prev_2['Open']: return None # 前日紅K
+    
+    # 趨勢與量能
+    price_20_ago = df['Close'].iloc[-21]
+    rise_20d = (today['Close'] - price_20_ago) / price_20_ago
+    if rise_20d <= 0.20: return None
+    
+    vol = today['Volume']
+    if vol < 300000: return None
+    amount = today['Close'] * vol
+    if amount < 50000000: return None
+    
+    drop_pct = (today['Open'] - today['Close']) / today['Open']
+    
+    return {
+        "drop_pct": round(drop_pct * 100, 2),
+        "rise_20d": round(rise_20d * 100, 2),
+        "vol_lots": int(vol / 1000),
+        "amount_yi": round(amount / 100000000, 2),
+        "pattern": "連紅漲停後黑K"
+    }
 
 # ==========================================
-# 策略 4: 十字星主升起漲 (阿嶽版) - V2 Update
+# 策略 4: 十字星主升起漲 (完整濾網版)
 # ==========================================
 def strategy_doji_rise(df, ticker, region, latest):
     if len(df) < 65: return None
-    
-    # 資料準備
-    close = latest['Close']
-    vol = latest['Volume']
-    
-    # 計算均線
+    close = latest['Close']; open_p = latest['Open']; high_p = latest['High']; low_p = latest['Low']; vol = latest['Volume']
     ma5_vol = df['Volume'].rolling(window=5).mean().iloc[-1]
     ma20 = df['Close'].rolling(window=20).mean().iloc[-1]
     ma60 = df['Close'].rolling(window=60).mean().iloc[-1]
     ma60_prev = df['Close'].rolling(window=60).mean().iloc[-2]
     
-    # ----------------------------------
-    # 【一、流動性濾網】(Hard Stop)
-    # 1. 5日均量 >= 5000 張 (5,000,000股)
-    # 2. 或 5日均值 >= 10 億 (1,000,000,000)
-    # ----------------------------------
+    # 流動性
     avg_price_5d = df['Close'][-5:].mean()
     avg_value_5d = ma5_vol * avg_price_5d
-    
-    is_liquid_vol = ma5_vol >= 5000000 
-    is_liquid_val = avg_value_5d >= 1000000000
-    
-    if not (is_liquid_vol or is_liquid_val): return None # 流動性不足直接剔除
+    if not (ma5_vol >= 5000000 or avg_value_5d >= 1000000000): return None
 
-    # ----------------------------------
-    # 【二、趨勢結構】(Hard Stop)
-    # 1. 股價 > 20MA & 60MA
-    # 2. 60MA 走平或上彎
-    # ----------------------------------
+    # 趨勢
     if close < ma20 or close < ma60: return None
-    if ma60 < ma60_prev: return None # 季線下彎剔除
+    if ma60 < ma60_prev: return None
 
-    # ----------------------------------
-    # 【三、整理型態】
-    # 檢查過去 10 天是否暴漲 (避免主升段追高)
-    # 簡單定義：過去 10 天漲幅不應超過 30% (若是噴出段通常很陡)
-    price_10_ago = df['Close'].iloc[-11]
-    if (close - price_10_ago) / price_10_ago > 0.30: return None # 漲太兇先避開
+    # 整理型態
+    if close / ma20 > 1.15: return None 
 
-    # ----------------------------------
-    # 【四、十字星條件】
-    # 實體極小 (< 0.6%)
-    open_p = latest['Open']
+    # 十字星
     body_pct = abs(close - open_p) / open_p
     if body_pct > 0.006: return None 
-    
-    # 必須有影線 (高低差 > 實體)
-    high_p = latest['High']; low_p = latest['Low']
-    range_pct = (high_p - low_p) / open_p
-    if range_pct < 0.01: return None # 波動太小(一字線)也不要
+    total_range = high_p - low_p; body_range = abs(close - open_p)
+    if total_range < body_range * 2: return None
+    if total_range == 0: return None
 
-    # ----------------------------------
-    # 【五、量能結構】
-    # 理想：今日量約為 5日均量 ±20% (0.8 ~ 1.2 倍)
-    # 濾網：禁止極端爆量 (>1.5倍) 或 極端縮量 (<0.5倍)
+    # 量能
     vol_ratio = vol / ma5_vol
-    if vol_ratio > 1.5: return None # 爆量剔除
-    if vol_ratio < 0.5: return None # 無量剔除
+    if vol_ratio > 1.5: return None
+    if vol_ratio < 0.5: return None
 
-    # ----------------------------------
-    # 【八、評分邏輯】(Score)
-    # 基礎分 60
-    # ----------------------------------
+    # 評分
     score = 60
     reasons = ["結構+十字星成立 (60分)"]
-
-    # 加分項
-    if ma5_vol >= 10000000: # 萬張以上大熱門
-        score += 5
-        reasons.append("成交量大 (+5)")
-    
-    # 量能漂亮 (0.8 ~ 1.2)
-    if 0.8 <= vol_ratio <= 1.2:
-        score += 5
-        reasons.append("量能穩健整理 (+5)")
-        
-    # 族群同步 (這裡用簡單的均線多頭排列代替族群轉強)
+    if ma5_vol >= 10000000 or avg_value_5d >= 2000000000: score += 5; reasons.append("流動性極佳 (+5)")
+    if 0.8 <= vol_ratio <= 1.2: score += 5; reasons.append("量能平穩 (+5)")
     ma5 = df['Close'].rolling(window=5).mean().iloc[-1]
     ma10 = df['Close'].rolling(window=10).mean().iloc[-1]
-    if ma5 > ma10 > ma20 > ma60:
-        score += 5
-        reasons.append("均線多頭排列 (+5)")
+    if ma5 > ma10 > ma20 > ma60: score += 5; reasons.append("均線多頭排列 (+5)")
+    if ma5_vol < 6000000 and avg_value_5d < 1200000000: score -= 10; reasons.append("流動性邊緣 (-10)")
+    if vol_ratio > 1.3: score -= 5; reasons.append("量能稍大 (-5)")
 
-    # 扣分項
-    # 量能在門檻邊緣 (例如剛好 5000 張)
-    if ma5_vol < 6000000:
-        score -= 5
-        reasons.append("流動性邊緣 (-5)")
-    
-    if vol_ratio > 1.3: # 雖然沒爆量但稍微偏大
-        score -= 5
-        reasons.append("量能稍大 (-5)")
-
-    # 篩選結果 (只回傳 60分以上)
     if score < 60: return None
-
-    return {
-        "score": score,
-        "pattern": "量縮十字星",
-        "vol_ratio": round(vol_ratio * 100, 1),
-        "vol_avg_val": round(avg_value_5d / 100000000, 1), # 5日均值(億)
-        "trend": "多頭整理",
-        "reasons": reasons
-    }
+    return {"score": score, "pattern": "標準十字星", "vol_ratio": round(vol_ratio * 100, 1), "vol_avg_val": round(avg_value_5d / 100000000, 1), "trend": "多頭整理", "reasons": reasons}
 
 # ==========================================
 # 策略 5: 主動式 ETF
@@ -286,12 +248,17 @@ def analyze_stock(stock_info):
     region = stock_info['region']
     try:
         stock = yf.Ticker(ticker)
-        # 預設還原權值
+        # 還原權值 (auto_adjust=True)
         df = stock.history(period="3y") 
         if len(df) < 205: return None
         
         latest = df.iloc[-1]
         prev = df.iloc[-2]
+        
+        # 統計用: 創新高
+        window_high_short = df['Close'][-61:-1].max()
+        is_60d_high = latest['Close'] > window_high_short
+        
         fin_data = get_financial_details(stock)
         display_name = get_stock_name(ticker, region, stock)
         
@@ -316,47 +283,71 @@ def analyze_stock(stock_info):
         if res := strategy_active_etf(ticker, latest['Close']):
             pkg['active_etf'] = {**base, **res}; has_res = True
             
-        return pkg if has_res else None
+        return {"result": pkg if has_res else None, "is_60d_high": is_60d_high}
     except: return None
 
 def main():
-    print("啟動全策略掃描 (十字星V2版)...")
+    print("啟動全策略掃描 (日期修正+還原權值+完整策略)...")
     stocks = get_tw_stock_list() # + get_us_stock_list()
     res = {
         "momentum": [], "granville_buy": [], "granville_sell": [], 
         "day_trading": [], "doji_rise": [], "active_etf": []
     }
     
+    stat_total = 0
+    stat_new_high = 0
+    
     with ThreadPoolExecutor(max_workers=20) as exc:
         futures = [exc.submit(analyze_stock, s) for s in stocks]
         for f in as_completed(futures):
-            r = f.result()
-            if r:
-                if 'momentum' in r: res['momentum'].append(r['momentum'])
-                if 'granville' in r:
-                    if r['granville']['type'] == 'buy': res['granville_buy'].append(r['granville'])
-                    else: res['granville_sell'].append(r['granville'])
-                if 'day_trading' in r: res['day_trading'].append(r['day_trading'])
-                if 'doji_rise' in r: res['doji_rise'].append(r['doji_rise'])
-                if 'active_etf' in r: res['active_etf'].append(r['active_etf'])
+            ret = f.result()
+            if ret:
+                stat_total += 1
+                if ret['is_60d_high']: stat_new_high += 1
+                r = ret['result']
+                if r:
+                    if 'momentum' in r: res['momentum'].append(r['momentum'])
+                    if 'granville' in r:
+                        if r['granville']['type'] == 'buy': res['granville_buy'].append(r['granville'])
+                        else: res['granville_sell'].append(r['granville'])
+                    if 'day_trading' in r: res['day_trading'].append(r['day_trading'])
+                    if 'doji_rise' in r: res['doji_rise'].append(r['doji_rise'])
+                    if 'active_etf' in r: res['active_etf'].append(r['active_etf'])
 
     res['momentum'].sort(key=lambda x: -x['score'])
     res['day_trading'].sort(key=lambda x: -x['rise_20d'])
-    # 十字星按分數排序 (越高分越好)
     res['doji_rise'].sort(key=lambda x: -x['score']) 
     
+    market_breadth = 0
+    if stat_total > 0: market_breadth = round((stat_new_high / stat_total) * 100, 2)
+    
     final = []
-    market_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+    
+    # --- 關鍵修正：強制使用 UTC+8 台灣時間 ---
+    tw_tz = timezone(timedelta(hours=8))
+    market_date = datetime.now(tw_tz).strftime('%Y-%m-%d')
+    # ------------------------------------
+    
     if os.path.exists(DATA_FILE):
         try: final = json.load(open(DATA_FILE))
         except: pass
         
-    rec = {"date": market_date, "strategies": res}
-    if final and final[-1]['date'] == market_date: final[-1] = rec
-    else: final.append(rec)
+    rec = {"date": market_date, "market_breadth": market_breadth, "strategies": res}
+    
+    # 檢查是否已存在當天資料，若有則覆蓋，無則新增
+    existing_idx = -1
+    for i, r in enumerate(final):
+        if r['date'] == market_date:
+            existing_idx = i
+            break
+            
+    if existing_idx != -1:
+        final[existing_idx] = rec # 覆蓋當天資料
+    else:
+        final.append(rec) # 新增
         
     with open(DATA_FILE, 'w', encoding='utf-8') as f: json.dump(final, f, ensure_ascii=False, indent=2)
-    print("掃描完成。")
+    print(f"掃描完成。日期: {market_date} / 新高佔比: {market_breadth}%")
 
 if __name__ == "__main__":
     main()
