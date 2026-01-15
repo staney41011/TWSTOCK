@@ -52,7 +52,6 @@ def strategy_momentum(df, ticker, region, latest, prev, fin_data):
     min_vol = 500000 if region == 'TW' else 1000000
     if latest['Volume'] < min_vol: return None
 
-    # 還原權值 Close
     window_high_short = df['Close'][-LOOKBACK_SHORT-1:-1].max()
     is_new_high = latest['Close'] > window_high_short
     was_high_yesterday = prev['Close'] > window_high_short
@@ -122,33 +121,29 @@ def strategy_granville(df, ticker, region, latest, prev):
 # ==========================================
 def strategy_day_trading(df, ticker, region, latest):
     if len(df) < 50: return None
-    
-    # 均線排列
     ma3 = df['Close'].rolling(window=3).mean().iloc[-1]
     ma4 = df['Close'].rolling(window=4).mean().iloc[-1]
     ma45 = df['Close'].rolling(window=45).mean().iloc[-1]
     ma46 = df['Close'].rolling(window=46).mean().iloc[-1]
     if not (ma3 > ma4 and ma45 > ma46): return None
     
-    # K線組合
     today = df.iloc[-1]
-    if today['Close'] >= today['Open']: return None # 今日黑K
+    if today['Close'] >= today['Open']: return None 
     
     day_prev = df.iloc[-2]; day_prev_2 = df.iloc[-3]
     prev_change = (day_prev['Close'] - day_prev_2['Close']) / day_prev_2['Close']
-    if prev_change < 0.095: return None # 昨日漲停
+    if prev_change < 0.095: return None 
     
-    if day_prev_2['Close'] <= day_prev_2['Open']: return None # 前日紅K
+    if day_prev_2['Close'] <= day_prev_2['Open']: return None 
     
-    # 趨勢與量能
     price_20_ago = df['Close'].iloc[-21]
     rise_20d = (today['Close'] - price_20_ago) / price_20_ago
     if rise_20d <= 0.20: return None
     
     vol = today['Volume']
-    if vol < 300000: return None
+    if vol < 300000: return None 
     amount = today['Close'] * vol
-    if amount < 50000000: return None
+    if amount < 50000000: return None 
     
     drop_pct = (today['Open'] - today['Close']) / today['Open']
     
@@ -161,7 +156,7 @@ def strategy_day_trading(df, ticker, region, latest):
     }
 
 # ==========================================
-# 策略 4: 十字星主升起漲 (完整濾網版)
+# 策略 4: 十字星主升起漲
 # ==========================================
 def strategy_doji_rise(df, ticker, region, latest):
     if len(df) < 65: return None
@@ -171,31 +166,25 @@ def strategy_doji_rise(df, ticker, region, latest):
     ma60 = df['Close'].rolling(window=60).mean().iloc[-1]
     ma60_prev = df['Close'].rolling(window=60).mean().iloc[-2]
     
-    # 流動性
     avg_price_5d = df['Close'][-5:].mean()
     avg_value_5d = ma5_vol * avg_price_5d
     if not (ma5_vol >= 5000000 or avg_value_5d >= 1000000000): return None
 
-    # 趨勢
     if close < ma20 or close < ma60: return None
     if ma60 < ma60_prev: return None
 
-    # 整理型態
     if close / ma20 > 1.15: return None 
 
-    # 十字星
     body_pct = abs(close - open_p) / open_p
     if body_pct > 0.006: return None 
     total_range = high_p - low_p; body_range = abs(close - open_p)
     if total_range < body_range * 2: return None
     if total_range == 0: return None
 
-    # 量能
     vol_ratio = vol / ma5_vol
     if vol_ratio > 1.5: return None
     if vol_ratio < 0.5: return None
 
-    # 評分
     score = 60
     reasons = ["結構+十字星成立 (60分)"]
     if ma5_vol >= 10000000 or avg_value_5d >= 2000000000: score += 5; reasons.append("流動性極佳 (+5)")
@@ -224,7 +213,6 @@ def strategy_active_etf(ticker, latest_price):
     if len(held_by) > 0: return {"count": len(held_by), "total_shares": total_shares, "total_value": total_value, "details": held_by}
     return None
 
-# --- 工具 ---
 def get_financial_details(stock_obj):
     data = {"pe": 999, "growth": None, "rev_yoy": None, "rev_qoq": None, "quarters": []}
     try:
@@ -248,54 +236,55 @@ def analyze_stock(stock_info):
     region = stock_info['region']
     try:
         stock = yf.Ticker(ticker)
-        # 還原權值 (auto_adjust=True)
         df = stock.history(period="3y") 
         if len(df) < 205: return None
-        
-        latest = df.iloc[-1]
-        prev = df.iloc[-2]
-        
-        # 統計用: 創新高
+        latest = df.iloc[-1]; prev = df.iloc[-2]
         window_high_short = df['Close'][-61:-1].max()
         is_60d_high = latest['Close'] > window_high_short
-        
         fin_data = get_financial_details(stock)
         display_name = get_stock_name(ticker, region, stock)
-        
-        base = {
-            "code": ticker, "name": display_name, "region": region,
-            "price": float(f"{latest['Close']:.2f}"),
-            "date": latest.name.strftime('%Y-%m-%d'),
-            "fundamentals": fin_data
-        }
-        
-        pkg = {}
-        has_res = False
-
-        if res := strategy_momentum(df, ticker, region, latest, prev, fin_data):
-            pkg['momentum'] = {**base, **res}; has_res = True
-        if res := strategy_granville(df, ticker, region, latest, prev):
-            pkg['granville'] = {**base, **res}; has_res = True
-        if res := strategy_day_trading(df, ticker, region, latest):
-            pkg['day_trading'] = {**base, **res}; has_res = True
-        if res := strategy_doji_rise(df, ticker, region, latest):
-            pkg['doji_rise'] = {**base, **res}; has_res = True
-        if res := strategy_active_etf(ticker, latest['Close']):
-            pkg['active_etf'] = {**base, **res}; has_res = True
-            
+        base = {"code": ticker, "name": display_name, "region": region, "price": float(f"{latest['Close']:.2f}"), "date": latest.name.strftime('%Y-%m-%d'), "fundamentals": fin_data}
+        pkg = {}; has_res = False
+        if res := strategy_momentum(df, ticker, region, latest, prev, fin_data): pkg['momentum'] = {**base, **res}; has_res = True
+        if res := strategy_granville(df, ticker, region, latest, prev): pkg['granville'] = {**base, **res}; has_res = True
+        if res := strategy_day_trading(df, ticker, region, latest): pkg['day_trading'] = {**base, **res}; has_res = True
+        if res := strategy_doji_rise(df, ticker, region, latest): pkg['doji_rise'] = {**base, **res}; has_res = True
+        if res := strategy_active_etf(ticker, latest['Close']): pkg['active_etf'] = {**base, **res}; has_res = True
         return {"result": pkg if has_res else None, "is_60d_high": is_60d_high}
     except: return None
 
 def main():
-    print("啟動全策略掃描 (日期修正+還原權值+完整策略)...")
-    stocks = get_tw_stock_list() # + get_us_stock_list()
-    res = {
-        "momentum": [], "granville_buy": [], "granville_sell": [], 
-        "day_trading": [], "doji_rise": [], "active_etf": []
-    }
+    print("啟動全策略掃描 (含錯誤資料清洗)...")
     
-    stat_total = 0
-    stat_new_high = 0
+    # ----------------------------------------------
+    # 🧹 [資料清洗] 刪除錯誤的 "2025-01-15" 資料
+    # ----------------------------------------------
+    tw_tz = timezone(timedelta(hours=8))
+    today_str = datetime.now(tw_tz).strftime('%Y-%m-%d') # e.g. "2025-01-15"
+    current_hour = datetime.now(tw_tz).hour
+    
+    if os.path.exists(DATA_FILE):
+        try:
+            with open(DATA_FILE, 'r', encoding='utf-8') as f:
+                history = json.load(f)
+            
+            # 如果現在是早上(盤中或盤前)，但 data.json 卻已經有今天的資料 -> 肯定是昨天誤判的 -> 刪掉
+            if current_hour < 14:
+                original_len = len(history)
+                # 這裡過濾掉日期等於 "今天" 的資料 (因為現在還太早，不該有今天的收盤資料)
+                history = [r for r in history if r['date'] != today_str]
+                
+                if len(history) != original_len:
+                    print(f"⚠️ 發現 {today_str} 的錯誤提早資料，已執行刪除。")
+                    with open(DATA_FILE, 'w', encoding='utf-8') as f:
+                        json.dump(history, f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            print(f"清洗資料時發生錯誤 (不影響後續執行): {e}")
+    # ----------------------------------------------
+
+    stocks = get_tw_stock_list() # + get_us_stock_list()
+    res = {"momentum": [], "granville_buy": [], "granville_sell": [], "day_trading": [], "doji_rise": [], "active_etf": []}
+    stat_total = 0; stat_new_high = 0
     
     with ThreadPoolExecutor(max_workers=20) as exc:
         futures = [exc.submit(analyze_stock, s) for s in stocks]
@@ -323,19 +312,13 @@ def main():
     
     final = []
     
-    # ----------------------------------------------------
-    # 【關鍵修正】：如果現在(台灣時間)是 14:00 以前，就算成昨天
-    # ----------------------------------------------------
-    tw_tz = timezone(timedelta(hours=8))
-    now = datetime.now(tw_tz)
-    
-    if now.hour < 14:
-        # 下午2點前執行，算昨天的盤
-        market_date = (now - timedelta(days=1)).strftime('%Y-%m-%d')
+    # 日期判定邏輯
+    if current_hour < 14:
+        # 下午2點前，算昨天的盤
+        market_date = (datetime.now(tw_tz) - timedelta(days=1)).strftime('%Y-%m-%d')
     else:
-        # 下午2點後執行，算今天的盤
-        market_date = now.strftime('%Y-%m-%d')
-    # ----------------------------------------------------
+        # 下午2點後，算今天的盤
+        market_date = today_str
     
     if os.path.exists(DATA_FILE):
         try: final = json.load(open(DATA_FILE))
@@ -343,17 +326,14 @@ def main():
         
     rec = {"date": market_date, "market_breadth": market_breadth, "strategies": res}
     
-    # 覆蓋或新增
+    # 寫入 (覆蓋或新增)
     existing_idx = -1
     for i, r in enumerate(final):
         if r['date'] == market_date:
             existing_idx = i
             break
-            
-    if existing_idx != -1:
-        final[existing_idx] = rec
-    else:
-        final.append(rec)
+    if existing_idx != -1: final[existing_idx] = rec
+    else: final.append(rec)
         
     with open(DATA_FILE, 'w', encoding='utf-8') as f: json.dump(final, f, ensure_ascii=False, indent=2)
     print(f"掃描完成。歸檔日期: {market_date} / 新高佔比: {market_breadth}%")
