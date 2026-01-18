@@ -16,7 +16,6 @@ DATA_FILE = "data.json"
 DATA_DIR = "data"
 tw_stock_map = twstock.codes 
 
-# --- 模擬資料 ---
 MOCK_ETF_DB = {
     "00980A": {"name": "野村台灣創新", "holdings": {"2330.TW": {"shares": 500, "pct": 15.2}, "2317.TW": {"shares": 300, "pct": 8.5}, "2454.TW": {"shares": 100, "pct": 5.1}}},
     "00981A": {"name": "凱基優選", "holdings": {"2330.TW": {"shares": 800, "pct": 18.1}, "2303.TW": {"shares": 1200, "pct": 6.2}, "2603.TW": {"shares": 500, "pct": 4.3}}},
@@ -70,36 +69,31 @@ def get_financial_details(stock_obj):
     except: pass
     return data
 
-# --- 安全抓取函式 (Retry) ---
+# --- 安全抓取函式 ---
 def fetch_data_safe(ticker, retries=3):
     for i in range(retries):
         try:
             stock = yf.Ticker(ticker)
             df = stock.history(period="2y") 
             if not df.empty: return stock, df
-        except:
-            time.sleep(1)
+        except: time.sleep(1)
     return None, None
 
-# --- [新增] 抓取大盤趨勢 (用於相對強勢 RS) ---
+# --- 抓取大盤趨勢 (RS用) ---
 def fetch_market_trend():
-    print("📈 正在分析大盤 (0050) 趨勢，以計算相對強勢(RS)...")
+    print("📈 分析大盤 (0050) RS 基準...")
     try:
         market = yf.Ticker("0050.TW")
         df = market.history(period="3mo")
         if len(df) > 20:
             latest = df['Close'].iloc[-1]
             past_20 = df['Close'].iloc[-21]
-            # 計算大盤近20日漲跌幅
-            market_return_20d = (latest - past_20) / past_20
-            print(f"   大盤近20日漲幅: {market_return_20d*100:.2f}%")
-            return market_return_20d
-    except Exception as e:
-        print(f"   ⚠️ 大盤資料抓取失敗 ({e})，將跳過 RS 判斷。")
+            return (latest - past_20) / past_20
+    except: pass
     return None
 
 # ==========================================
-# 策略 1~5 (保持不變)
+# 策略 1~5 (維持不變)
 # ==========================================
 def strategy_momentum(df, ticker, region, latest, prev, fin_data):
     LOOKBACK_SHORT = 60; LOOKBACK_LONG = 500; VOL_FACTOR = 1.2; GROWTH_REV_PRIORITY = 0.15
@@ -185,114 +179,94 @@ def strategy_active_etf(ticker, latest_price):
     return None
 
 # ==========================================
-# 策略 6: 厚積薄發 (V3 - 究極進化版)
+# 策略 6: 厚積薄發 (V4 - 菁英計分版)
 # ==========================================
 def strategy_low_volatility(df, ticker, region, latest, market_ret_20d):
     if len(df) < 205: return None
     
-    close_series = df['Close']
-    vol_series = df['Volume']
-    high_series = df['High']
-    low_series = df['Low']
+    # 準備數據
+    close_s = df['Close']; vol_s = df['Volume']
     
-    # 均線
-    ma20 = close_series.rolling(window=20, min_periods=15).mean()
-    ma50 = close_series.rolling(window=50, min_periods=40).mean()
-    ma200 = close_series.rolling(window=200, min_periods=150).mean()
-    vol_ma50 = vol_series.rolling(window=50, min_periods=40).mean()
+    ma20 = close_s.rolling(window=20, min_periods=15).mean()
+    ma50 = close_s.rolling(window=50, min_periods=40).mean()
+    ma200 = close_s.rolling(window=200, min_periods=150).mean()
+    vol_ma50 = vol_s.rolling(window=50, min_periods=40).mean()
+    std_20 = close_s.rolling(window=20, min_periods=15).std()
     
-    # 布林通道 (Bollinger Bands) - 用於判斷壓縮
-    std_20 = close_series.rolling(window=20, min_periods=15).std()
-    
-    # 波動率 (顯示用)
-    std_10 = close_series.rolling(window=10, min_periods=5).std().iloc[-1]
-    
-    curr_close = float(close_series.iloc[-1])
-    curr_open = float(df['Open'].iloc[-1])
-    curr_low = float(low_series.iloc[-1])
-    curr_vol = float(vol_series.iloc[-1])
-    
+    curr_close = float(close_s.iloc[-1])
+    curr_vol = float(vol_s.iloc[-1])
     curr_ma20 = float(ma20.iloc[-1])
     curr_ma50 = float(ma50.iloc[-1])
     curr_ma200 = float(ma200.iloc[-1])
     curr_vol_ma50 = float(vol_ma50.iloc[-1])
     curr_std_20 = float(std_20.iloc[-1])
-    prev_high = float(high_series.iloc[-2])
 
     # 防呆
     if pd.isna(curr_ma50) or pd.isna(curr_ma200): return None
 
-    # --- 1. 核心趨勢 (Core Trend) ---
+    # --- 1. 基礎門檻 (Trend) ---
     cond_trend = (curr_close > curr_ma200) and (curr_ma50 > curr_ma200)
     cond_support = (curr_close > curr_ma50)
     
-    if not (cond_trend and cond_support): return None 
+    if not (cond_trend and cond_support): return None
 
-    # --- 2. 訊號偵測 (Signals) ---
+    # --- 2. 三大濾網計分 (Scoring) ---
+    score = 0
     signals = []
-    
-    # A. 縮量十字星
-    body_size = abs(curr_close - curr_open)
-    is_doji = body_size < (curr_close * 0.005)
-    if is_doji: signals.append("★ 十字星")
 
-    # B. 強力跳空
-    if curr_low > prev_high: signals.append("★ 強力跳空")
-
-    # C. 50MA 完美回測
-    dist_to_ma50 = (curr_close - curr_ma50) / curr_ma50
-    if 0 <= dist_to_ma50 < 0.03: signals.append("★ 50MA 回測")
-
-    # D. [新增] 布林通道壓縮 (BB Squeeze)
-    # 帶寬 = (上軌 - 下軌) / 中軌 = (4 * std) / ma20
+    # Filter A: 布林通道壓縮 (頻寬 < 10%)
     if pd.notna(curr_std_20) and curr_ma20 > 0:
         bb_width = (4 * curr_std_20) / curr_ma20
-        if bb_width < 0.10: # 壓縮在 10% 以內
-            signals.append("★ 布林壓縮")
+        if bb_width < 0.10:
+            score += 1
+            signals.append("布林壓縮")
 
-    # E. [新增] 量能急凍 (Volume Dry-up)
+    # Filter B: 量能急凍 (量 < 0.5倍均量)
     if pd.notna(curr_vol_ma50) and curr_vol_ma50 > 0:
-        if curr_vol < (curr_vol_ma50 * 0.5): # 量縮到均量的一半以下
-            signals.append("★ 量能急凍")
+        if curr_vol < (curr_vol_ma50 * 0.5):
+            score += 1
+            signals.append("量能急凍")
 
-    # F. [新增] 相對強勢 (Relative Strength)
-    if market_ret_20d is not None and len(close_series) > 22:
-        price_20_ago = float(close_series.iloc[-21])
+    # Filter C: 相對強勢 (RS)
+    if market_ret_20d is not None and len(close_s) > 22:
+        price_20_ago = float(close_s.iloc[-21])
         if price_20_ago > 0:
             stock_ret_20d = (curr_close - price_20_ago) / price_20_ago
             if stock_ret_20d > market_ret_20d:
-                signals.append("★ 相對強勢")
+                score += 1
+                signals.append("相對強勢")
 
-    # --- 3. 輸出結果 ---
-    tag = "OBSERVE"
-    desc_text = "趨勢多頭 (觀察中)"
+    # --- 3. 篩選 (0分淘汰) ---
+    if score == 0:
+        return None  # 剔除只有趨勢但沒有訊號的股票
+
+    # --- 4. 輸出 ---
+    tag = f"★ {score}分"
+    if score == 3: tag = "★ 3分 (滿分)"
     
-    if signals:
-        tag = "META"
-        desc_text = " | ".join(signals)
-        
-    vol_pct = 0
-    if pd.notna(std_10) and curr_close > 0:
-        vol_pct = round((std_10 / curr_close) * 100, 2)
+    desc_text = " | ".join(signals)
+    
+    vol_pct = 0 # 為了相容前端排序，雖然不一定重要了
+    if pd.notna(curr_std_20) and curr_close > 0:
+        vol_pct = round((curr_std_20 / curr_close) * 100, 2)
 
     return {
         "tag": tag,
         "volatility_pct": vol_pct,
         "trend_status": "多頭排列",
         "volume_status": "量能收縮" if (pd.notna(curr_vol_ma50) and curr_vol < curr_vol_ma50) else "量能放大",
-        "desc": desc_text
+        "desc": desc_text,
+        "score_val": score # 用於排序
     }
 
 def analyze_stock(stock_info, market_ret_20d):
     ticker = stock_info['code']
     region = stock_info['region']
-    
     stock, df = fetch_data_safe(ticker)
     
     if stock is None or df is None or len(df) < 205: return None
         
-    latest = df.iloc[-1]
-    prev = df.iloc[-2]
+    latest = df.iloc[-1]; prev = df.iloc[-2]
     real_trade_date = latest.name.strftime('%Y-%m-%d')
     window_high_short = df['Close'][-61:-1].max()
     is_60d_high = latest['Close'] > window_high_short
@@ -307,14 +281,12 @@ def analyze_stock(stock_info, market_ret_20d):
     if res := strategy_day_trading(df, ticker, region, latest): pkg['day_trading'] = {**base, **res}; has_res = True
     if res := strategy_doji_rise(df, ticker, region, latest): pkg['doji_rise'] = {**base, **res}; has_res = True
     if res := strategy_active_etf(ticker, latest['Close']): pkg['active_etf'] = {**base, **res}; has_res = True
-    
-    # 傳入 market_ret_20d 進行比較
     if res := strategy_low_volatility(df, ticker, region, latest, market_ret_20d): pkg['low_volatility'] = {**base, **res}; has_res = True
         
     return {"result": pkg if has_res else None, "is_60d_high": is_60d_high, "trade_date": real_trade_date}
 
 def main():
-    print("啟動全策略掃描 (V3 究極進化版 - 含RS/布林/量縮)...")
+    print("啟動全策略掃描 (V4 菁英計分版 - 0分淘汰)...")
     if not os.path.exists(DATA_DIR): os.makedirs(DATA_DIR)
         
     all_files = glob.glob(os.path.join(DATA_DIR, "*.json"))
@@ -326,7 +298,7 @@ def main():
             if file_date.weekday() >= 5: os.remove(file_path)
         except: pass
 
-    # 1. 先抓大盤 RS 基準
+    # 1. 抓大盤 RS
     market_ret_20d = fetch_market_trend()
 
     stocks = get_tw_stock_list() 
@@ -334,7 +306,6 @@ def main():
     stat_total = 0; stat_new_high = 0; detected_market_date = None
     
     with ThreadPoolExecutor(max_workers=20) as exc:
-        # 將 market_ret_20d 傳入每個執行緒
         futures = [exc.submit(analyze_stock, s, market_ret_20d) for s in stocks]
         for f in as_completed(futures):
             ret = f.result()
@@ -349,8 +320,8 @@ def main():
     res['momentum'].sort(key=lambda x: -x['score'])
     res['day_trading'].sort(key=lambda x: -x['rise_20d'])
     res['doji_rise'].sort(key=lambda x: -x['score'])
-    # 新排序邏輯：有 META 的排前面，再來比波動率低
-    res['low_volatility'].sort(key=lambda x: (0 if x['tag'] == 'META' else 1, x['volatility_pct']))
+    # 排序：高分優先
+    res['low_volatility'].sort(key=lambda x: -x.get('score_val', 0))
     
     market_breadth = 0
     if stat_total > 0: market_breadth = round((stat_new_high / stat_total) * 100, 2)
