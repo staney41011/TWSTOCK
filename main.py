@@ -6,6 +6,7 @@ import os
 import glob
 import random
 import math
+import time
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
@@ -22,7 +23,7 @@ MOCK_ETF_DB = {
     "00982A": {"name": "富邦成長", "holdings": {"2330.TW": {"shares": 600, "pct": 12.0}, "2317.TW": {"shares": 400, "pct": 7.8}, "3008.TW": {"shares": 50, "pct": 3.2}}},
 }
 
-# --- NaN 清洗函式 ---
+# --- 工具函式 ---
 def clean_for_json(obj):
     if isinstance(obj, float):
         if math.isnan(obj) or math.isinf(obj): return None
@@ -37,11 +38,9 @@ def get_stock_name(ticker, region, stock_obj=None):
     display_name = ticker
     if region == 'TW':
         clean_code = ticker.split('.')[0]
-        if clean_code in tw_stock_map:
-            return tw_stock_map[clean_code].name
+        if clean_code in tw_stock_map: return tw_stock_map[clean_code].name
     if stock_obj:
-        try:
-            return stock_obj.info.get('longName') or stock_obj.info.get('shortName') or ticker
+        try: return stock_obj.info.get('longName') or stock_obj.info.get('shortName') or ticker
         except: pass
     return display_name
 
@@ -53,9 +52,41 @@ def get_tw_stock_list():
         if len(code) == 4: stocks.append({"code": f"{code}.TWO", "region": "TW"})
     return stocks
 
+def get_financial_details(stock_obj):
+    data = {"pe": 999, "growth": None, "rev_yoy": None, "rev_qoq": None, "quarters": []}
+    try:
+        info = stock_obj.info
+        data['pe'] = info.get('trailingPE', 999)
+        data['growth'] = info.get('earningsGrowth', None)
+        data['rev_yoy'] = info.get('revenueGrowth', None)
+        q_stmt = stock_obj.quarterly_income_stmt
+        if q_stmt is not None and not q_stmt.empty:
+            vals = q_stmt.loc['Total Revenue'] if 'Total Revenue' in q_stmt.index else q_stmt.loc['Operating Revenue']
+            limit = min(4, len(vals))
+            for i in range(limit):
+                curr = vals[i]; qoq = None
+                if i+1 < len(vals) and vals[i+1] != 0: qoq = (curr - vals[i+1]) / vals[i+1]
+                data['quarters'].append({"date": vals.index[i].strftime('%Y-%m'), "revenue": curr, "qoq": qoq})
+    except: pass
+    return data
+
+# --- [新增] 安全抓取函式 (Retry 機制) ---
+def fetch_data_safe(ticker, retries=3):
+    for i in range(retries):
+        try:
+            stock = yf.Ticker(ticker)
+            df = stock.history(period="2y") # 抓2年確保有足夠均線
+            if not df.empty: return stock, df
+        except:
+            time.sleep(1) # 失敗等1秒再試
+    return None, None
+
 # ==========================================
-# 策略 1~5 (保持不變)
+# 策略群 (Momentum, Granville, DayTrading, Doji, ETF 保持不變)
 # ==========================================
+# 為節省篇幅，請保留您原本的 strategy_momentum, strategy_granville 等函式
+# ... (這裡請貼上原有的其他策略函式) ...
+
 def strategy_momentum(df, ticker, region, latest, prev, fin_data):
     LOOKBACK_SHORT = 60; LOOKBACK_LONG = 500; VOL_FACTOR = 1.2; GROWTH_REV_PRIORITY = 0.15
     if latest['Volume'] < (500000 if region == 'TW' else 1000000): return None
@@ -140,69 +171,52 @@ def strategy_active_etf(ticker, latest_price):
     return None
 
 # ==========================================
-# 策略 6: 厚積薄發 (趨勢訊號版 - New!)
+# 策略 6: 厚積薄發 (趨勢訊號版 V2)
 # ==========================================
 def strategy_low_volatility(df, ticker, region, latest):
-    # 資料長度檢查 (放寬一點避免剛好 200 天被踢)
     if len(df) < 205: return None
     
-    # 1. 計算指標 (使用 min_periods 增加容錯，允許中間缺幾天)
     close_series = df['Close']
     vol_series = df['Volume']
     high_series = df['High']
     low_series = df['Low']
     
-    # 均線: 50MA, 200MA (允許缺值計算，避免 NaN)
     ma50 = close_series.rolling(window=50, min_periods=40).mean()
     ma200 = close_series.rolling(window=200, min_periods=150).mean()
     vol_ma50 = vol_series.rolling(window=50, min_periods=40).mean()
-    
-    # 波動率 (僅顯示用)
     std_10 = close_series.rolling(window=10, min_periods=5).std().iloc[-1]
     
-    # 取最新值
     curr_close = close_series.iloc[-1]
     curr_open = df['Open'].iloc[-1]
     curr_low = low_series.iloc[-1]
     curr_vol = vol_series.iloc[-1]
-    
     curr_ma50 = ma50.iloc[-1]
     curr_ma200 = ma200.iloc[-1]
     curr_vol_ma50 = vol_ma50.iloc[-1]
     prev_high = high_series.iloc[-2]
 
-    # --- 防呆 (如果關鍵均線算不出來，跳過) ---
-    if pd.isna(curr_ma50) or pd.isna(curr_ma200): 
-        return None
+    if pd.isna(curr_ma50) or pd.isna(curr_ma200): return None
 
-    # 2. 核心條件 (Core) - 多頭架構
-    cond_trend = (curr_close > curr_ma200) and (curr_ma50 > curr_ma200) # 200MA之上且均線發散
-    cond_support = (curr_close > curr_ma50) # 守住 50MA
+    # Core
+    cond_trend = (curr_close > curr_ma200) and (curr_ma50 > curr_ma200)
+    cond_support = (curr_close > curr_ma50)
     
-    if not (cond_trend and cond_support):
-        return None # 趨勢不對直接剔除
+    if not (cond_trend and cond_support): return None
 
-    # 3. 進階訊號偵測 (Signals)
+    # Signals
     signals = []
-    
-    # Signal A: 縮量十字星
     body_size = abs(curr_close - curr_open)
-    is_doji = body_size < (curr_close * 0.005) # 實體 < 0.5%
-    is_low_vol = pd.notna(curr_vol_ma50) and (curr_vol < curr_vol_ma50 * 0.6) # 量 < 0.6倍
+    is_doji = body_size < (curr_close * 0.005)
+    is_low_vol = pd.notna(curr_vol_ma50) and (curr_vol < curr_vol_ma50 * 0.6)
     if is_doji and is_low_vol: signals.append("★ 縮量十字星")
 
-    # Signal B: 強力跳空 (最低價 > 昨日最高價)
     if curr_low > prev_high: signals.append("★ 強力跳空")
 
-    # Signal C: 50MA 完美回測 (距離 3% 內)
     dist_to_ma50 = (curr_close - curr_ma50) / curr_ma50
     if 0 <= dist_to_ma50 < 0.03: signals.append("★ 50MA 完美回測")
 
-    # 4. 輸出結果
-    # 只要符合核心條件就入選，有訊號則標記 META，否則 OBSERVE
     tag = "OBSERVE"
     desc_text = "趨勢多頭 (觀察中)"
-    
     if signals:
         tag = "META"
         desc_text = " | ".join(signals)
@@ -219,56 +233,37 @@ def strategy_low_volatility(df, ticker, region, latest):
         "desc": desc_text
     }
 
-# --- 工具 & Main ---
-def get_financial_details(stock_obj):
-    data = {"pe": 999, "growth": None, "rev_yoy": None, "rev_qoq": None, "quarters": []}
-    try:
-        info = stock_obj.info
-        data['pe'] = info.get('trailingPE', 999)
-        data['growth'] = info.get('earningsGrowth', None)
-        data['rev_yoy'] = info.get('revenueGrowth', None)
-        q_stmt = stock_obj.quarterly_income_stmt
-        if q_stmt is not None and not q_stmt.empty:
-            vals = q_stmt.loc['Total Revenue'] if 'Total Revenue' in q_stmt.index else q_stmt.loc['Operating Revenue']
-            limit = min(4, len(vals))
-            for i in range(limit):
-                curr = vals[i]; qoq = None
-                if i+1 < len(vals) and vals[i+1] != 0: qoq = (curr - vals[i+1]) / vals[i+1]
-                data['quarters'].append({"date": vals.index[i].strftime('%Y-%m'), "revenue": curr, "qoq": qoq})
-    except: pass
-    return data
-
 def analyze_stock(stock_info):
     ticker = stock_info['code']
     region = stock_info['region']
-    try:
-        stock = yf.Ticker(ticker)
-        df = stock.history(period="3y") 
-        if len(df) < 205: return None
+    
+    # 改用帶 Retry 的抓取函式
+    stock, df = fetch_data_safe(ticker)
+    
+    if stock is None or df is None or len(df) < 205: return None
         
-        latest = df.iloc[-1]; prev = df.iloc[-2]
-        real_trade_date = latest.name.strftime('%Y-%m-%d')
-        window_high_short = df['Close'][-61:-1].max()
-        is_60d_high = latest['Close'] > window_high_short
-        fin_data = get_financial_details(stock)
-        display_name = get_stock_name(ticker, region, stock)
+    latest = df.iloc[-1]
+    prev = df.iloc[-2]
+    real_trade_date = latest.name.strftime('%Y-%m-%d')
+    window_high_short = df['Close'][-61:-1].max()
+    is_60d_high = latest['Close'] > window_high_short
+    fin_data = get_financial_details(stock)
+    display_name = get_stock_name(ticker, region, stock)
+    
+    base = {"code": ticker, "name": display_name, "region": region, "price": float(f"{latest['Close']:.2f}"), "date": real_trade_date, "fundamentals": fin_data}
+    pkg = {}; has_res = False
+    
+    if res := strategy_momentum(df, ticker, region, latest, prev, fin_data): pkg['momentum'] = {**base, **res}; has_res = True
+    if res := strategy_granville(df, ticker, region, latest, prev): pkg['granville'] = {**base, **res}; has_res = True
+    if res := strategy_day_trading(df, ticker, region, latest): pkg['day_trading'] = {**base, **res}; has_res = True
+    if res := strategy_doji_rise(df, ticker, region, latest): pkg['doji_rise'] = {**base, **res}; has_res = True
+    if res := strategy_active_etf(ticker, latest['Close']): pkg['active_etf'] = {**base, **res}; has_res = True
+    if res := strategy_low_volatility(df, ticker, region, latest): pkg['low_volatility'] = {**base, **res}; has_res = True
         
-        base = {"code": ticker, "name": display_name, "region": region, "price": float(f"{latest['Close']:.2f}"), "date": real_trade_date, "fundamentals": fin_data}
-        pkg = {}; has_res = False
-        
-        if res := strategy_momentum(df, ticker, region, latest, prev, fin_data): pkg['momentum'] = {**base, **res}; has_res = True
-        if res := strategy_granville(df, ticker, region, latest, prev): pkg['granville'] = {**base, **res}; has_res = True
-        if res := strategy_day_trading(df, ticker, region, latest): pkg['day_trading'] = {**base, **res}; has_res = True
-        if res := strategy_doji_rise(df, ticker, region, latest): pkg['doji_rise'] = {**base, **res}; has_res = True
-        if res := strategy_active_etf(ticker, latest['Close']): pkg['active_etf'] = {**base, **res}; has_res = True
-        # 新策略
-        if res := strategy_low_volatility(df, ticker, region, latest): pkg['low_volatility'] = {**base, **res}; has_res = True
-            
-        return {"result": pkg if has_res else None, "is_60d_high": is_60d_high, "trade_date": real_trade_date}
-    except: return None
+    return {"result": pkg if has_res else None, "is_60d_high": is_60d_high, "trade_date": real_trade_date}
 
 def main():
-    print("啟動全策略掃描 (含厚積薄發 V2 - 趨勢訊號版)...")
+    print("啟動全策略掃描 (極速 20 線程 + 自動重試)...")
     if not os.path.exists(DATA_DIR): os.makedirs(DATA_DIR)
         
     all_files = glob.glob(os.path.join(DATA_DIR, "*.json"))
@@ -284,6 +279,7 @@ def main():
     res = {"momentum": [], "granville_buy": [], "granville_sell": [], "day_trading": [], "doji_rise": [], "active_etf": [], "low_volatility": []}
     stat_total = 0; stat_new_high = 0; detected_market_date = None
     
+    # 恢復 20 線程
     with ThreadPoolExecutor(max_workers=20) as exc:
         futures = [exc.submit(analyze_stock, s) for s in stocks]
         for f in as_completed(futures):
