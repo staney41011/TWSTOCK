@@ -25,35 +25,18 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-    - name: Run Force Clean
+    - name: Cleanup and Repair
       run: |
-        # 建立強制清洗腳本
-        cat <<EOF > force_clean.py
-        import json, os, math, glob
-        TARGET_FILE = "data.json"
-        DATA_DIR = "data"
-        def clean_nan(obj):
-            if isinstance(obj, float):
-                if math.isnan(obj) or math.isinf(obj): return None
-                return obj
-            elif isinstance(obj, dict):
-                return {k: clean_nan(v) for k, v in obj.items()}
-            elif isinstance(obj, list):
-                return [clean_nan(v) for v in obj]
-            return obj
-        def main():
-            print("Running Force Clean...")
-            if os.path.exists(TARGET_FILE):
-                with open(TARGET_FILE, 'r', encoding='utf-8') as f: data = json.load(f)
-                with open(TARGET_FILE, 'w', encoding='utf-8') as f: json.dump(clean_nan(data), f, ensure_ascii=False, indent=2)
-            if os.path.exists(DATA_DIR):
-                for fp in glob.glob(os.path.join(DATA_DIR, "*.json")):
-                    with open(fp, 'r', encoding='utf-8') as f: d = json.load(f)
-                    with open(fp, 'w', encoding='utf-8') as f: json.dump(clean_nan(d), f, ensure_ascii=False, indent=2)
-        if __name__ == "__main__": main()
-        EOF
+        # 1. 刪除亂七八糟的檔案
+        rm -f restore.py fix_data.py fix_nan.py force_clean.py master_fix.py debug_2344.py old_backup.json
         
-        python force_clean.py
+        # 2. 執行穩定版回補 (找回華邦電)
+        if [ -f "backfill.py" ]; then
+            python backfill.py
+        fi
+        
+        # 3. 正常更新 (確保 main.py 邏輯一致)
+        # python main.py  <-- 這次先註解掉，專心做修復就好
 
     - name: Commit and Push changes
       run: |
@@ -62,7 +45,11 @@ jobs:
         git fetch origin main
         git reset --soft origin/main
         
-        git add data.json data/
+        # 重新加入整理後的檔案
+        git add data.json data/ main.py index.html backfill.py
         
-        git commit -m "Force clean NaN from all files [skip ci]" || exit 0
+        # 提交刪除的紀錄
+        git add -u 
+        
+        git commit -m "Cleanup files and repair 1/16 data [skip ci]" || exit 0
         git push origin main
