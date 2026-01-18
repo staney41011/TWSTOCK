@@ -41,6 +41,9 @@ jobs:
         git config --global user.email "action@github.com"
         git fetch origin main
         git reset --soft origin/main
-        git add data.json
+        
+        # --- 關鍵修正：加入 data 資料夾 ---
+        git add data.json data/
+        
         git commit -m "Auto update stock data [skip ci]" || exit 0
         git push origin main
