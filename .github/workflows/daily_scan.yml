@@ -25,16 +25,35 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-    - name: Run Master Fix
+    - name: Run Force Clean
       run: |
-        # 執行全能修復腳本
-        # (請確保您有將 master_fix.py 上傳到 GitHub)
-        if [ -f "master_fix.py" ]; then
-            python master_fix.py
-        fi
+        # 建立強制清洗腳本
+        cat <<EOF > force_clean.py
+        import json, os, math, glob
+        TARGET_FILE = "data.json"
+        DATA_DIR = "data"
+        def clean_nan(obj):
+            if isinstance(obj, float):
+                if math.isnan(obj) or math.isinf(obj): return None
+                return obj
+            elif isinstance(obj, dict):
+                return {k: clean_nan(v) for k, v in obj.items()}
+            elif isinstance(obj, list):
+                return [clean_nan(v) for v in obj]
+            return obj
+        def main():
+            print("Running Force Clean...")
+            if os.path.exists(TARGET_FILE):
+                with open(TARGET_FILE, 'r', encoding='utf-8') as f: data = json.load(f)
+                with open(TARGET_FILE, 'w', encoding='utf-8') as f: json.dump(clean_nan(data), f, ensure_ascii=False, indent=2)
+            if os.path.exists(DATA_DIR):
+                for fp in glob.glob(os.path.join(DATA_DIR, "*.json")):
+                    with open(fp, 'r', encoding='utf-8') as f: d = json.load(f)
+                    with open(fp, 'w', encoding='utf-8') as f: json.dump(clean_nan(d), f, ensure_ascii=False, indent=2)
+        if __name__ == "__main__": main()
+        EOF
         
-        # 接著可以跑每日更新 (選用)
-        # python main.py
+        python force_clean.py
 
     - name: Commit and Push changes
       run: |
@@ -43,8 +62,7 @@ jobs:
         git fetch origin main
         git reset --soft origin/main
         
-        # 將所有修好的檔案存回去
-        git add data.json data/ master_fix.py
+        git add data.json data/
         
-        git commit -m "Fix NaN and Restore Data [skip ci]" || exit 0
+        git commit -m "Force clean NaN from all files [skip ci]" || exit 0
         git push origin main
