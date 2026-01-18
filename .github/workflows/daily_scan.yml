@@ -25,37 +25,15 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-    - name: Run NaN Fix
+    - name: Run Restore Script (Force Overwrite)
       run: |
-        # 建立修復腳本
-        cat <<EOF > fix_nan.py
-        import json, os, math, glob
-        TARGET_FILE = "data.json"
-        DATA_DIR = "data"
-        def clean_nan(obj):
-            if isinstance(obj, float):
-                if math.isnan(obj) or math.isinf(obj): return None
-                return obj
-            elif isinstance(obj, dict):
-                return {k: clean_nan(v) for k, v in obj.items()}
-            elif isinstance(obj, list):
-                return [clean_nan(v) for v in obj]
-            return obj
-        def main():
-            if not os.path.exists(TARGET_FILE): return
-            with open(TARGET_FILE, 'r', encoding='utf-8') as f: raw_data = json.load(f)
-            cleaned_data = clean_nan(raw_data)
-            with open(TARGET_FILE, 'w', encoding='utf-8') as f: json.dump(cleaned_data, f, ensure_ascii=False, indent=2)
-            if not os.path.exists(DATA_DIR): os.makedirs(DATA_DIR)
-            for record in cleaned_data:
-                if record.get('date'):
-                    with open(os.path.join(DATA_DIR, f"{record['date']}.json"), 'w', encoding='utf-8') as f:
-                        json.dump(record, f, ensure_ascii=False, indent=2)
-        if __name__ == "__main__": main()
-        EOF
+        # 只要備份檔存在，就執行強制還原
+        if [ -f "old_backup.json" ]; then
+          python restore.py
+        fi
         
-        # 執行修復
-        python fix_nan.py
+        # 接著執行今天的掃描 (選用，您可以註解掉這行只做還原)
+        # python main.py
 
     - name: Commit and Push changes
       run: |
@@ -64,8 +42,8 @@ jobs:
         git fetch origin main
         git reset --soft origin/main
         
-        # 強制加入 data 資料夾與修復後的檔案
-        git add data.json data/
+        # 確保 data 資料夾被加入
+        git add data.json data/ restore.py
         
-        git commit -m "Fix NaN values in json [skip ci]" || exit 0
+        git commit -m "Force restore old data [skip ci]" || exit 0
         git push origin main
