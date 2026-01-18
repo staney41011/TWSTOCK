@@ -5,7 +5,7 @@ import json
 import os
 import glob
 import random
-import math  # <--- 新增 math
+import math
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
@@ -22,15 +22,10 @@ MOCK_ETF_DB = {
     "00982A": {"name": "富邦成長", "holdings": {"2330.TW": {"shares": 600, "pct": 12.0}, "2317.TW": {"shares": 400, "pct": 7.8}, "3008.TW": {"shares": 50, "pct": 3.2}}},
 }
 
-# --- [關鍵修復] 資料清洗函式 ---
+# --- [關鍵] NaN 清洗函式 ---
 def clean_for_json(obj):
-    """
-    遞迴將 Python 的 NaN, Infinity 轉換為 None (JSON null)，
-    確保前端讀取時不會報錯。
-    """
     if isinstance(obj, float):
-        if math.isnan(obj) or math.isinf(obj):
-            return None
+        if math.isnan(obj) or math.isinf(obj): return None
         return obj
     elif isinstance(obj, dict):
         return {k: clean_for_json(v) for k, v in obj.items()}
@@ -47,8 +42,7 @@ def get_stock_name(ticker, region, stock_obj=None):
     if stock_obj:
         try:
             return stock_obj.info.get('longName') or stock_obj.info.get('shortName') or ticker
-        except:
-            pass
+        except: pass
     return display_name
 
 def get_tw_stock_list():
@@ -71,7 +65,6 @@ def strategy_momentum(df, ticker, region, latest, prev, fin_data):
     min_vol = 500000 if region == 'TW' else 1000000
     if latest['Volume'] < min_vol: return None
 
-    # 還原權值 Close
     window_high_short = df['Close'][-LOOKBACK_SHORT-1:-1].max()
     is_new_high = latest['Close'] > window_high_short
     was_high_yesterday = prev['Close'] > window_high_short
@@ -234,29 +227,96 @@ def strategy_active_etf(ticker, latest_price):
     return None
 
 # ==========================================
-# 策略 6: 厚積薄發 (低波動醞釀)
+# 策略 6: 厚積薄發 (趨勢訊號版 V2)
 # ==========================================
 def strategy_low_volatility(df, ticker, region, latest):
-    if len(df) < 200: return None
-    close = latest['Close']; vol = latest['Volume']
-    ma50 = df['Close'].rolling(window=50).mean().iloc[-1]
-    ma200 = df['Close'].rolling(window=200).mean().iloc[-1]
-    vol_ma50 = df['Volume'].rolling(window=50).mean().iloc[-1]
-    std_dev_10 = df['Close'].rolling(window=10).std().iloc[-1]
+    # 需要 200MA，至少要 200 根 (放寬到 205 確保有前一日)
+    if len(df) < 205: return None
     
-    cond_a = close > ma200 and ma50 > ma200
-    cond_b = close > ma50
-    if not (cond_a and cond_b): return None
+    # 1. 計算指標 (使用 min_periods 增加容錯率)
+    close_series = df['Close']
+    vol_series = df['Volume']
+    high_series = df['High']
+    low_series = df['Low']
     
-    volatility_ratio = std_dev_10 / close
-    cond_c = volatility_ratio < 0.03
-    cond_d = vol > vol_ma50 * 0.7
+    # 均線 (允許少量缺值)
+    ma50 = close_series.rolling(window=50, min_periods=40).mean()
+    ma200 = close_series.rolling(window=200, min_periods=150).mean()
+    vol_ma50 = vol_series.rolling(window=50, min_periods=40).mean()
     
-    if cond_c and cond_d:
-        return {"tag": "META", "volatility_pct": round(volatility_ratio * 100, 2), "trend_status": "多頭排列 (200MA上)", "volume_status": "量能達標", "desc": "波動壓縮極致(<3%)，且量能維持一定水準，隨時可能發動。"}
-    elif volatility_ratio < 0.06:
-        return {"tag": "OBSERVE", "volatility_pct": round(volatility_ratio * 100, 2), "trend_status": "多頭排列", "volume_status": "量能待觀察" if not cond_d else "量能達標", "desc": "趨勢正確，但波動尚未收斂至極致(3%~6%)，持續觀察。"}
-    return None
+    # 波動率 (僅供顯示用，不作為過濾條件)
+    std_10 = close_series.rolling(window=10, min_periods=5).std().iloc[-1]
+    
+    # 取得最新一筆與前一筆數據
+    curr_close = close_series.iloc[-1]
+    curr_open = df['Open'].iloc[-1]
+    curr_low = low_series.iloc[-1]
+    curr_vol = vol_series.iloc[-1]
+    
+    curr_ma50 = ma50.iloc[-1]
+    curr_ma200 = ma200.iloc[-1]
+    curr_vol_ma50 = vol_ma50.iloc[-1]
+    
+    prev_high = high_series.iloc[-2]
+
+    # --- 防呆檢查 (如果關鍵指標是 NaN，直接跳過) ---
+    if pd.isna(curr_ma50) or pd.isna(curr_ma200): 
+        return None
+
+    # 2. 核心條件 (Core Filter)
+    # A. 趨勢確認: 收盤 > 200MA 且 50MA > 200MA
+    cond_trend = (curr_close > curr_ma200) and (curr_ma50 > curr_ma200)
+    
+    # B. 支撐確認: 收盤 > 50MA
+    cond_support = (curr_close > curr_ma50)
+    
+    if not (cond_trend and cond_support):
+        return None # 核心趨勢不對，直接剔除
+
+    # 3. 進階訊號偵測 (Signals)
+    signals = []
+    
+    # 訊號 A: 縮量十字星
+    # 實體 < 0.5% 且 量 < 0.6倍均量
+    body_size = abs(curr_close - curr_open)
+    is_doji = body_size < (curr_close * 0.005)
+    is_low_vol = pd.notna(curr_vol_ma50) and (curr_vol < curr_vol_ma50 * 0.6)
+    
+    if is_doji and is_low_vol:
+        signals.append("★ 縮量十字星")
+
+    # 訊號 B: 強力跳空
+    # 最低價 > 昨日最高價
+    if curr_low > prev_high:
+        signals.append("★ 強力跳空")
+
+    # 訊號 C: 50MA 完美回測
+    # 距離 50MA 在 3% 內 (且未跌破，核心條件已確保未跌破)
+    dist_to_ma50 = (curr_close - curr_ma50) / curr_ma50
+    if 0 <= dist_to_ma50 < 0.03:
+        signals.append("★ 50MA 完美回測")
+
+    # 4. 輸出結果
+    # 只要符合核心條件就會列入，若有訊號則標記 META，否則為 OBSERVE
+    tag = "OBSERVE"
+    desc_text = "趨勢多頭 (觀察中)"
+    
+    if signals:
+        tag = "META"
+        desc_text = " | ".join(signals)
+        
+    # 計算波動率百分比 (顯示用)
+    vol_pct = 0
+    if pd.notna(std_10) and curr_close > 0:
+        vol_pct = round((std_10 / curr_close) * 100, 2)
+
+    return {
+        "tag": tag,
+        "volatility_pct": vol_pct,
+        "trend_status": "多頭排列",
+        "volume_status": "量能收縮" if (pd.notna(curr_vol_ma50) and curr_vol < curr_vol_ma50) else "量能放大",
+        "desc": desc_text
+    }
 
 # --- 工具 & Main ---
 def get_financial_details(stock_obj):
@@ -311,17 +371,20 @@ def analyze_stock(stock_info):
         if res := strategy_day_trading(df, ticker, region, latest): pkg['day_trading'] = {**base, **res}; has_res = True
         if res := strategy_doji_rise(df, ticker, region, latest): pkg['doji_rise'] = {**base, **res}; has_res = True
         if res := strategy_active_etf(ticker, latest['Close']): pkg['active_etf'] = {**base, **res}; has_res = True
+        
+        # 使用新的策略邏輯
         if res := strategy_low_volatility(df, ticker, region, latest): pkg['low_volatility'] = {**base, **res}; has_res = True
             
         return {"result": pkg if has_res else None, "is_60d_high": is_60d_high, "trade_date": real_trade_date}
     except: return None
 
 def main():
-    print("啟動全策略掃描 (NaN 清洗修正版)...")
+    print("啟動全策略掃描 (厚積薄發 V2 - 趨勢訊號版)...")
     
     if not os.path.exists(DATA_DIR):
         os.makedirs(DATA_DIR)
         
+    # 清洗週末檔案
     all_files = glob.glob(os.path.join(DATA_DIR, "*.json"))
     for file_path in all_files:
         filename = os.path.basename(file_path)
@@ -331,8 +394,7 @@ def main():
             if file_date.weekday() >= 5:
                 print(f"⚠️ 刪除週末誤判檔案: {filename}")
                 os.remove(file_path)
-        except:
-            pass
+        except: pass
 
     stocks = get_tw_stock_list() 
     res = {"momentum": [], "granville_buy": [], "granville_sell": [], "day_trading": [], "doji_rise": [], "active_etf": [], "low_volatility": []}
@@ -376,22 +438,20 @@ def main():
         
     print(f"✅ 確認歸檔日期: {final_date}")
     
-    # ------------------------------------------------
-    # 關鍵修正: 在存檔前清洗 NaN
-    # ------------------------------------------------
     daily_record = {
         "date": final_date,
         "market_breadth": market_breadth,
         "strategies": res
     }
     
-    # 這裡進行清洗！
-    cleaned_daily_record = clean_for_json(daily_record)
+    # 存檔前清洗
+    cleaned_daily = clean_for_json(daily_record)
     
     target_file = os.path.join(DATA_DIR, f"{final_date}.json")
     with open(target_file, 'w', encoding='utf-8') as f:
-        json.dump(cleaned_daily_record, f, ensure_ascii=False, indent=2)
+        json.dump(cleaned_daily, f, ensure_ascii=False, indent=2)
     
+    # 合併發布
     all_files = sorted(glob.glob(os.path.join(DATA_DIR, "*.json")))
     final_history = []
     for file_path in all_files:
@@ -403,11 +463,10 @@ def main():
                     final_history.append(data)
         except: pass
             
-    # 總檔也要清洗一次 (雙重保險)
-    cleaned_final_history = clean_for_json(final_history)
-    
+    # 總檔清洗並發布
+    cleaned_history = clean_for_json(final_history)
     with open(DATA_FILE, 'w', encoding='utf-8') as f:
-        json.dump(cleaned_final_history, f, ensure_ascii=False, indent=2)
+        json.dump(cleaned_history, f, ensure_ascii=False, indent=2)
         
     print(f"總檔更新完成。日期: {final_date} / 新高佔比: {market_breadth}%")
 
