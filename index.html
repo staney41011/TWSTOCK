@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>多策略選股中控台</title>
+    <title>台股策略戰情室</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
@@ -33,6 +33,11 @@
                 </div>
             </div>
         </div>
+        <div class="mt-4 md:mt-0 text-right">
+             <button @click="loadData" class="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition">
+                ↻ 強制重整
+             </button>
+        </div>
     </header>
 
     <div v-if="currentRecord.market_breadth !== undefined" 
@@ -58,24 +63,12 @@
     </div>
 
     <div class="flex space-x-2 mb-6 overflow-x-auto pb-2">
-        <button @click="currentStrategy = 'momentum'" :class="currentStrategy === 'momentum' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">
-            🔥 動能爆發
-        </button>
-        <button @click="currentStrategy = 'doji_rise'" :class="currentStrategy === 'doji_rise' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">
-            ✨ 十字星起漲
-        </button>
-        <button @click="currentStrategy = 'day_trading'" :class="currentStrategy === 'day_trading' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">
-            ⚡ 隔日沖
-        </button>
-        <button @click="currentStrategy = 'low_volatility'" :class="currentStrategy === 'low_volatility' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">
-            🧘 厚積薄發
-        </button>
-        <button @click="currentStrategy = 'granville'" :class="currentStrategy === 'granville' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">
-            📉 葛蘭碧八法
-        </button>
-        <button @click="currentStrategy = 'etf'" :class="currentStrategy === 'etf' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">
-            🏦 主動式 ETF
-        </button>
+        <button @click="currentStrategy = 'momentum'" :class="currentStrategy === 'momentum' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🔥 動能爆發</button>
+        <button @click="currentStrategy = 'doji_rise'" :class="currentStrategy === 'doji_rise' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">✨ 十字星起漲</button>
+        <button @click="currentStrategy = 'day_trading'" :class="currentStrategy === 'day_trading' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">⚡ 隔日沖</button>
+        <button @click="currentStrategy = 'low_volatility'" :class="currentStrategy === 'low_volatility' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🧘 厚積薄發</button>
+        <button @click="currentStrategy = 'granville'" :class="currentStrategy === 'granville' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">📉 葛蘭碧八法</button>
+        <button @click="currentStrategy = 'etf'" :class="currentStrategy === 'etf' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🏦 主動式 ETF</button>
     </div>
 
     <section class="mb-8 bg-gray-800/50 rounded-lg p-5 border border-gray-700">
@@ -88,7 +81,6 @@
             <span v-if="currentStrategy === 'granville'">葛蘭碧八大法則 - 篩選邏輯</span>
             <span v-if="currentStrategy === 'etf'">主動式 ETF - 篩選邏輯</span>
         </h3>
-        
         <div class="text-sm text-gray-300">
             <ul v-if="currentStrategy === 'momentum'" class="space-y-1 list-disc list-inside">
                 <li><b class="text-yellow-400">創高</b>：股價創 60 日新高且昨日未創高。</li>
@@ -123,7 +115,7 @@
         </div>
     </section>
 
-    <div v-if="loading" class="text-center text-gray-500 py-20"><p class="text-xl animate-pulse">正在載入多重策略數據...</p></div>
+    <div v-if="loading" class="text-center text-gray-500 py-20"><p class="text-xl animate-pulse">正在載入最新數據...</p></div>
 
     <div v-else>
         
@@ -182,11 +174,7 @@
         <div v-if="currentStrategy === 'low_volatility'">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div v-for="stock in strategyData.low_volatility" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 border-l-4" :class="stock.tag === 'META' ? 'border-l-green-500' : 'border-l-gray-500'">
-                    <div class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg font-bold" 
-                         :class="stock.tag === 'META' ? 'bg-green-600' : 'bg-gray-600'">
-                        <span v-if="stock.tag === 'META'">★ META 買點</span>
-                        <span v-else>👁️ 觀察中</span>
-                    </div>
+                    <div class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg font-bold" :class="stock.tag === 'META' ? 'bg-green-600' : 'bg-gray-600'"><span v-if="stock.tag === 'META'">★ META 買點</span><span v-else>👁️ 觀察中</span></div>
                     <div class="flex justify-between items-start mb-4">
                         <div><h3 class="text-xl font-bold text-white">{{ stock.name }}</h3><p class="text-gray-400 text-sm">{{ stock.code.split('.')[0] }} | ${{ stock.price }}</p></div>
                     </div>
@@ -249,6 +237,7 @@
             <div v-if="currentStrategy === 'doji_rise'" class="bg-yellow-900/20 p-4 rounded mb-4 border border-yellow-800">
                 <h4 class="text-yellow-400 font-bold mb-2">✨ 策略評分明細 ({{ selectedStock.score }}分)</h4>
                 <ul class="text-sm text-gray-300 space-y-1 mb-3"><li v-for="r in selectedStock.reasons" class="flex items-center"><span class="mr-2" :class="r.includes('-') ? 'text-red-400' : 'text-green-400'">●</span> {{ r }}</li></ul>
+                <div class="border-t border-gray-700 pt-2 mt-2"><div class="text-xs text-gray-400 mb-1">操作建議：</div><p class="text-sm text-white">十字星後 3 日內需出現實體紅K突破高點，若 5 日內未突破則移出觀察。</p></div>
             </div>
 
             <div v-if="currentStrategy === 'day_trading'" class="bg-green-900/20 p-4 rounded mb-4 border border-green-800">
@@ -279,9 +268,7 @@
                             <tr v-for="q in selectedStock.fundamentals.quarters" :key="q.date" class="border-b border-gray-700 text-center">
                                 <td class="px-4 py-3 border border-gray-600">{{ q.date }}</td>
                                 <td class="px-4 py-3 border border-gray-600">{{ formatBigNumber(q.revenue) }}</td>
-                                <td class="px-4 py-3 border border-gray-600">
-                                    <span v-if="q.qoq" :class="q.qoq > 0 ? 'text-red-400' : 'text-green-400'">{{ formatPercent(q.qoq) }}</span><span v-else>-</span>
-                                </td>
+                                <td class="px-4 py-3 border border-gray-600"><span v-if="q.qoq" :class="q.qoq > 0 ? 'text-red-400' : 'text-green-400'">{{ formatPercent(q.qoq) }}</span><span v-else>-</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -312,7 +299,15 @@
             }
         },
         methods: {
-            async loadData() { try { const r = await fetch('./data.json'); this.history = await r.json(); } catch { this.history = []; } finally { this.loading = false; } },
+            // 加入時間戳記避免快取 (?t=...)
+            async loadData() { 
+                this.loading = true;
+                try { 
+                    const r = await fetch('./data.json?t=' + new Date().getTime()); 
+                    this.history = await r.json(); 
+                } catch { this.history = []; } 
+                finally { this.loading = false; } 
+            },
             openModal(stock) { this.selectedStock = stock; this.showModal = true; },
             formatPercent(v) { if(!v && v!==0) return '-'; let n=parseFloat(v); if(isNaN(n)) return '-'; if(Math.abs(n)<10) n*=100; return (n>0?'+':'')+n.toFixed(2)+'%'; },
             isPositive(v) { return v && parseFloat(v) > 0; },
