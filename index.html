@@ -19,108 +19,116 @@
 
 <div id="app" v-cloak class="min-h-screen p-4 md:p-8 max-w-6xl mx-auto pb-20">
     
-    <header class="mb-6 flex flex-col md:flex-row justify-between items-start border-b border-gray-700 pb-4">
-        <div>
-            <h1 class="text-3xl font-bold text-white mb-2">⚡ 台股策略戰情室</h1>
-            <div class="flex items-center gap-4 mt-2">
-                <select v-model="selectedDateIndex" class="bg-gray-800 border border-gray-600 text-white rounded px-3 py-1 text-sm focus:outline-none focus:border-blue-500">
-                    <option v-for="(record, index) in reversedHistory" :value="index">
-                        {{ record.date }}
-                    </option>
-                </select>
-                <div class="text-gray-400 text-sm" v-if="currentRecord.date">
-                    資料日期: {{ currentRecord.date }}
-                </div>
-            </div>
-        </div>
-        <div class="mt-4 md:mt-0 text-right">
-             <button @click="loadData" class="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition">
-                ↻ 強制重整
-             </button>
-        </div>
-    </header>
+    <div v-if="errorMsg" class="bg-red-900/50 border border-red-500 text-white p-4 rounded mb-6 text-center">
+        <h3 class="font-bold text-lg mb-2">⚠️ 資料讀取發生錯誤</h3>
+        <p class="font-mono text-sm">{{ errorMsg }}</p>
+        <p class="text-gray-400 text-xs mt-2">請嘗試按 Ctrl+F5 強制重新整理，或檢查 data.json 格式。</p>
+        <button @click="loadData" class="mt-4 bg-red-700 hover:bg-red-600 px-4 py-2 rounded text-sm">重試</button>
+    </div>
 
-    <div v-if="currentRecord.market_breadth !== undefined" 
-         class="mb-8 p-4 rounded-lg flex items-center justify-between border"
-         :class="currentRecord.market_breadth > 2 ? 'bg-red-900/30 border-red-700' : 'bg-blue-900/30 border-blue-700'">
-        <div class="flex items-center gap-4">
-            <div class="p-3 rounded-full" :class="currentRecord.market_breadth > 2 ? 'bg-red-600' : 'bg-blue-600'">
-                <svg v-if="currentRecord.market_breadth > 2" class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"></path></svg>
-                <svg v-else class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-            </div>
+    <div v-if="loading" class="text-center py-20">
+        <p class="text-xl animate-pulse text-blue-400">🔄 正在下載最新策略數據...</p>
+    </div>
+
+    <div v-else-if="history.length > 0">
+        <header class="mb-6 flex flex-col md:flex-row justify-between items-start border-b border-gray-700 pb-4">
             <div>
-                <h3 class="text-sm font-bold" :class="currentRecord.market_breadth > 2 ? 'text-red-300' : 'text-blue-300'">全市場創新高佔比 (60日)</h3>
-                <div class="text-3xl font-bold text-white mt-1">
-                    {{ currentRecord.market_breadth }}%
-                    <span v-if="currentRecord.market_breadth > 2" class="text-sm bg-red-600 text-white px-2 py-1 rounded ml-2 animate-pulse">🔥 多頭強盛 (>2%)</span>
-                    <span v-else class="text-sm text-gray-400 ml-2">🧊 市場冷靜中</span>
+                <h1 class="text-3xl font-bold text-white mb-2">⚡ 台股策略戰情室</h1>
+                <div class="flex items-center gap-4 mt-2">
+                    <select v-model="selectedDateIndex" class="bg-gray-800 border border-gray-600 text-white rounded px-3 py-1 text-sm focus:outline-none focus:border-blue-500">
+                        <option v-for="(record, index) in reversedHistory" :value="index">
+                            {{ record.date }} ({{ getStockCount(record) }}檔)
+                        </option>
+                    </select>
+                    <div class="text-gray-400 text-sm" v-if="currentRecord.date">
+                        資料日期: {{ currentRecord.date }}
+                    </div>
                 </div>
             </div>
+            <div class="mt-4 md:mt-0 text-right">
+                 <button @click="loadData" class="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition">
+                    ↻ 強制重整
+                 </button>
+            </div>
+        </header>
+
+        <div v-if="currentRecord.market_breadth !== undefined" 
+             class="mb-8 p-4 rounded-lg flex items-center justify-between border"
+             :class="currentRecord.market_breadth > 2 ? 'bg-red-900/30 border-red-700' : 'bg-blue-900/30 border-blue-700'">
+            <div class="flex items-center gap-4">
+                <div class="p-3 rounded-full" :class="currentRecord.market_breadth > 2 ? 'bg-red-600' : 'bg-blue-600'">
+                    <svg v-if="currentRecord.market_breadth > 2" class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"></path></svg>
+                    <svg v-else class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold" :class="currentRecord.market_breadth > 2 ? 'text-red-300' : 'text-blue-300'">全市場創新高佔比</h3>
+                    <div class="text-3xl font-bold text-white mt-1">
+                        {{ currentRecord.market_breadth }}%
+                        <span v-if="currentRecord.market_breadth > 2" class="text-sm bg-red-600 text-white px-2 py-1 rounded ml-2 animate-pulse">🔥 多頭強盛 (>2%)</span>
+                        <span v-else class="text-sm text-gray-400 ml-2">🧊 市場冷靜中</span>
+                    </div>
+                </div>
+            </div>
+            <div class="text-right text-gray-400 text-xs hidden md:block max-w-xs leading-relaxed">
+                統計今日收盤價創下過去 60 日新高的股票數量佔全市場比例。<br>通常 > 2% 代表多頭氣氛熱絡。
+            </div>
         </div>
-        <div class="text-right text-gray-400 text-xs hidden md:block max-w-xs leading-relaxed">
-            統計今日收盤價創下過去 60 日新高的股票數量佔全市場比例。<br>通常 > 2% 代表多頭氣氛熱絡。
+
+        <div class="flex space-x-2 mb-6 overflow-x-auto pb-2">
+            <button @click="currentStrategy = 'momentum'" :class="currentStrategy === 'momentum' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🔥 動能爆發</button>
+            <button @click="currentStrategy = 'doji_rise'" :class="currentStrategy === 'doji_rise' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">✨ 十字星起漲</button>
+            <button @click="currentStrategy = 'day_trading'" :class="currentStrategy === 'day_trading' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">⚡ 隔日沖</button>
+            <button @click="currentStrategy = 'low_volatility'" :class="currentStrategy === 'low_volatility' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🧘 厚積薄發</button>
+            <button @click="currentStrategy = 'granville'" :class="currentStrategy === 'granville' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">📉 葛蘭碧八法</button>
+            <button @click="currentStrategy = 'etf'" :class="currentStrategy === 'etf' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🏦 主動式 ETF</button>
         </div>
-    </div>
 
-    <div class="flex space-x-2 mb-6 overflow-x-auto pb-2">
-        <button @click="currentStrategy = 'momentum'" :class="currentStrategy === 'momentum' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🔥 動能爆發</button>
-        <button @click="currentStrategy = 'doji_rise'" :class="currentStrategy === 'doji_rise' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">✨ 十字星起漲</button>
-        <button @click="currentStrategy = 'day_trading'" :class="currentStrategy === 'day_trading' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">⚡ 隔日沖</button>
-        <button @click="currentStrategy = 'low_volatility'" :class="currentStrategy === 'low_volatility' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🧘 厚積薄發</button>
-        <button @click="currentStrategy = 'granville'" :class="currentStrategy === 'granville' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">📉 葛蘭碧八法</button>
-        <button @click="currentStrategy = 'etf'" :class="currentStrategy === 'etf' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🏦 主動式 ETF</button>
-    </div>
+        <section class="mb-8 bg-gray-800/50 rounded-lg p-5 border border-gray-700">
+            <h3 class="text-blue-400 font-bold mb-3 flex items-center text-lg">
+                <span class="mr-2">💡</span> 
+                <span v-if="currentStrategy === 'momentum'">動能爆發 - 篩選邏輯</span>
+                <span v-if="currentStrategy === 'doji_rise'">十字星主升起漲 - 篩選邏輯</span>
+                <span v-if="currentStrategy === 'day_trading'">隔日沖 (漲停回檔) - 篩選邏輯</span>
+                <span v-if="currentStrategy === 'low_volatility'">厚積薄發 (低波動醞釀) - 篩選邏輯</span>
+                <span v-if="currentStrategy === 'granville'">葛蘭碧八大法則 - 篩選邏輯</span>
+                <span v-if="currentStrategy === 'etf'">主動式 ETF - 篩選邏輯</span>
+            </h3>
+            <div class="text-sm text-gray-300">
+                <ul v-if="currentStrategy === 'momentum'" class="space-y-1 list-disc list-inside">
+                    <li><b class="text-yellow-400">創高</b>：股價創 60 日新高且昨日未創高。</li>
+                    <li><b class="text-red-400">營收</b>：年增 > 15% 優先 (+3分)。</li>
+                    <li><b>加分</b>：量增、兩年新高、EPS成長。</li>
+                </ul>
+                <ul v-if="currentStrategy === 'doji_rise'" class="space-y-1 list-disc list-inside">
+                    <li><b class="text-yellow-400">流動性</b>：5日均量 > 5000張。</li>
+                    <li><b class="text-red-400">趨勢</b>：股價 > 20MA & 60MA，60MA 上揚。</li>
+                    <li><b>形態</b>：整理區上緣、實體極小十字星。</li>
+                    <li><b class="text-green-400">量能</b>：量縮整理 (0.5~1.5倍均量)。</li>
+                </ul>
+                <ul v-if="currentStrategy === 'day_trading'" class="space-y-1 list-disc list-inside">
+                    <li><b class="text-red-400">關鍵型態</b>：前天紅K → 昨天漲停 → 今天黑K。</li>
+                    <li><b class="text-yellow-400">均線架構</b>：MA3 > MA4 且 MA45 > MA46。</li>
+                    <li><b>強勢背景</b>：近20日漲幅 > 20%。</li>
+                </ul>
+                <ul v-if="currentStrategy === 'low_volatility'" class="space-y-1 list-disc list-inside">
+                    <li><b class="text-yellow-400">大趨勢</b>：收盤 > 200MA 且 50MA > 200MA。</li>
+                    <li><b class="text-red-400">VCP收縮</b>：10日標準差/收盤價 < 3% (極度壓縮)。</li>
+                    <li><b>動能</b>：股價守住 50MA 且 量能不窒息 (>0.7倍均量)。</li>
+                    <li><b>訊號</b>：符合上述為 <span class="text-green-400">★ META 買點</span>；趨勢對但波動稍大為 <span class="text-gray-400">觀察中</span>。</li>
+                </ul>
+                <ul v-if="currentStrategy === 'granville'" class="space-y-1 list-disc list-inside">
+                    <li><b>基準</b>：200日移動平均線 (年線)。</li>
+                    <li><b>買進</b>：假跌破上揚年線、回測年線不破。</li>
+                    <li><b>賣出</b>：假突破下彎年線、反彈至年線不過。</li>
+                </ul>
+                <ul v-if="currentStrategy === 'etf'" class="space-y-1 list-disc list-inside">
+                    <li>追蹤主動式 ETF 持股明細與佔比。</li>
+                </ul>
+            </div>
+        </section>
 
-    <section class="mb-8 bg-gray-800/50 rounded-lg p-5 border border-gray-700">
-        <h3 class="text-blue-400 font-bold mb-3 flex items-center text-lg">
-            <span class="mr-2">💡</span> 
-            <span v-if="currentStrategy === 'momentum'">動能爆發 - 篩選邏輯</span>
-            <span v-if="currentStrategy === 'doji_rise'">十字星主升起漲 - 篩選邏輯</span>
-            <span v-if="currentStrategy === 'day_trading'">隔日沖 (漲停回檔) - 篩選邏輯</span>
-            <span v-if="currentStrategy === 'low_volatility'">厚積薄發 (低波動醞釀) - 篩選邏輯</span>
-            <span v-if="currentStrategy === 'granville'">葛蘭碧八大法則 - 篩選邏輯</span>
-            <span v-if="currentStrategy === 'etf'">主動式 ETF - 篩選邏輯</span>
-        </h3>
-        <div class="text-sm text-gray-300">
-            <ul v-if="currentStrategy === 'momentum'" class="space-y-1 list-disc list-inside">
-                <li><b class="text-yellow-400">創高</b>：股價創 60 日新高且昨日未創高。</li>
-                <li><b class="text-red-400">營收</b>：年增 > 15% 優先 (+3分)。</li>
-                <li><b>加分</b>：量增、兩年新高、EPS成長。</li>
-            </ul>
-            <ul v-if="currentStrategy === 'doji_rise'" class="space-y-1 list-disc list-inside">
-                <li><b class="text-yellow-400">流動性</b>：5日均量 > 5000張。</li>
-                <li><b class="text-red-400">趨勢</b>：股價 > 20MA & 60MA，60MA 上揚。</li>
-                <li><b>形態</b>：整理區上緣、實體極小十字星。</li>
-                <li><b class="text-green-400">量能</b>：量縮整理 (0.5~1.5倍均量)。</li>
-            </ul>
-            <ul v-if="currentStrategy === 'day_trading'" class="space-y-1 list-disc list-inside">
-                <li><b class="text-red-400">關鍵型態</b>：前天紅K → 昨天漲停 → 今天黑K。</li>
-                <li><b class="text-yellow-400">均線架構</b>：MA3 > MA4 且 MA45 > MA46。</li>
-                <li><b>強勢背景</b>：近20日漲幅 > 20%。</li>
-            </ul>
-            <ul v-if="currentStrategy === 'low_volatility'" class="space-y-1 list-disc list-inside">
-                <li><b class="text-yellow-400">大趨勢</b>：收盤 > 200MA 且 50MA > 200MA。</li>
-                <li><b class="text-red-400">VCP收縮</b>：10日標準差/收盤價 < 3% (極度壓縮)。</li>
-                <li><b>動能</b>：股價守住 50MA 且 量能不窒息 (>0.7倍均量)。</li>
-                <li><b>訊號</b>：符合上述為 <span class="text-green-400">★ META 買點</span>；趨勢對但波動稍大為 <span class="text-gray-400">觀察中</span>。</li>
-            </ul>
-            <ul v-if="currentStrategy === 'granville'" class="space-y-1 list-disc list-inside">
-                <li><b>基準</b>：200日移動平均線 (年線)。</li>
-                <li><b>買進</b>：假跌破上揚年線、回測年線不破。</li>
-                <li><b>賣出</b>：假突破下彎年線、反彈至年線不過。</li>
-            </ul>
-            <ul v-if="currentStrategy === 'etf'" class="space-y-1 list-disc list-inside">
-                <li>追蹤主動式 ETF 持股明細與佔比。</li>
-            </ul>
-        </div>
-    </section>
-
-    <div v-if="loading" class="text-center text-gray-500 py-20"><p class="text-xl animate-pulse">正在載入最新數據...</p></div>
-
-    <div v-else>
-        
-        <div v-if="currentStrategy === 'momentum'">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div>
+            <div v-if="currentStrategy === 'momentum'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div v-for="stock in strategyData.momentum" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 relative overflow-hidden group">
                     <div class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg font-bold" :class="stock.score >= 5 ? 'bg-red-600' : 'bg-gray-600'">{{ stock.score }}分</div>
                     <div class="flex justify-between items-end mb-4">
@@ -134,10 +142,8 @@
                 </div>
                 <div v-if="!strategyData.momentum?.length" class="col-span-full text-center text-gray-500 py-10">無符合標的</div>
             </div>
-        </div>
 
-        <div v-if="currentStrategy === 'doji_rise'">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-if="currentStrategy === 'doji_rise'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div v-for="stock in strategyData.doji_rise" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 border-l-4 border-l-yellow-500 relative">
                     <div class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg font-bold" :class="stock.score >= 80 ? 'bg-purple-600' : (stock.score >= 70 ? 'bg-red-600' : 'bg-yellow-600')">{{ stock.score }}分</div>
                     <div class="flex justify-between items-start mb-4">
@@ -151,10 +157,8 @@
                 </div>
                 <div v-if="!strategyData.doji_rise?.length" class="col-span-full text-center text-gray-500 py-10">今日無符合「量縮十字星」整理個股</div>
             </div>
-        </div>
 
-        <div v-if="currentStrategy === 'day_trading'">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-if="currentStrategy === 'day_trading'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div v-for="stock in strategyData.day_trading" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 border-l-4 border-l-green-500 relative">
                     <div class="absolute top-0 right-0 bg-green-600 text-white text-xs px-2 py-1 rounded-bl-lg font-bold">漲停回檔</div>
                     <div class="flex justify-between items-start mb-4">
@@ -169,10 +173,8 @@
                 </div>
                 <div v-if="!strategyData.day_trading?.length" class="col-span-full text-center text-gray-500 py-10">無符合標的</div>
             </div>
-        </div>
 
-        <div v-if="currentStrategy === 'low_volatility'">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-if="currentStrategy === 'low_volatility'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div v-for="stock in strategyData.low_volatility" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 border-l-4" :class="stock.tag === 'META' ? 'border-l-green-500' : 'border-l-gray-500'">
                     <div class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg font-bold" :class="stock.tag === 'META' ? 'bg-green-600' : 'bg-gray-600'"><span v-if="stock.tag === 'META'">★ META 買點</span><span v-else>👁️ 觀察中</span></div>
                     <div class="flex justify-between items-start mb-4">
@@ -186,27 +188,26 @@
                 </div>
                 <div v-if="!strategyData.low_volatility?.length" class="col-span-full text-center text-gray-500 py-10">今日無符合條件個股</div>
             </div>
-        </div>
 
-        <div v-if="currentStrategy === 'granville'">
-            <div class="flex space-x-4 mb-4">
-                <button @click="granvilleMode = 'buy'" :class="granvilleMode === 'buy' ? 'text-red-400 border-red-400' : 'text-gray-500 border-transparent'" class="border-b-2 pb-1 font-bold">🚀 買進 ({{ strategyData.granville_buy?.length || 0 }})</button>
-                <button @click="granvilleMode = 'sell'" :class="granvilleMode === 'sell' ? 'text-green-400 border-green-400' : 'text-gray-500 border-transparent'" class="border-b-2 pb-1 font-bold">🛑 賣出 ({{ strategyData.granville_sell?.length || 0 }})</button>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div v-for="stock in (granvilleMode === 'buy' ? strategyData.granville_buy : strategyData.granville_sell)" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700">
+            <div v-if="currentStrategy === 'granville'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div v-if="!strategyData.granville_buy?.length && !strategyData.granville_sell?.length" class="col-span-full text-center text-gray-500 py-10">無訊號</div>
+                <div v-for="stock in strategyData.granville_buy" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700">
                     <div class="flex justify-between items-start mb-3">
                         <div><h3 class="text-xl font-bold text-white">{{ stock.name }}</h3><p class="text-gray-400 text-sm">{{ stock.code.split('.')[0] }}</p></div>
-                        <div class="text-right"><div class="text-lg font-bold" :class="stock.type === 'buy' ? 'text-red-400' : 'text-green-400'">${{ stock.price }}</div><div class="text-xs text-gray-500">MA200: {{ stock.ma200 }}</div></div>
+                        <div class="text-right"><div class="text-lg font-bold text-red-400">${{ stock.price }}</div><div class="text-xs text-gray-500">MA200: {{ stock.ma200 }}</div></div>
                     </div>
                     <div class="bg-gray-700/50 p-3 rounded text-sm text-gray-300"><div class="font-bold mb-1 text-yellow-300">{{ stock.title }}</div>{{ stock.desc }}</div>
                 </div>
-                <div v-if="!(granvilleMode === 'buy' ? strategyData.granville_buy : strategyData.granville_sell)?.length" class="col-span-full text-center text-gray-500 py-10">無訊號</div>
+                <div v-for="stock in strategyData.granville_sell" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700">
+                    <div class="flex justify-between items-start mb-3">
+                        <div><h3 class="text-xl font-bold text-white">{{ stock.name }}</h3><p class="text-gray-400 text-sm">{{ stock.code.split('.')[0] }}</p></div>
+                        <div class="text-right"><div class="text-lg font-bold text-green-400">${{ stock.price }}</div><div class="text-xs text-gray-500">MA200: {{ stock.ma200 }}</div></div>
+                    </div>
+                    <div class="bg-gray-700/50 p-3 rounded text-sm text-gray-300"><div class="font-bold mb-1 text-yellow-300">{{ stock.title }}</div>{{ stock.desc }}</div>
+                </div>
             </div>
-        </div>
 
-        <div v-if="currentStrategy === 'etf'">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-if="currentStrategy === 'etf'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div v-for="stock in strategyData.active_etf" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700">
                     <div class="flex justify-between items-center mb-4">
                         <div><h3 class="text-xl font-bold text-white">{{ stock.name }}</h3><span class="bg-purple-900 text-purple-200 text-xs px-2 py-1 rounded border border-purple-700">被 {{ stock.count }} 檔 ETF 持有</span></div>
@@ -237,22 +238,21 @@
             <div v-if="currentStrategy === 'doji_rise'" class="bg-yellow-900/20 p-4 rounded mb-4 border border-yellow-800">
                 <h4 class="text-yellow-400 font-bold mb-2">✨ 策略評分明細 ({{ selectedStock.score }}分)</h4>
                 <ul class="text-sm text-gray-300 space-y-1 mb-3"><li v-for="r in selectedStock.reasons" class="flex items-center"><span class="mr-2" :class="r.includes('-') ? 'text-red-400' : 'text-green-400'">●</span> {{ r }}</li></ul>
-                <div class="border-t border-gray-700 pt-2 mt-2"><div class="text-xs text-gray-400 mb-1">操作建議：</div><p class="text-sm text-white">十字星後 3 日內需出現實體紅K突破高點，若 5 日內未突破則移出觀察。</p></div>
             </div>
 
             <div v-if="currentStrategy === 'day_trading'" class="bg-green-900/20 p-4 rounded mb-4 border border-green-800">
                 <h4 class="text-green-400 font-bold mb-2">⚡ 隔日沖訊號</h4>
                 <div class="grid grid-cols-2 gap-4 text-sm">
-                    <div><span class="text-gray-400">今日實體跌幅：</span><span class="text-xl font-bold text-white">{{ selectedStock.drop_pct }}%</span></div>
-                    <div><span class="text-gray-400">近20日漲幅：</span><span class="text-xl font-bold text-red-400">+{{ selectedStock.rise_20d }}%</span></div>
+                    <div><span class="text-gray-400">實體跌幅：</span><span class="text-xl font-bold text-white">{{ selectedStock.drop_pct }}%</span></div>
+                    <div><span class="text-gray-400">20日漲幅：</span><span class="text-xl font-bold text-red-400">+{{ selectedStock.rise_20d }}%</span></div>
                 </div>
             </div>
 
             <div v-if="currentStrategy === 'low_volatility'" class="bg-blue-900/20 p-4 rounded mb-4 border border-blue-800">
                 <h4 class="text-blue-300 font-bold mb-2">🧘 VCP 型態分析</h4>
                 <div class="grid grid-cols-2 gap-4 text-sm mb-2">
-                    <div><span class="text-gray-400">波動率狀態：</span><span :class="selectedStock.volatility_pct < 3 ? 'text-green-400' : 'text-yellow-300'">{{ selectedStock.volatility_pct }}%</span></div>
-                    <div><span class="text-gray-400">量能狀態：</span><span class="text-white">{{ selectedStock.volume_status }}</span></div>
+                    <div><span class="text-gray-400">波動率：</span><span class="text-white">{{ selectedStock.volatility_pct }}%</span></div>
+                    <div><span class="text-gray-400">量能：</span><span class="text-white">{{ selectedStock.volume_status }}</span></div>
                 </div>
                 <div class="text-sm text-gray-300">{{ selectedStock.desc }}</div>
             </div>
@@ -274,7 +274,6 @@
                     </table>
                 </div>
             </div>
-
             <div class="pt-4"><a :href="`https://tw.stock.yahoo.com/quote/${selectedStock.code.split('.')[0]}`" target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">前往 Yahoo 股市</a></div>
         </div>
     </div>
@@ -285,30 +284,69 @@
     createApp({
         data() {
             return {
-                loading: true, history: [], selectedDateIndex: 0,
-                currentStrategy: 'momentum', granvilleMode: 'buy', showModal: false, selectedStock: null
+                loading: true, 
+                history: [], 
+                selectedDateIndex: 0,
+                currentStrategy: 'momentum', 
+                granvilleMode: 'buy', 
+                showModal: false, 
+                selectedStock: null,
+                errorMsg: '' // 錯誤訊息
             }
         },
         computed: {
-            reversedHistory() { return [...this.history].reverse(); },
-            currentRecord() { if (this.reversedHistory.length === 0) return {}; return this.reversedHistory[this.selectedDateIndex]; },
+            reversedHistory() { 
+                if (!Array.isArray(this.history)) return [];
+                return [...this.history].reverse(); 
+            },
+            currentRecord() { 
+                if (this.reversedHistory.length === 0) return {}; 
+                return this.reversedHistory[this.selectedDateIndex]; 
+            },
             strategyData() {
-                const rec = this.currentRecord; if (!rec) return {};
+                const rec = this.currentRecord; 
+                if (!rec) return {};
                 if (rec.strategies) return rec.strategies;
-                return { momentum: rec.buy || [] }; 
+                // 向下相容
+                return { 
+                    momentum: rec.buy || [],
+                    granville_buy: [], granville_sell: [],
+                    day_trading: [], doji_rise: [], active_etf: [], low_volatility: []
+                }; 
             }
         },
         methods: {
-            // 加入時間戳記避免快取 (?t=...)
             async loadData() { 
                 this.loading = true;
+                this.errorMsg = '';
                 try { 
-                    const r = await fetch('./data.json?t=' + new Date().getTime()); 
-                    this.history = await r.json(); 
-                } catch { this.history = []; } 
-                finally { this.loading = false; } 
+                    // 強制清除快取
+                    const t = new Date().getTime();
+                    const r = await fetch(`./data.json?t=${t}`); 
+                    
+                    if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
+                    
+                    const data = await r.json();
+                    
+                    // 格式檢查
+                    if (!Array.isArray(data)) throw new Error("資料格式錯誤 (非陣列)");
+                    
+                    this.history = data; 
+                } catch (e) {
+                    this.history = [];
+                    this.errorMsg = e.message;
+                    console.error("Data Load Error:", e);
+                } finally { 
+                    this.loading = false; 
+                } 
             },
             openModal(stock) { this.selectedStock = stock; this.showModal = true; },
+            getStockCount(record) {
+                if (!record.strategies) return (record.buy || []).length;
+                let count = 0;
+                for (let k in record.strategies) count += record.strategies[k].length;
+                return count;
+            },
             formatPercent(v) { if(!v && v!==0) return '-'; let n=parseFloat(v); if(isNaN(n)) return '-'; if(Math.abs(n)<10) n*=100; return (n>0?'+':'')+n.toFixed(2)+'%'; },
             isPositive(v) { return v && parseFloat(v) > 0; },
             isHighGrowth(v) { return v && parseFloat(v) > 0.15; },
