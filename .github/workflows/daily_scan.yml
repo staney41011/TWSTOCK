@@ -25,14 +25,15 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-    - name: Run Restore Script (Force Overwrite)
+    - name: Run Master Fix
       run: |
-        # 只要備份檔存在，就執行強制還原
-        if [ -f "old_backup.json" ]; then
-          python restore.py
+        # 執行全能修復腳本
+        # (請確保您有將 master_fix.py 上傳到 GitHub)
+        if [ -f "master_fix.py" ]; then
+            python master_fix.py
         fi
         
-        # 接著執行今天的掃描 (選用，您可以註解掉這行只做還原)
+        # 接著可以跑每日更新 (選用)
         # python main.py
 
     - name: Commit and Push changes
@@ -42,8 +43,8 @@ jobs:
         git fetch origin main
         git reset --soft origin/main
         
-        # 確保 data 資料夾被加入
-        git add data.json data/ restore.py
+        # 將所有修好的檔案存回去
+        git add data.json data/ master_fix.py
         
-        git commit -m "Force restore old data [skip ci]" || exit 0
+        git commit -m "Fix NaN and Restore Data [skip ci]" || exit 0
         git push origin main
