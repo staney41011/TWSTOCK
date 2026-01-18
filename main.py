@@ -5,6 +5,7 @@ import json
 import os
 import glob
 import random
+import math  # <--- 新增 math
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
@@ -20,6 +21,22 @@ MOCK_ETF_DB = {
     "00981A": {"name": "凱基優選", "holdings": {"2330.TW": {"shares": 800, "pct": 18.1}, "2303.TW": {"shares": 1200, "pct": 6.2}, "2603.TW": {"shares": 500, "pct": 4.3}}},
     "00982A": {"name": "富邦成長", "holdings": {"2330.TW": {"shares": 600, "pct": 12.0}, "2317.TW": {"shares": 400, "pct": 7.8}, "3008.TW": {"shares": 50, "pct": 3.2}}},
 }
+
+# --- [關鍵修復] 資料清洗函式 ---
+def clean_for_json(obj):
+    """
+    遞迴將 Python 的 NaN, Infinity 轉換為 None (JSON null)，
+    確保前端讀取時不會報錯。
+    """
+    if isinstance(obj, float):
+        if math.isnan(obj) or math.isinf(obj):
+            return None
+        return obj
+    elif isinstance(obj, dict):
+        return {k: clean_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [clean_for_json(v) for v in obj]
+    return obj
 
 def get_stock_name(ticker, region, stock_obj=None):
     display_name = ticker
@@ -72,18 +89,18 @@ def strategy_momentum(df, ticker, region, latest, prev, fin_data):
             score += 2
             reasons.append("(加分) 兩年新高 +2分")
 
-        if fin_data['rev_yoy'] and fin_data['rev_yoy'] > GROWTH_REV_PRIORITY:
+        if fin_data['rev_yoy'] and fin_data['rev_yoy'] is not None and fin_data['rev_yoy'] > GROWTH_REV_PRIORITY:
             score += 3
             reasons.append("★營收年增>15% (+3分)")
-        elif fin_data['rev_yoy'] and fin_data['rev_yoy'] > 0:
+        elif fin_data['rev_yoy'] and fin_data['rev_yoy'] is not None and fin_data['rev_yoy'] > 0:
             score += 1
             reasons.append("(加分) 營收正成長 (+1分)")
             
-        if fin_data['growth'] and fin_data['growth'] > 0.15:
+        if fin_data['growth'] and fin_data['growth'] is not None and fin_data['growth'] > 0.15:
             score += 1
             reasons.append("(加分) EPS高成長 (+1分)")
         
-        if fin_data['pe'] != 999 and fin_data['pe'] < 30:
+        if fin_data['pe'] != 999 and fin_data['pe'] is not None and fin_data['pe'] < 30:
             score += 1
             reasons.append("(加分) 本益比合理 (+1分)")
 
@@ -255,7 +272,9 @@ def get_financial_details(stock_obj):
             limit = min(4, len(vals))
             for i in range(limit):
                 curr = vals[i]
-                qoq = (curr - vals[i+1]) / vals[i+1] if i+1 < len(vals) and vals[i+1] != 0 else None
+                qoq = None
+                if i+1 < len(vals) and vals[i+1] != 0:
+                    qoq = (curr - vals[i+1]) / vals[i+1]
                 data['quarters'].append({"date": vals.index[i].strftime('%Y-%m'), "revenue": curr, "qoq": qoq})
     except: pass
     return data
@@ -271,8 +290,6 @@ def analyze_stock(stock_info):
         latest = df.iloc[-1]
         prev = df.iloc[-2]
         
-        # --- 關鍵修正：抓取真實交易日 ---
-        # 即使在週日跑，這裡抓到的也會是週五的日期 (例如 2025-01-16)
         real_trade_date = latest.name.strftime('%Y-%m-%d')
         
         window_high_short = df['Close'][-61:-1].max()
@@ -283,7 +300,7 @@ def analyze_stock(stock_info):
         base = {
             "code": ticker, "name": display_name, "region": region, 
             "price": float(f"{latest['Close']:.2f}"), 
-            "date": real_trade_date, # 使用真實交易日
+            "date": real_trade_date,
             "fundamentals": fin_data
         }
         
@@ -300,40 +317,34 @@ def analyze_stock(stock_info):
     except: return None
 
 def main():
-    print("啟動全策略掃描 (真實交易日修正版)...")
+    print("啟動全策略掃描 (NaN 清洗修正版)...")
     
     if not os.path.exists(DATA_DIR):
         os.makedirs(DATA_DIR)
         
-    # ---------------------------------------------
-    # 🧹 週末/錯誤日期 清洗區塊
-    # ---------------------------------------------
-    # 掃描所有 json 檔案，刪除週末日期的檔案
     all_files = glob.glob(os.path.join(DATA_DIR, "*.json"))
     for file_path in all_files:
         filename = os.path.basename(file_path)
         file_date_str = filename.replace(".json", "")
         try:
             file_date = datetime.strptime(file_date_str, '%Y-%m-%d')
-            # 檢查是否為週末 (5=Sat, 6=Sun)
             if file_date.weekday() >= 5:
                 print(f"⚠️ 刪除週末誤判檔案: {filename}")
                 os.remove(file_path)
         except:
-            pass # 檔名格式不對就跳過
+            pass
 
     stocks = get_tw_stock_list() 
     res = {"momentum": [], "granville_buy": [], "granville_sell": [], "day_trading": [], "doji_rise": [], "active_etf": [], "low_volatility": []}
     stat_total = 0; stat_new_high = 0
     
-    detected_market_date = None # 用來記錄偵測到的真實交易日
+    detected_market_date = None
     
     with ThreadPoolExecutor(max_workers=20) as exc:
         futures = [exc.submit(analyze_stock, s) for s in stocks]
         for f in as_completed(futures):
             ret = f.result()
             if ret:
-                # 抓取第一筆有效的交易日期作為當日日期
                 if detected_market_date is None and ret.get("trade_date"):
                     detected_market_date = ret["trade_date"]
                     
@@ -357,7 +368,6 @@ def main():
     market_breadth = 0
     if stat_total > 0: market_breadth = round((stat_new_high / stat_total) * 100, 2)
     
-    # 最終日期決定：如果有偵測到真實交易日就用，否則用系統時間(防呆)
     if detected_market_date:
         final_date = detected_market_date
     else:
@@ -366,32 +376,38 @@ def main():
         
     print(f"✅ 確認歸檔日期: {final_date}")
     
-    # 儲存單日檔案
+    # ------------------------------------------------
+    # 關鍵修正: 在存檔前清洗 NaN
+    # ------------------------------------------------
     daily_record = {
         "date": final_date,
         "market_breadth": market_breadth,
         "strategies": res
     }
     
+    # 這裡進行清洗！
+    cleaned_daily_record = clean_for_json(daily_record)
+    
     target_file = os.path.join(DATA_DIR, f"{final_date}.json")
     with open(target_file, 'w', encoding='utf-8') as f:
-        json.dump(daily_record, f, ensure_ascii=False, indent=2)
+        json.dump(cleaned_daily_record, f, ensure_ascii=False, indent=2)
     
-    # 合併發布
     all_files = sorted(glob.glob(os.path.join(DATA_DIR, "*.json")))
     final_history = []
     for file_path in all_files:
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-                # 再次確認：如果是週末資料就不合併
                 d = datetime.strptime(data['date'], '%Y-%m-%d')
                 if d.weekday() < 5:
                     final_history.append(data)
         except: pass
             
+    # 總檔也要清洗一次 (雙重保險)
+    cleaned_final_history = clean_for_json(final_history)
+    
     with open(DATA_FILE, 'w', encoding='utf-8') as f:
-        json.dump(final_history, f, ensure_ascii=False, indent=2)
+        json.dump(cleaned_final_history, f, ensure_ascii=False, indent=2)
         
     print(f"總檔更新完成。日期: {final_date} / 新高佔比: {market_breadth}%")
 
