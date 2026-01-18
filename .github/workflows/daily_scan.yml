@@ -3,7 +3,9 @@ name: Daily Stock Scan
 on:
   schedule:
     - cron: '0 22 * * 1-5'
+  
   workflow_dispatch:
+
   push:
     branches:
       - main
@@ -29,14 +31,8 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-    - name: Run Restore and Scan
+    - name: Run Scan Script
       run: |
-        # 1. 如果有上傳 old_backup.json，先執行救援
-        if [ -f "old_backup.json" ]; then
-          python restore.py
-        fi
-        
-        # 2. 執行正常的每日掃描
         python main.py
 
     - name: Commit and Push changes
@@ -46,8 +42,8 @@ jobs:
         git fetch origin main
         git reset --soft origin/main
         
-        # 加入所有相關檔案
-        git add data.json data/ old_backup.json restore.py
+        # 確保加入 data 資料夾
+        git add data.json data/
         
-        git commit -m "Fix data and restore history [skip ci]" || exit 0
+        git commit -m "Auto update stock data [skip ci]" || exit 0
         git push origin main
