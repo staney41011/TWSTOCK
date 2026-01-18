@@ -42,7 +42,7 @@ jobs:
         git fetch origin main
         git reset --soft origin/main
         
-        # --- 關鍵修正：加入 data 資料夾 ---
+        # 確保加入 data 資料夾
         git add data.json data/
         
         git commit -m "Auto update stock data [skip ci]" || exit 0
