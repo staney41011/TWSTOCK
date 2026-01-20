@@ -1,9 +1,18 @@
 name: Daily Stock Scan
 
 on:
+  # 1. 每天早上 06:00 (UTC+8) 自動執行 -> 只跑 main.py
   schedule:
     - cron: '0 22 * * 1-5'
+  
+  # 2. 手動觸發 -> 提供選項讓您決定要不要跑 Backfill
   workflow_dispatch:
+    inputs:
+      run_backfill:
+        description: '⚠️ 是否要執行歷史回補 (Backfill)? (耗時較久，僅在修改策略後使用)'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -25,18 +34,21 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-    - name: Cleanup and Repair
+    - name: Run Strategy Script
       run: |
-        # 1. 刪除亂七八糟的檔案
-        rm -f restore.py fix_data.py fix_nan.py force_clean.py master_fix.py debug_2344.py old_backup.json
-        
-        # 2. 執行穩定版回補 (找回華邦電)
-        if [ -f "backfill.py" ]; then
-            python backfill.py
+        # 判斷是否為手動觸發且勾選了 backfill
+        if [ "${{ github.event.inputs.run_backfill }}" == "true" ]; then
+            echo "🚀 偵測到回補指令：啟動 backfill.py ..."
+            if [ -f "backfill.py" ]; then
+                python backfill.py
+            else
+                echo "❌ 找不到 backfill.py，請確認檔案已上傳。"
+                exit 1
+            fi
+        else
+            echo "⚡ 執行標準每日掃描：啟動 main.py ..."
+            python main.py
         fi
-        
-        # 3. 正常更新 (確保 main.py 邏輯一致)
-        # python main.py  <-- 這次先註解掉，專心做修復就好
 
     - name: Commit and Push changes
       run: |
@@ -45,11 +57,9 @@ jobs:
         git fetch origin main
         git reset --soft origin/main
         
-        # 重新加入整理後的檔案
-        git add data.json data/ main.py index.html backfill.py
+        # 加入所有可能的變更 (包含新產生的 json 和 python 修改)
+        git add .
         
-        # 提交刪除的紀錄
-        git add -u 
-        
-        git commit -m "Cleanup files and repair 1/16 data [skip ci]" || exit 0
+        # 提交 (如果沒變更則略過)
+        git commit -m "Auto update stock data [skip ci]" || exit 0
         git push origin main
