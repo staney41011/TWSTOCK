@@ -54,8 +54,7 @@ def strategy_granville_vcp(df, market_ret_20d):
     
     # Step 1: Granville Filter
     granville_type = None
-    if curr_ma200 <= prev_ma200: return None # 趨勢必須向上
-    
+    if curr_ma200 <= prev_ma200: return None
     if prev_close < prev_ma200 and curr_close > curr_ma200:
         granville_type = "法則二 (假跌破)"
     elif curr_close > curr_ma200:
@@ -109,7 +108,7 @@ def get_stock_name(ticker):
     return ticker
 
 def main():
-    print("🐢 啟動 V5 回補 (葛蘭碧 X 厚積薄發)...")
+    print("🐢 啟動 V5 回補 (移除舊葛蘭碧)...")
     files = sorted(glob.glob(os.path.join(DATA_DIR, "*.json")))
     target_files = [f for f in files if "2026-01-16" in f] 
     if not target_files: return
@@ -121,6 +120,12 @@ def main():
         market_ret = get_market_ret_at_date(target_date_str)
         
         with open(file_path, 'r', encoding='utf-8') as f: record = json.load(f)
+        
+        # [重要] 清空舊的 granville 欄位 (如果有的話)，避免殘留
+        if "strategies" in record:
+            record["strategies"].pop("granville_buy", None)
+            record["strategies"].pop("granville_sell", None)
+            
         new_list = []
         for i, ticker in enumerate(stock_list):
             if i % 100 == 0: print(f"   {i}/{len(stock_list)}...")
