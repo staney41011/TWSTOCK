@@ -6,7 +6,6 @@ import os
 import glob
 import math
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 
 DATA_DIR = "data"
@@ -22,18 +21,13 @@ def clean_for_json(obj):
         return [clean_for_json(v) for v in obj]
     return obj
 
-# --- 抓取指定日期的大盤歷史 RS ---
 def get_market_ret_at_date(target_date_str):
     try:
         market = yf.Ticker("0050.TW")
-        # 抓取包含目標日期的區間
         target_dt = datetime.strptime(target_date_str, "%Y-%m-%d")
         end_dt = target_dt + timedelta(days=5)
         start_dt = target_dt - timedelta(days=60)
-        
         df = market.history(start=start_dt, end=end_dt)
-        
-        # 找到目標日期的收盤價
         if target_date_str in df.index:
             target_idx = df.index.get_loc(target_date_str)
             if target_idx >= 20:
@@ -43,67 +37,61 @@ def get_market_ret_at_date(target_date_str):
     except: pass
     return None
 
-def strategy_low_volatility(df, market_ret_20d):
+# V5 融合版策略 (Backfill版)
+def strategy_granville_vcp(df, market_ret_20d):
     if len(df) < 205: return None
-    
     close_s = df['Close']; vol_s = df['Volume']
-    ma20 = close_s.rolling(window=20, min_periods=15).mean()
-    ma50 = close_s.rolling(window=50, min_periods=40).mean()
     ma200 = close_s.rolling(window=200, min_periods=150).mean()
+    curr_ma200 = float(ma200.iloc[-1]); prev_ma200 = float(ma200.iloc[-2])
+    ma20 = close_s.rolling(window=20, min_periods=15).mean()
     vol_ma50 = vol_s.rolling(window=50, min_periods=40).mean()
     std_20 = close_s.rolling(window=20, min_periods=15).std()
+    curr_close = float(close_s.iloc[-1]); prev_close = float(close_s.iloc[-2])
+    curr_vol = float(vol_s.iloc[-1]); curr_ma20 = float(ma20.iloc[-1])
+    curr_vol_ma50 = float(vol_ma50.iloc[-1]); curr_std_20 = float(std_20.iloc[-1])
+
+    if pd.isna(curr_ma200): return None
     
-    curr_close = float(close_s.iloc[-1])
-    curr_vol = float(vol_s.iloc[-1])
-    curr_ma20 = float(ma20.iloc[-1])
-    curr_ma50 = float(ma50.iloc[-1])
-    curr_ma200 = float(ma200.iloc[-1])
-    curr_vol_ma50 = float(vol_ma50.iloc[-1])
-    curr_std_20 = float(std_20.iloc[-1])
+    # Step 1: Granville Filter
+    granville_type = None
+    if curr_ma200 <= prev_ma200: return None # 趨勢必須向上
+    
+    if prev_close < prev_ma200 and curr_close > curr_ma200:
+        granville_type = "法則二 (假跌破)"
+    elif curr_close > curr_ma200:
+        dist = (df['Low'].iloc[-1] - curr_ma200) / curr_ma200
+        if 0 <= dist < 0.015 and curr_close > df['Open'].iloc[-1]:
+             granville_type = "法則三 (回測支撐)"
+    
+    if not granville_type: return None
 
-    if pd.isna(curr_ma50) or pd.isna(curr_ma200): return None
-
-    # Core
-    cond_trend = (curr_close > curr_ma200) and (curr_ma50 > curr_ma200)
-    cond_support = (curr_close > curr_ma50)
-    if not (cond_trend and cond_support): return None
-
-    # Scoring
-    score = 0
-    signals = []
-
-    # 1. BB Squeeze
+    # Step 2: Scoring
+    score = 0; signals = []
     if pd.notna(curr_std_20) and curr_ma20 > 0:
-        bb_width = (4 * curr_std_20) / curr_ma20
-        if bb_width < 0.10: score += 1; signals.append("布林壓縮")
-
-    # 2. Vol Dry-up
+        if (4 * curr_std_20) / curr_ma20 < 0.10: score += 1; signals.append("布林壓縮")
     if pd.notna(curr_vol_ma50) and curr_vol_ma50 > 0:
         if curr_vol < (curr_vol_ma50 * 0.5): score += 1; signals.append("量能急凍")
-
-    # 3. RS
     if market_ret_20d is not None and len(close_s) > 22:
         price_20_ago = float(close_s.iloc[-21])
         if price_20_ago > 0:
-            stock_ret_20d = (curr_close - price_20_ago) / price_20_ago
-            if stock_ret_20d > market_ret_20d: score += 1; signals.append("相對強勢")
-
-    if score == 0: return None
+            if (curr_close - price_20_ago) / price_20_ago > market_ret_20d: score += 1; signals.append("相對強勢")
 
     tag = f"★ {score}分"
+    if score == 0: tag = "觀察 (0分)"
     if score == 3: tag = "★ 3分 (滿分)"
     
-    desc_text = " | ".join(signals)
+    desc_text = f"【{granville_type}】"
+    if signals: desc_text += " + " + " | ".join(signals)
+    else: desc_text += " (符合葛蘭碧買點)"
+
     vol_pct = 0
-    if pd.notna(curr_std_20) and curr_close > 0: vol_pct = round((curr_std_20 / curr_close) * 100, 2)
+    std_10 = close_s.rolling(window=10, min_periods=5).std().iloc[-1]
+    if pd.notna(std_10) and curr_close > 0: vol_pct = round((std_10 / curr_close) * 100, 2)
 
     return {
-        "tag": tag,
-        "volatility_pct": vol_pct,
-        "trend_status": "多頭排列",
+        "tag": tag, "volatility_pct": vol_pct, "trend_status": f"MA200上揚 ({granville_type})",
         "volume_status": "量能收縮" if (pd.notna(curr_vol_ma50) and curr_vol < curr_vol_ma50) else "量能放大",
-        "desc": desc_text,
-        "score_val": score
+        "desc": desc_text, "score_val": score
     }
 
 def get_tw_stock_list():
@@ -121,70 +109,51 @@ def get_stock_name(ticker):
     return ticker
 
 def main():
-    print("🐢 啟動 V4 回補程序 (含 RS 計算)...")
+    print("🐢 啟動 V5 回補 (葛蘭碧 X 厚積薄發)...")
     files = sorted(glob.glob(os.path.join(DATA_DIR, "*.json")))
     target_files = [f for f in files if "2026-01-16" in f] 
-    
     if not target_files: return
-
     stock_list = get_tw_stock_list()
     
     for file_path in target_files:
         target_date_str = os.path.basename(file_path).replace(".json", "")
-        print(f"\n📅 修復: {target_date_str} (計算大盤 RS...)")
-        
-        # 取得當日大盤 RS 基準
+        print(f"\n📅 修復: {target_date_str}")
         market_ret = get_market_ret_at_date(target_date_str)
-        if market_ret: print(f"   大盤 20日漲幅基準: {market_ret*100:.2f}%")
         
-        with open(file_path, 'r', encoding='utf-8') as f:
-            record = json.load(f)
-            
-        new_low_vol_list = []
-        
-        # 單線程跑 (穩定優先)
+        with open(file_path, 'r', encoding='utf-8') as f: record = json.load(f)
+        new_list = []
         for i, ticker in enumerate(stock_list):
             if i % 100 == 0: print(f"   {i}/{len(stock_list)}...")
             try:
                 stock = yf.Ticker(ticker)
                 df = stock.history(period="1y") 
                 if df.empty or len(df) < 205: continue
-                
                 df = df[df.index.strftime('%Y-%m-%d') <= target_date_str]
                 if df.empty: continue
+                if df.index[-1].strftime("%Y-%m-%d") != target_date_str: continue
                 
-                last_date = df.index[-1].strftime("%Y-%m-%d")
-                if last_date != target_date_str: continue
-
-                res = strategy_low_volatility(df, market_ret)
-                
+                res = strategy_granville_vcp(df, market_ret)
                 if res:
                     latest = df.iloc[-1]
-                    new_low_vol_list.append({
-                        "code": ticker,
-                        "name": get_stock_name(ticker),
-                        "region": "TW",
-                        "price": float(f"{latest['Close']:.2f}"),
-                        **res
+                    new_list.append({
+                        "code": ticker, "name": get_stock_name(ticker), "region": "TW",
+                        "price": float(f"{latest['Close']:.2f}"), **res
                     })
             except: pass
         
-        new_low_vol_list.sort(key=lambda x: -x.get('score_val', 0))
+        new_list.sort(key=lambda x: -x.get('score_val', 0))
         if "strategies" not in record: record["strategies"] = {}
-        record["strategies"]["low_volatility"] = clean_for_json(new_low_vol_list)
+        record["strategies"]["low_volatility"] = clean_for_json(new_list)
         
-        with open(file_path, 'w', encoding='utf-8') as f:
-            json.dump(record, f, ensure_ascii=False, indent=2)
-            
-        print(f"✅ 完成，找到 {len(new_low_vol_list)} 檔。")
+        with open(file_path, 'w', encoding='utf-8') as f: json.dump(record, f, ensure_ascii=False, indent=2)
+        print(f"✅ 完成，找到 {len(new_list)} 檔。")
 
     final_history = []
     for file_path in files:
         try:
             with open(file_path, 'r', encoding='utf-8') as f: final_history.append(json.load(f))
         except: pass
-    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
-        json.dump(clean_for_json(final_history), f, ensure_ascii=False, indent=2)
+    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f: json.dump(clean_for_json(final_history), f, ensure_ascii=False, indent=2)
     print("🎉 Done!")
 
 if __name__ == "__main__":
