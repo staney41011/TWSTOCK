@@ -91,7 +91,7 @@ def fetch_market_trend():
     return None
 
 # ==========================================
-# 策略 1~5 (保持不變)
+# 策略 1~5 (維持不變)
 # ==========================================
 def strategy_momentum(df, ticker, region, latest, prev, fin_data):
     LOOKBACK_SHORT = 60; LOOKBACK_LONG = 500; VOL_FACTOR = 1.2; GROWTH_REV_PRIORITY = 0.15
@@ -109,22 +109,6 @@ def strategy_momentum(df, ticker, region, latest, prev, fin_data):
         if fin_data['growth'] and fin_data['growth'] > 0.15: score += 1; reasons.append("(加分) EPS高成長 (+1分)")
         if fin_data['pe'] != 999 and fin_data['pe'] < 30: score += 1; reasons.append("(加分) 本益比合理 (+1分)")
         return {"score": score, "reasons": reasons}
-    return None
-
-# 原本獨立的 strategy_granville 這裡可以選擇保留或移除，
-# 既然您說要結合進厚積薄發，那原本的葛蘭碧區塊可以留著當純技術指標參考，
-# 或者為了版面乾淨直接拿掉。這裡我們先保留，但不會顯示在厚積薄發分頁裡。
-def strategy_granville_legacy(df, ticker, region, latest, prev):
-    if len(df) < 205: return None
-    ma200 = df['Close'].rolling(window=200).mean(); curr_ma = ma200.iloc[-1]; prev_ma = ma200.iloc[-2]
-    ma_rising = curr_ma > prev_ma; ma_falling = curr_ma < prev_ma
-    close = latest['Close']; prev_close = prev['Close']
-    if prev_close >= prev_ma and close < curr_ma and ma_rising: return {"type": "buy", "score": 5, "title": "葛蘭碧法則2 (買進)", "desc": "假跌破：跌破上揚年線，視為洗盤。", "ma200": float(f"{curr_ma:.2f}")}
-    dist = (latest['Low'] - curr_ma) / curr_ma
-    if 0 < dist < 0.015 and close > latest['Open'] and ma_rising: return {"type": "buy", "score": 4, "title": "葛蘭碧法則3 (買進)", "desc": "回測支撐：回測年線不破且收紅K。", "ma200": float(f"{curr_ma:.2f}")}
-    if prev_close <= prev_ma and close > curr_ma and ma_falling: return {"type": "sell", "score": -5, "title": "葛蘭碧法則6 (賣出)", "desc": "假突破：突破下彎年線，屬逃命波。", "ma200": float(f"{curr_ma:.2f}")}
-    dist_h = (curr_ma - latest['High']) / curr_ma
-    if 0 < dist_h < 0.015 and close < latest['Open'] and ma_falling: return {"type": "sell", "score": -4, "title": "葛蘭碧法則7 (賣出)", "desc": "反彈遇壓：反彈至年線不過且收黑K。", "ma200": float(f"{curr_ma:.2f}")}
     return None
 
 def strategy_day_trading(df, ticker, region, latest):
@@ -187,89 +171,59 @@ def strategy_granville_vcp(df, ticker, region, latest, prev, market_ret_20d):
     
     close_s = df['Close']; vol_s = df['Volume']
     
-    # 葛蘭碧指標 (200MA)
     ma200 = close_s.rolling(window=200, min_periods=150).mean()
-    curr_ma200 = float(ma200.iloc[-1])
-    prev_ma200 = float(ma200.iloc[-2])
+    curr_ma200 = float(ma200.iloc[-1]); prev_ma200 = float(ma200.iloc[-2])
     
-    # 厚積薄發指標
     ma20 = close_s.rolling(window=20, min_periods=15).mean()
     vol_ma50 = vol_s.rolling(window=50, min_periods=40).mean()
     std_20 = close_s.rolling(window=20, min_periods=15).std()
     
-    curr_close = float(close_s.iloc[-1])
-    prev_close = float(close_s.iloc[-2])
-    curr_vol = float(vol_s.iloc[-1])
-    curr_ma20 = float(ma20.iloc[-1])
-    curr_vol_ma50 = float(vol_ma50.iloc[-1])
-    curr_std_20 = float(std_20.iloc[-1])
+    curr_close = float(close_s.iloc[-1]); prev_close = float(close_s.iloc[-2])
+    curr_vol = float(vol_s.iloc[-1]); curr_ma20 = float(ma20.iloc[-1])
+    curr_vol_ma50 = float(vol_ma50.iloc[-1]); curr_std_20 = float(std_20.iloc[-1])
 
-    # 防呆
     if pd.isna(curr_ma200): return None
 
-    # --- Step 1: 葛蘭碧初選 (入場門票) ---
+    # Step 1: Granville Filter (入場門票)
     granville_type = None
-    
-    # 1. 200MA 趨勢必須向上 (這很重要，不做空頭)
     if curr_ma200 <= prev_ma200: return None
-
-    # 2. 法則判斷
-    # 法則二 (假跌破)：昨收 < 昨日MA, 今收 > 今日MA
+    
     if prev_close < prev_ma200 and curr_close > curr_ma200:
         granville_type = "法則二 (假跌破)"
-    
-    # 法則三 (回測不破)：回測到 MA200 附近 (1.5%內) 且收紅
     elif curr_close > curr_ma200:
         dist = (df['Low'].iloc[-1] - curr_ma200) / curr_ma200
-        # 低點碰到或接近 MA200
         if 0 <= dist < 0.015 and curr_close > df['Open'].iloc[-1]:
              granville_type = "法則三 (回測支撐)"
     
-    # 沒拿到門票，直接淘汰
     if not granville_type: return None
 
-    # --- Step 2: 厚積薄發計分 (菁英加分) ---
+    # Step 2: VCP Scoring
     score = 0; signals = []
-
-    # A. 布林壓縮
     if pd.notna(curr_std_20) and curr_ma20 > 0:
-        bb_width = (4 * curr_std_20) / curr_ma20
-        if bb_width < 0.10: score += 1; signals.append("布林壓縮")
-
-    # B. 量能急凍
+        if (4 * curr_std_20) / curr_ma20 < 0.10: score += 1; signals.append("布林壓縮")
     if pd.notna(curr_vol_ma50) and curr_vol_ma50 > 0:
         if curr_vol < (curr_vol_ma50 * 0.5): score += 1; signals.append("量能急凍")
-
-    # C. 相對強勢 (RS)
     if market_ret_20d is not None and len(close_s) > 22:
         price_20_ago = float(close_s.iloc[-21])
         if price_20_ago > 0:
-            stock_ret_20d = (curr_close - price_20_ago) / price_20_ago
-            if stock_ret_20d > market_ret_20d: score += 1; signals.append("相對強勢")
+            if (curr_close - price_20_ago) / price_20_ago > market_ret_20d: score += 1; signals.append("相對強勢")
 
-    # --- 輸出結果 ---
     tag = f"★ {score}分"
     if score == 0: tag = "觀察 (0分)"
     if score == 3: tag = "★ 3分 (滿分)"
     
-    # 描述文案結合葛蘭碧類型
     desc_text = f"【{granville_type}】"
-    if signals:
-        desc_text += " + " + " | ".join(signals)
-    else:
-        desc_text += " (符合葛蘭碧買點，無VCP訊號)"
+    if signals: desc_text += " + " + " | ".join(signals)
+    else: desc_text += " (符合葛蘭碧買點)"
 
     vol_pct = 0
     std_10 = close_s.rolling(window=10, min_periods=5).std().iloc[-1]
     if pd.notna(std_10) and curr_close > 0: vol_pct = round((std_10 / curr_close) * 100, 2)
 
     return {
-        "tag": tag,
-        "volatility_pct": vol_pct,
-        "trend_status": f"MA200上揚 ({granville_type})",
+        "tag": tag, "volatility_pct": vol_pct, "trend_status": f"MA200上揚 ({granville_type})",
         "volume_status": "量能收縮" if (pd.notna(curr_vol_ma50) and curr_vol < curr_vol_ma50) else "量能放大",
-        "desc": desc_text,
-        "score_val": score
+        "desc": desc_text, "score_val": score
     }
 
 def analyze_stock(stock_info, market_ret_20d):
@@ -290,18 +244,21 @@ def analyze_stock(stock_info, market_ret_20d):
     pkg = {}; has_res = False
     
     if res := strategy_momentum(df, ticker, region, latest, prev, fin_data): pkg['momentum'] = {**base, **res}; has_res = True
-    if res := strategy_granville_legacy(df, ticker, region, latest, prev): pkg['granville'] = {**base, **res}; has_res = True
+    
+    # [關鍵修改] 移除獨立的葛蘭碧策略呼叫
+    # if res := strategy_granville_legacy(...): ...  <-- 刪除此行
+    
     if res := strategy_day_trading(df, ticker, region, latest): pkg['day_trading'] = {**base, **res}; has_res = True
     if res := strategy_doji_rise(df, ticker, region, latest): pkg['doji_rise'] = {**base, **res}; has_res = True
     if res := strategy_active_etf(ticker, latest['Close']): pkg['active_etf'] = {**base, **res}; has_res = True
     
-    # 呼叫新的融合策略
+    # 融合策略
     if res := strategy_granville_vcp(df, ticker, region, latest, prev, market_ret_20d): pkg['low_volatility'] = {**base, **res}; has_res = True
         
     return {"result": pkg if has_res else None, "is_60d_high": is_60d_high, "trade_date": real_trade_date}
 
 def main():
-    print("啟動全策略掃描 (V5 葛蘭碧融合版)...")
+    print("啟動全策略掃描 (移除獨立葛蘭碧)...")
     if not os.path.exists(DATA_DIR): os.makedirs(DATA_DIR)
         
     all_files = glob.glob(os.path.join(DATA_DIR, "*.json"))
@@ -324,7 +281,8 @@ def main():
 
     market_ret_20d = fetch_market_trend()
     stocks = get_tw_stock_list() 
-    res = {"momentum": [], "granville_buy": [], "granville_sell": [], "day_trading": [], "doji_rise": [], "active_etf": [], "low_volatility": []}
+    # [關鍵修改] 移除 granville_buy, granville_sell 初始化
+    res = {"momentum": [], "day_trading": [], "doji_rise": [], "active_etf": [], "low_volatility": []}
     stat_total = 0; stat_new_high = 0; detected_market_date = None
     
     with ThreadPoolExecutor(max_workers=20) as exc:
@@ -335,6 +293,8 @@ def main():
                 if detected_market_date is None and ret.get("trade_date"): detected_market_date = ret["trade_date"]
                 stat_total += 1
                 if ret['is_60d_high']: stat_new_high += 1
+                
+                # [關鍵修改] 彙整邏輯簡化 (不再有 granville 分流)
                 if r := ret['result']:
                     for k in res.keys():
                         if k in r: res[k].append(r[k])
