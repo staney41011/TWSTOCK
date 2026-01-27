@@ -69,12 +69,44 @@
 
         <div class="flex space-x-2 mb-6 overflow-x-auto pb-2">
             <button @click="currentStrategy = 'momentum'" :class="currentStrategy === 'momentum' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🔥 動能爆發</button>
+            <button @click="currentStrategy = 'low_volatility'" :class="currentStrategy === 'low_volatility' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🧘 厚積薄發</button>
             <button @click="currentStrategy = 'doji_rise'" :class="currentStrategy === 'doji_rise' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">✨ 十字星</button>
             <button @click="currentStrategy = 'day_trading'" :class="currentStrategy === 'day_trading' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">⚡ 隔日沖</button>
+            <button @click="currentStrategy = 'cbas'" :class="currentStrategy === 'cbas' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🔄 可轉債 (CBAS)</button>
             <button @click="currentStrategy = 'etf'" :class="currentStrategy === 'etf' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🏦 主動式 ETF</button>
         </div>
 
         <div>
+            <div v-if="currentStrategy === 'cbas'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div v-for="stock in strategyData.cbas" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 border-l-4 border-l-purple-500">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h3 class="text-lg font-bold text-white">{{ stock.name }} <span class="text-sm text-gray-400">({{ stock.code.split('.')[0] }})</span></h3>
+                            <div class="text-purple-300 font-bold text-sm">{{ stock.cb_name }}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-bold text-white">${{ stock.price }}</div>
+                            <div class="text-xs" :class="stock.pct_change > 0 ? 'text-red-400' : 'text-green-400'">{{ formatPercent(stock.pct_change/100) }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-700/40 p-3 rounded text-sm grid grid-cols-2 gap-4 mt-3">
+                        <div class="text-center border-r border-gray-600">
+                            <div class="text-[10px] text-gray-400">雙低指標 (Double Low)</div>
+                            <div class="text-xl font-bold text-yellow-400">{{ stock.double_low }}</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-[10px] text-gray-400">CB 價格 / 溢價率</div>
+                            <div class="font-bold text-white">${{ stock.cb_price }} <span class="text-xs text-gray-400">({{ stock.premium_pct }}%)</span></div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-xs text-center text-purple-200 bg-purple-900/30 py-1 rounded">
+                        🚀 股價帶量突破 + CB低檔佈局
+                    </div>
+                </div>
+                <div v-if="!strategyData.cbas?.length" class="col-span-full text-center text-gray-500 py-10">尚無符合「股價發動 + 雙低」的可轉債標的</div>
+            </div>
+
             <div v-if="currentStrategy === 'momentum'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div v-for="stock in strategyData.momentum" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 relative overflow-hidden group">
                     <div class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg font-bold" :class="stock.score >= 5 ? 'bg-red-600' : 'bg-gray-600'">{{ stock.score }}分</div>
@@ -88,6 +120,28 @@
                     </div>
                 </div>
                 <div v-if="!strategyData.momentum?.length" class="col-span-full text-center text-gray-500 py-10">無符合標的</div>
+            </div>
+
+            <div v-if="currentStrategy === 'low_volatility'">
+                <div v-if="!strategyData.low_volatility?.length" class="text-center py-10 bg-gray-800/50 rounded border border-gray-700">
+                    <p class="text-gray-400">尚無符合「厚積薄發」條件的標的</p>
+                    <p class="text-xs text-gray-500 mt-2">篩選標準：葛蘭碧回測/假跌破 + VCP三大濾網計分</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div v-for="stock in strategyData.low_volatility" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 border-l-4" :class="stock.tag.includes('3分') ? 'border-l-yellow-400' : (stock.tag.includes('0分') ? 'border-l-gray-500' : 'border-l-green-500')">
+                        <div class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg font-bold" :class="stock.tag.includes('3分') ? 'bg-yellow-600' : (stock.tag.includes('0分') ? 'bg-gray-600' : 'bg-green-600')">
+                            {{ stock.tag }}
+                        </div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div><h3 class="text-xl font-bold text-white">{{ stock.name }}</h3><p class="text-gray-400 text-sm">{{ stock.code.split('.')[0] }} | ${{ stock.price }}</p></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 text-center bg-gray-700/40 p-2 rounded text-sm mb-2">
+                            <div><div class="text-[10px] text-gray-400">趨勢狀態</div><div class="font-bold text-xs text-white truncate">{{ stock.trend_status }}</div></div>
+                            <div><div class="text-[10px] text-gray-400">量能</div><div class="font-bold text-xs text-white">{{ stock.volume_status }}</div></div>
+                        </div>
+                        <div class="text-xs text-gray-400 mt-2 bg-gray-900/50 p-2 rounded">{{ stock.desc }}</div>
+                    </div>
+                </div>
             </div>
 
             <div v-if="currentStrategy === 'day_trading'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -126,9 +180,29 @@
             <button @click="showModal = false" class="absolute top-4 right-4 text-gray-400 hover:text-white">✕</button>
             <h2 class="text-3xl font-bold mb-1">{{ selectedStock.name }}</h2>
             <div class="text-gray-400 text-sm mb-6 font-mono">{{ selectedStock.code.split('.')[0] }}</div>
+
+            <div v-if="currentStrategy === 'low_volatility'" class="bg-blue-900/20 p-4 rounded mb-4 border border-blue-800">
+                <h4 class="text-blue-300 font-bold mb-2">🧘 VCP 型態分析</h4>
+                <div class="grid grid-cols-2 gap-4 text-sm mb-2">
+                    <div><span class="text-gray-400">評分：</span><span class="text-white font-bold">{{ selectedStock.tag }}</span></div>
+                    <div><span class="text-gray-400">趨勢：</span><span class="text-white">{{ selectedStock.trend_status }}</span></div>
+                </div>
+                <div class="text-sm text-gray-300 mt-2 p-2 bg-gray-900/50 rounded">{{ selectedStock.desc }}</div>
+            </div>
             
             <div v-if="currentStrategy === 'momentum'" class="bg-gray-700/30 p-4 rounded mb-4"><h4 class="text-yellow-400 font-bold mb-2">🏆 入選理由</h4><ul class="text-sm text-gray-300 space-y-1"><li v-for="r in selectedStock.reasons">✔ {{ r }}</li></ul></div>
             
+            <div v-if="currentStrategy === 'cbas'" class="bg-purple-900/20 p-4 rounded mb-4 border border-purple-800">
+                <h4 class="text-purple-300 font-bold mb-2">🔄 CBAS 策略數據</h4>
+                <div class="grid grid-cols-2 gap-4 text-sm mb-2">
+                    <div><span class="text-gray-400">CB 名稱：</span><span class="text-white">{{ selectedStock.cb_name }}</span></div>
+                    <div><span class="text-gray-400">CB 價格：</span><span class="text-white">${{ selectedStock.cb_price }}</span></div>
+                    <div><span class="text-gray-400">溢價率：</span><span class="text-white">{{ selectedStock.premium_pct }}%</span></div>
+                    <div><span class="text-gray-400">雙低指標：</span><span class="text-yellow-400 font-bold">{{ selectedStock.double_low }}</span></div>
+                </div>
+                <div class="text-xs text-gray-400 mt-2">雙低 = CB價格 + 溢價率。數值越低，代表可轉債價格便宜且溢價低，下檔有債底保護，上檔跟隨股價發動機率高。</div>
+            </div>
+
             <div v-if="selectedStock.fundamentals && selectedStock.fundamentals.quarters?.length">
                 <h4 class="text-white font-bold mb-2">📊 近四季營收趨勢</h4>
                 <div class="overflow-x-auto">
@@ -163,7 +237,8 @@
                     day_trading: strats.day_trading || [],
                     doji_rise: strats.doji_rise || [],
                     active_etf: strats.active_etf || [],
-                    low_volatility: strats.low_volatility || [] // 即使後端有給，前端也不顯示
+                    low_volatility: strats.low_volatility || [],
+                    cbas: strats.cbas || [] // 新增 CBAS 資料源
                 }; 
             }
         },
