@@ -61,15 +61,14 @@
                 <div class="text-xs text-gray-400">動能爆發</div>
                 <div class="text-xl font-bold text-white">{{ (strategyData.momentum || []).length }} 檔</div>
             </div>
-            <div class="bg-gray-800 p-3 rounded border border-gray-700 text-center">
-                <div class="text-xs text-gray-400">隔日沖</div>
-                <div class="text-xl font-bold text-white">{{ (strategyData.day_trading || []).length }} 檔</div>
+            <div class="bg-gray-800 p-3 rounded border border-gray-700 text-center border-l-4 border-l-purple-500">
+                <div class="text-xs text-gray-400">CBAS 可轉債</div>
+                <div class="text-xl font-bold text-white">{{ (strategyData.cbas || []).length }} 檔</div>
             </div>
         </div>
 
         <div class="flex space-x-2 mb-6 overflow-x-auto pb-2">
             <button @click="currentStrategy = 'momentum'" :class="currentStrategy === 'momentum' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🔥 動能爆發</button>
-            <button @click="currentStrategy = 'low_volatility'" :class="currentStrategy === 'low_volatility' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🧘 厚積薄發</button>
             <button @click="currentStrategy = 'doji_rise'" :class="currentStrategy === 'doji_rise' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">✨ 十字星</button>
             <button @click="currentStrategy = 'day_trading'" :class="currentStrategy === 'day_trading' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">⚡ 隔日沖</button>
             <button @click="currentStrategy = 'cbas'" :class="currentStrategy === 'cbas' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🔄 可轉債 (CBAS)</button>
@@ -122,28 +121,6 @@
                 <div v-if="!strategyData.momentum?.length" class="col-span-full text-center text-gray-500 py-10">無符合標的</div>
             </div>
 
-            <div v-if="currentStrategy === 'low_volatility'">
-                <div v-if="!strategyData.low_volatility?.length" class="text-center py-10 bg-gray-800/50 rounded border border-gray-700">
-                    <p class="text-gray-400">尚無符合「厚積薄發」條件的標的</p>
-                    <p class="text-xs text-gray-500 mt-2">篩選標準：葛蘭碧回測/假跌破 + VCP三大濾網計分</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div v-for="stock in strategyData.low_volatility" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 border-l-4" :class="stock.tag.includes('3分') ? 'border-l-yellow-400' : (stock.tag.includes('0分') ? 'border-l-gray-500' : 'border-l-green-500')">
-                        <div class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg font-bold" :class="stock.tag.includes('3分') ? 'bg-yellow-600' : (stock.tag.includes('0分') ? 'bg-gray-600' : 'bg-green-600')">
-                            {{ stock.tag }}
-                        </div>
-                        <div class="flex justify-between items-start mb-4">
-                            <div><h3 class="text-xl font-bold text-white">{{ stock.name }}</h3><p class="text-gray-400 text-sm">{{ stock.code.split('.')[0] }} | ${{ stock.price }}</p></div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2 text-center bg-gray-700/40 p-2 rounded text-sm mb-2">
-                            <div><div class="text-[10px] text-gray-400">趨勢狀態</div><div class="font-bold text-xs text-white truncate">{{ stock.trend_status }}</div></div>
-                            <div><div class="text-[10px] text-gray-400">量能</div><div class="font-bold text-xs text-white">{{ stock.volume_status }}</div></div>
-                        </div>
-                        <div class="text-xs text-gray-400 mt-2 bg-gray-900/50 p-2 rounded">{{ stock.desc }}</div>
-                    </div>
-                </div>
-            </div>
-
             <div v-if="currentStrategy === 'day_trading'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                  <div v-for="stock in strategyData.day_trading" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 border-l-4 border-l-green-500 relative">
                     <div class="absolute top-0 right-0 bg-green-600 text-white text-xs px-2 py-1 rounded-bl-lg font-bold">漲停回檔</div>
@@ -181,15 +158,6 @@
             <h2 class="text-3xl font-bold mb-1">{{ selectedStock.name }}</h2>
             <div class="text-gray-400 text-sm mb-6 font-mono">{{ selectedStock.code.split('.')[0] }}</div>
 
-            <div v-if="currentStrategy === 'low_volatility'" class="bg-blue-900/20 p-4 rounded mb-4 border border-blue-800">
-                <h4 class="text-blue-300 font-bold mb-2">🧘 VCP 型態分析</h4>
-                <div class="grid grid-cols-2 gap-4 text-sm mb-2">
-                    <div><span class="text-gray-400">評分：</span><span class="text-white font-bold">{{ selectedStock.tag }}</span></div>
-                    <div><span class="text-gray-400">趨勢：</span><span class="text-white">{{ selectedStock.trend_status }}</span></div>
-                </div>
-                <div class="text-sm text-gray-300 mt-2 p-2 bg-gray-900/50 rounded">{{ selectedStock.desc }}</div>
-            </div>
-            
             <div v-if="currentStrategy === 'momentum'" class="bg-gray-700/30 p-4 rounded mb-4"><h4 class="text-yellow-400 font-bold mb-2">🏆 入選理由</h4><ul class="text-sm text-gray-300 space-y-1"><li v-for="r in selectedStock.reasons">✔ {{ r }}</li></ul></div>
             
             <div v-if="currentStrategy === 'cbas'" class="bg-purple-900/20 p-4 rounded mb-4 border border-purple-800">
@@ -237,7 +205,6 @@
                     day_trading: strats.day_trading || [],
                     doji_rise: strats.doji_rise || [],
                     active_etf: strats.active_etf || [],
-                    low_volatility: strats.low_volatility || [],
                     cbas: strats.cbas || [] // 新增 CBAS 資料源
                 }; 
             }
