@@ -1,3 +1,4 @@
+import requests # <--- 新增 requests
 import yfinance as yf
 import pandas as pd
 import twstock
@@ -91,7 +92,155 @@ def fetch_market_trend():
     return None
 
 # ==========================================
-# 策略 1~5 (維持不變)
+# [新增] CBAS 可轉債策略模組
+# ==========================================
+def fetch_active_cbs():
+    """抓取櫃買中心可轉債行情"""
+    url = "https://www.tpex.org.tw/web/bond/tradeinfo/cb/cb_daily_result.php?l=zh-tw&o=json"
+    try:
+        print("🔗 連線櫃買中心抓取 CB 資料...")
+        headers = {"User-Agent": "Mozilla/5.0"}
+        res = requests.get(url, headers=headers, timeout=10)
+        res.raise_for_status()
+        data = res.json()
+        raw_list = data.get('aaData', [])
+        
+        cb_list = []
+        for row in raw_list:
+            try:
+                cb_id = row[0]
+                cb_name = row[1]
+                
+                # 數值處理
+                def parse_float(val):
+                    if isinstance(val, str):
+                        val = val.replace(',', '')
+                        if '--' in val or val.strip() == '': return None
+                    return float(val)
+
+                cb_close = parse_float(row[3])
+                conv_price = parse_float(row[12])
+                
+                if cb_close is None or conv_price is None: continue
+
+                # CB代號前4碼通常是股票代號
+                stock_id = cb_id[:4]
+                cb_list.append({
+                    "stock_id": stock_id,
+                    "cb_id": cb_id,
+                    "cb_name": cb_name,
+                    "cb_price": cb_close,
+                    "conversion_price": conv_price
+                })
+            except: continue
+        return cb_list
+    except Exception as e:
+        print(f"⚠️ CB 資料抓取失敗: {e}")
+        return []
+
+def check_cbas_signal(stock_id):
+    """檢查個股是否符合發動訊號 (突破上軌 + 出量)"""
+    suffixes = ['.TW', '.TWO']
+    df = None; valid_symbol = None
+    
+    for suffix in suffixes:
+        symbol = f"{stock_id}{suffix}"
+        # 重用 fetch_data_safe (這裡用它抓資料很方便)
+        _, tmp_df = fetch_data_safe(symbol, retries=1)
+        if tmp_df is not None and len(tmp_df) > 30:
+            df = tmp_df
+            valid_symbol = symbol
+            break
+            
+    if df is None: return None
+
+    # 技術指標計算
+    close = df['Close']
+    volume = df['Volume']
+    
+    ma20 = close.rolling(20).mean()
+    std20 = close.rolling(20).std()
+    upper = ma20 + (2 * std20)
+    vol_ma5 = volume.rolling(5).mean()
+    
+    curr_close = close.iloc[-1]
+    curr_vol = volume.iloc[-1]
+    curr_upper = upper.iloc[-1]
+    curr_vol_ma5 = vol_ma5.iloc[-1]
+    prev_close = close.iloc[-2]
+
+    # 1. 突破條件: 突破布林上軌
+    is_breakout = curr_close > curr_upper
+    
+    # 2. 量能條件: 大於 2 倍均量
+    is_volume_surge = curr_vol > (curr_vol_ma5 * 2.0)
+    
+    if is_breakout and is_volume_surge:
+        # 取得股票名稱
+        stock_name = get_stock_name(valid_symbol, "TW")
+        pct_change = round(((curr_close - prev_close) / prev_close) * 100, 2)
+        
+        return {
+            "code": valid_symbol,
+            "name": stock_name,
+            "price": float(f"{curr_close:.2f}"),
+            "pct_change": pct_change,
+            "vol_ratio": round(curr_vol / curr_vol_ma5, 1) if curr_vol_ma5 > 0 else 0
+        }
+    return None
+
+def run_cbas_scanner():
+    """執行完整的 CBAS 掃描流程"""
+    print("🚀 啟動 CBAS (可轉債發動) 掃描...")
+    cb_list = fetch_active_cbs()
+    if not cb_list: return []
+    
+    unique_stocks = list(set([item['stock_id'] for item in cb_list]))
+    print(f"   共監控 {len(cb_list)} 檔可轉債，關聯 {len(unique_stocks)} 檔個股")
+    
+    stock_signals = {}
+    
+    # 多線程掃描個股訊號
+    with ThreadPoolExecutor(max_workers=10) as exc:
+        future_to_sid = {exc.submit(check_cbas_signal, sid): sid for sid in unique_stocks}
+        for future in as_completed(future_to_sid):
+            res = future.result()
+            if res:
+                # 只取代碼前4碼做 key
+                sid = res['code'].split('.')[0]
+                stock_signals[sid] = res
+    
+    # 整合結果 (計算雙低)
+    results = []
+    for cb in cb_list:
+        sid = cb['stock_id']
+        if sid in stock_signals:
+            sig = stock_signals[sid]
+            
+            # 雙低公式
+            parity = (sig['price'] / cb['conversion_price']) * 100
+            premium = ((cb['cb_price'] - parity) / parity) * 100
+            double_low = cb['cb_price'] + premium
+            
+            results.append({
+                "code": sig['code'],
+                "name": sig['name'],
+                "price": sig['price'],
+                "pct_change": sig['pct_change'],
+                "cb_name": cb['cb_name'],
+                "cb_price": cb['cb_price'],
+                "premium_pct": round(premium, 2),
+                "double_low": round(double_low, 2),
+                "desc": f"CB:{cb['cb_name']} | 雙低:{round(double_low, 2)}"
+            })
+            
+    # 依照雙低排序 (越低越好)
+    results.sort(key=lambda x: x['double_low'])
+    print(f"✅ CBAS 掃描完成，找到 {len(results)} 檔標的")
+    return results
+
+# ==========================================
+# 既有策略群
 # ==========================================
 def strategy_momentum(df, ticker, region, latest, prev, fin_data):
     LOOKBACK_SHORT = 60; LOOKBACK_LONG = 500; VOL_FACTOR = 1.2; GROWTH_REV_PRIORITY = 0.15
@@ -163,31 +312,24 @@ def strategy_active_etf(ticker, latest_price):
     if len(held_by) > 0: return {"count": len(held_by), "total_shares": total_shares, "total_value": total_value, "details": held_by}
     return None
 
-# ==========================================
-# 策略 6: 厚積薄發 (V5 - 葛蘭碧融合版)
-# ==========================================
-def strategy_granville_vcp(df, ticker, region, latest, prev, market_ret_20d):
+def strategy_low_volatility(df, ticker, region, latest, market_ret_20d):
     if len(df) < 205: return None
     
     close_s = df['Close']; vol_s = df['Volume']
-    
     ma200 = close_s.rolling(window=200, min_periods=150).mean()
     curr_ma200 = float(ma200.iloc[-1]); prev_ma200 = float(ma200.iloc[-2])
-    
     ma20 = close_s.rolling(window=20, min_periods=15).mean()
     vol_ma50 = vol_s.rolling(window=50, min_periods=40).mean()
     std_20 = close_s.rolling(window=20, min_periods=15).std()
-    
     curr_close = float(close_s.iloc[-1]); prev_close = float(close_s.iloc[-2])
     curr_vol = float(vol_s.iloc[-1]); curr_ma20 = float(ma20.iloc[-1])
     curr_vol_ma50 = float(vol_ma50.iloc[-1]); curr_std_20 = float(std_20.iloc[-1])
 
     if pd.isna(curr_ma200): return None
 
-    # Step 1: Granville Filter (入場門票)
+    # Step 1: Granville Filter
     granville_type = None
     if curr_ma200 <= prev_ma200: return None
-    
     if prev_close < prev_ma200 and curr_close > curr_ma200:
         granville_type = "法則二 (假跌破)"
     elif curr_close > curr_ma200:
@@ -197,7 +339,7 @@ def strategy_granville_vcp(df, ticker, region, latest, prev, market_ret_20d):
     
     if not granville_type: return None
 
-    # Step 2: VCP Scoring
+    # Step 2: Scoring
     score = 0; signals = []
     if pd.notna(curr_std_20) and curr_ma20 > 0:
         if (4 * curr_std_20) / curr_ma20 < 0.10: score += 1; signals.append("布林壓縮")
@@ -244,21 +386,15 @@ def analyze_stock(stock_info, market_ret_20d):
     pkg = {}; has_res = False
     
     if res := strategy_momentum(df, ticker, region, latest, prev, fin_data): pkg['momentum'] = {**base, **res}; has_res = True
-    
-    # [關鍵修改] 移除獨立的葛蘭碧策略呼叫
-    # if res := strategy_granville_legacy(...): ...  <-- 刪除此行
-    
     if res := strategy_day_trading(df, ticker, region, latest): pkg['day_trading'] = {**base, **res}; has_res = True
     if res := strategy_doji_rise(df, ticker, region, latest): pkg['doji_rise'] = {**base, **res}; has_res = True
     if res := strategy_active_etf(ticker, latest['Close']): pkg['active_etf'] = {**base, **res}; has_res = True
-    
-    # 融合策略
-    if res := strategy_granville_vcp(df, ticker, region, latest, prev, market_ret_20d): pkg['low_volatility'] = {**base, **res}; has_res = True
+    if res := strategy_low_volatility(df, ticker, region, latest, market_ret_20d): pkg['low_volatility'] = {**base, **res}; has_res = True
         
     return {"result": pkg if has_res else None, "is_60d_high": is_60d_high, "trade_date": real_trade_date}
 
 def main():
-    print("啟動全策略掃描 (移除獨立葛蘭碧)...")
+    print("啟動全策略掃描 (含 CBAS 新策略)...")
     if not os.path.exists(DATA_DIR): os.makedirs(DATA_DIR)
         
     all_files = glob.glob(os.path.join(DATA_DIR, "*.json"))
@@ -270,7 +406,6 @@ def main():
             if file_date.weekday() >= 5: os.remove(file_path)
         except: pass
 
-    # 日期檢查
     tw_tz = timezone(timedelta(hours=8))
     now = datetime.now(tw_tz)
     expected_date = now.strftime('%Y-%m-%d')
@@ -281,7 +416,11 @@ def main():
 
     market_ret_20d = fetch_market_trend()
     stocks = get_tw_stock_list() 
-    # [關鍵修改] 移除 granville_buy, granville_sell 初始化
+    
+    # 1. 執行 CBAS 掃描 (獨立執行)
+    cbas_results = run_cbas_scanner()
+    
+    # 2. 執行一般個股掃描
     res = {"momentum": [], "day_trading": [], "doji_rise": [], "active_etf": [], "low_volatility": []}
     stat_total = 0; stat_new_high = 0; detected_market_date = None
     
@@ -293,11 +432,12 @@ def main():
                 if detected_market_date is None and ret.get("trade_date"): detected_market_date = ret["trade_date"]
                 stat_total += 1
                 if ret['is_60d_high']: stat_new_high += 1
-                
-                # [關鍵修改] 彙整邏輯簡化 (不再有 granville 分流)
                 if r := ret['result']:
                     for k in res.keys():
                         if k in r: res[k].append(r[k])
+
+    # 將 CBAS 結果加入總表 (使用新 Key 'cbas')
+    res['cbas'] = clean_for_json(cbas_results)
 
     if detected_market_date and detected_market_date != expected_date:
         print(f"⚠️ [警告] 日期不符 ({detected_market_date} vs {expected_date})")
