@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       run_backfill:
-        description: '⚠️ 是否要執行歷史回補 (Backfill)? (耗時較久，僅在修改策略後使用)'
+        description: '是否要執行歷史回補 (Backfill)? (耗時較久，僅在修改策略後使用)'
         required: false
         type: boolean
         default: false
@@ -38,7 +38,7 @@ jobs:
       run: |
         # 判斷是否為手動觸發且勾選了 backfill
         if [ "${{ github.event.inputs.run_backfill }}" == "true" ]; then
-            echo "🚀 偵測到回補指令：啟動 backfill.py ..."
+            echo "偵測到回補指令：啟動 backfill.py ..."
             if [ -f "backfill.py" ]; then
                 python backfill.py
             else

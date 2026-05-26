@@ -151,7 +151,7 @@ def main():
         record["strategies"]["low_volatility"] = clean_for_json(new_list)
         
         with open(file_path, 'w', encoding='utf-8') as f: json.dump(record, f, ensure_ascii=False, indent=2)
-        print(f"✅ 完成，找到 {len(new_list)} 檔。")
+        print(f"完成，找到 {len(new_list)} 檔。")
 
     final_history = []
     for file_path in files:

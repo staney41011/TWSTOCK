@@ -23,7 +23,36 @@ MOCK_ETF_DB = {
     "00982A": {"name": "富邦成長", "holdings": {"2330.TW": {"shares": 600, "pct": 12.0}, "2317.TW": {"shares": 400, "pct": 7.8}, "3008.TW": {"shares": 50, "pct": 3.2}}},
 }
 
+TWSE_FUND_URL = "https://openapi.twse.com.tw/v1/opendata/t187ap47_L"
+TWSE_QUOTE_URL = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
+TPEX_CB_ISSUE_URL = "https://www.tpex.org.tw/openapi/v1/bond_ISSBD5_data"
+TPEX_CB_QUOTE_URL = "https://www.tpex.org.tw/www/zh-tw/bond/cbDayQry"
+
 # --- 工具函式 ---
+def fetch_json(url, params=None, timeout=20):
+    headers = {"User-Agent": "Mozilla/5.0"}
+    res = requests.get(url, params=params, headers=headers, timeout=timeout)
+    res.raise_for_status()
+    return json.loads(res.content.decode("utf-8-sig"))
+
+def parse_float(val):
+    if val is None: return None
+    if isinstance(val, (int, float)): return float(val)
+    text = str(val).replace(",", "").strip()
+    if text == "" or text in {"--", "-"}: return None
+    try: return float(text)
+    except ValueError: return None
+
+def roc_or_yyyymmdd_to_iso(val):
+    if not val: return None
+    text = str(val).strip().replace("/", "").replace("-", "")
+    if len(text) == 7 and text.isdigit():
+        year = int(text[:3]) + 1911
+        return f"{year:04d}-{text[3:5]}-{text[5:7]}"
+    if len(text) == 8 and text.isdigit():
+        return f"{text[:4]}-{text[4:6]}-{text[6:8]}"
+    return str(val)
+
 def clean_for_json(obj):
     if isinstance(obj, float):
         if math.isnan(obj) or math.isinf(obj): return None
@@ -51,6 +80,13 @@ def get_tw_stock_list():
     for code in twstock.tpex:
         if len(code) == 4: stocks.append({"code": f"{code}.TWO", "region": "TW"})
     return stocks
+
+def get_tw_ticker_candidates(stock_id):
+    if stock_id in twstock.twse:
+        return [f"{stock_id}.TW"]
+    if stock_id in twstock.tpex:
+        return [f"{stock_id}.TWO"]
+    return [f"{stock_id}.TW", f"{stock_id}.TWO"]
 
 def get_financial_details(stock_obj):
     data = {"pe": 999, "growth": None, "rev_yoy": None, "rev_qoq": None, "quarters": []}
@@ -83,39 +119,72 @@ def fetch_data_safe(ticker, retries=3):
 # CBAS 可轉債策略模組
 # ==========================================
 def fetch_active_cbs():
-    url = "https://www.tpex.org.tw/web/bond/tradeinfo/cb/cb_daily_result.php?l=zh-tw&o=json"
     try:
-        print("🔗 連線櫃買中心抓取 CB 資料...")
-        headers = {"User-Agent": "Mozilla/5.0"}
-        res = requests.get(url, headers=headers, timeout=10)
-        res.raise_for_status()
-        data = res.json()
-        raw_list = data.get('aaData', [])
-        
+        print("連線 TPEx OpenAPI 抓取可轉債發行資料...")
+        raw_list = fetch_json(TPEX_CB_ISSUE_URL)
         cb_list = []
         for row in raw_list:
             try:
-                cb_id = row[0]; cb_name = row[1]
-                def parse_float(val):
-                    if isinstance(val, str):
-                        val = val.replace(',', '')
-                        if '--' in val or val.strip() == '': return None
-                    return float(val)
-                cb_close = parse_float(row[3]); conv_price = parse_float(row[12])
-                if cb_close is None or conv_price is None: continue
-                stock_id = cb_id[:4]
-                cb_list.append({"stock_id": stock_id, "cb_id": cb_id, "cb_name": cb_name, "cb_price": cb_close, "conversion_price": conv_price})
+                cb_id = (row.get("BondCode") or "").strip()
+                stock_id = (row.get("IssuerCode") or "").strip()
+                conv_price = parse_float(row.get("Conversion/ExchangePriceAtIssuance"))
+                is_listed = row.get("ListingStatus") == "2"
+                is_public = row.get("OfferingMethod") == "7"
+                if not (cb_id and len(stock_id) == 4 and stock_id.isdigit() and is_listed and is_public):
+                    continue
+                if conv_price is None or conv_price <= 0:
+                    continue
+                cb_list.append({
+                    "stock_id": stock_id,
+                    "cb_id": cb_id,
+                    "cb_name": row.get("ShortName") or cb_id,
+                    "conversion_price": conv_price,
+                    "issue_date": roc_or_yyyymmdd_to_iso(row.get("IssueDate")),
+                    "maturity_date": roc_or_yyyymmdd_to_iso(row.get("MaturityDate")),
+                    "listing_date": roc_or_yyyymmdd_to_iso(row.get("ListingDate")),
+                    "outstanding_amount": parse_float(row.get("OutstandingAmount")),
+                    "put_option_date": roc_or_yyyymmdd_to_iso(row.get("PutOptionDate")),
+                    "put_option_price": parse_float(row.get("PutOptionPrice")),
+                    "guaranteed": row.get("Guaranteed") == "1",
+                })
             except: continue
+        print(f"可轉債發行資料：{len(cb_list)} 檔")
         return cb_list
     except Exception as e:
-        print(f"⚠️ CB 資料抓取失敗: {e}")
+        print(f"CB 資料抓取失敗: {e}")
         return []
 
+def fetch_cb_latest_quote(cb_id):
+    try:
+        data = fetch_json(TPEX_CB_QUOTE_URL, params={"code": cb_id, "response": "json"}, timeout=15)
+        tables = data.get("tables") or []
+        rows = tables[0].get("data", []) if tables else []
+        latest = None
+        for row in rows:
+            if len(row) < 11 or row[1] != "等價":
+                continue
+            close = parse_float(row[2])
+            if close is None:
+                continue
+            latest = {
+                "trade_date": roc_or_yyyymmdd_to_iso(row[0]),
+                "cb_price": close,
+                "cb_change": parse_float(row[3]),
+                "cb_open": parse_float(row[4]),
+                "cb_high": parse_float(row[5]),
+                "cb_low": parse_float(row[6]),
+                "cb_transactions": parse_float(row[7]),
+                "cb_units": parse_float(row[8]),
+                "cb_trade_value": parse_float(row[9]),
+                "cb_avg_price": parse_float(row[10]),
+            }
+        return latest
+    except Exception:
+        return None
+
 def check_cbas_signal(stock_id):
-    suffixes = ['.TW', '.TWO']
     df = None; valid_symbol = None
-    for suffix in suffixes:
-        symbol = f"{stock_id}{suffix}"
+    for symbol in get_tw_ticker_candidates(stock_id):
         _, tmp_df = fetch_data_safe(symbol, retries=1)
         if tmp_df is not None and len(tmp_df) > 30:
             df = tmp_df; valid_symbol = symbol; break
@@ -143,7 +212,7 @@ def check_cbas_signal(stock_id):
     return None
 
 def run_cbas_scanner():
-    print("🚀 啟動 CBAS (可轉債發動) 掃描...")
+    print("啟動 CBAS (可轉債發動) 掃描...")
     cb_list = fetch_active_cbs()
     if not cb_list: return []
     
@@ -161,17 +230,28 @@ def run_cbas_scanner():
         sid = cb['stock_id']
         if sid in stock_signals:
             sig = stock_signals[sid]
+            quote = fetch_cb_latest_quote(cb['cb_id'])
+            if not quote:
+                continue
             parity = (sig['price'] / cb['conversion_price']) * 100
-            premium = ((cb['cb_price'] - parity) / parity) * 100
-            double_low = cb['cb_price'] + premium
+            if parity <= 0:
+                continue
+            premium = ((quote['cb_price'] - parity) / parity) * 100
+            double_low = quote['cb_price'] + premium
             results.append({
                 "code": sig['code'], "name": sig['name'], "price": sig['price'], "pct_change": sig['pct_change'],
-                "cb_name": cb['cb_name'], "cb_price": cb['cb_price'], "premium_pct": round(premium, 2),
-                "double_low": round(double_low, 2), "desc": f"CB:{cb['cb_name']} | 雙低:{round(double_low, 2)}"
+                "cb_code": cb['cb_id'], "cb_name": cb['cb_name'], "cb_price": quote['cb_price'],
+                "conversion_price": cb['conversion_price'], "conversion_value": round(parity, 2),
+                "premium_pct": round(premium, 2), "double_low": round(double_low, 2),
+                "cb_trade_date": quote.get("trade_date"), "cb_units": quote.get("cb_units"),
+                "cb_trade_value": quote.get("cb_trade_value"),
+                "maturity_date": cb.get("maturity_date"), "put_option_date": cb.get("put_option_date"),
+                "put_option_price": cb.get("put_option_price"), "guaranteed": cb.get("guaranteed"),
+                "desc": f"CB:{cb['cb_name']} | 雙低:{round(double_low, 2)}"
             })
             
     results.sort(key=lambda x: x['double_low'])
-    print(f"✅ CBAS 掃描完成，找到 {len(results)} 檔標的")
+    print(f"CBAS 掃描完成，找到 {len(results)} 檔標的")
     return results
 
 # ==========================================
@@ -235,17 +315,59 @@ def strategy_doji_rise(df, ticker, region, latest):
     if score < 60: return None
     return {"score": score, "pattern": "標準十字星", "vol_ratio": round(vol_ratio * 100, 1), "vol_avg_val": round((ma5_vol * df['Close'][-5:].mean()) / 100000000, 1), "trend": "多頭整理", "reasons": reasons}
 
-def strategy_active_etf(ticker, latest_price):
-    held_by = []
-    total_shares = 0; total_value = 0
-    for etf_code, data in MOCK_ETF_DB.items():
-        if ticker in data['holdings']:
-            h = data['holdings'][ticker]
-            val = h['shares'] * 1000 * latest_price
-            held_by.append({"etf_code": etf_code, "etf_name": data['name'], "shares": h['shares'], "pct": h['pct'], "value": val})
-            total_shares += h['shares']; total_value += val
-    if len(held_by) > 0: return {"count": len(held_by), "total_shares": total_shares, "total_value": total_value, "details": held_by}
-    return None
+def fetch_twse_quote_map():
+    try:
+        rows = fetch_json(TWSE_QUOTE_URL)
+        return {row.get("Code"): row for row in rows if row.get("Code")}
+    except Exception as e:
+        print(f"TWSE 行情資料抓取失敗: {e}")
+        return {}
+
+def fetch_active_etfs():
+    try:
+        funds = fetch_json(TWSE_FUND_URL)
+        quotes = fetch_twse_quote_map()
+        results = []
+        for fund in funds:
+            fund_type = fund.get("基金類型") or ""
+            full_name = fund.get("基金中文名稱") or ""
+            if "主動式交易所交易基金" not in fund_type and "主動式ETF" not in full_name:
+                continue
+
+            code = fund.get("基金代號")
+            quote = quotes.get(code, {})
+            close = parse_float(quote.get("ClosingPrice"))
+            change = parse_float(quote.get("Change"))
+            prev_close = close - change if close is not None and change is not None else None
+            pct_change = round((change / prev_close) * 100, 2) if prev_close else None
+            trade_value = parse_float(quote.get("TradeValue"))
+
+            results.append({
+                "code": code,
+                "name": fund.get("基金簡稱") or code,
+                "full_name": full_name,
+                "price": close,
+                "change": change,
+                "pct_change": pct_change,
+                "date": roc_or_yyyymmdd_to_iso(quote.get("Date") or fund.get("出表日期")),
+                "fund_type": fund_type,
+                "market": "國內" if "國內" in fund_type else "國外",
+                "asset_class": "債券" if "債券" in fund_type else "股票",
+                "listing_date": roc_or_yyyymmdd_to_iso(fund.get("上市日期")),
+                "manager": fund.get("基金經理人"),
+                "benchmark": fund.get("績效指標中文名稱") or fund.get("標的指數/追蹤指數名稱"),
+                "includes_foreign": fund.get("是否包含國外成分股"),
+                "issued_units": parse_float(fund.get("發行單位數/轉換數")),
+                "trade_volume": parse_float(quote.get("TradeVolume")),
+                "trade_value": trade_value,
+                "source": "TWSE OpenAPI",
+            })
+        results.sort(key=lambda x: x.get("trade_value") or 0, reverse=True)
+        print(f"主動式 ETF 資料：{len(results)} 檔")
+        return results
+    except Exception as e:
+        print(f"主動式 ETF 資料抓取失敗: {e}")
+        return []
 
 def analyze_stock(stock_info):
     ticker = stock_info['code']
@@ -267,7 +389,6 @@ def analyze_stock(stock_info):
     if res := strategy_momentum(df, ticker, region, latest, prev, fin_data): pkg['momentum'] = {**base, **res}; has_res = True
     if res := strategy_day_trading(df, ticker, region, latest): pkg['day_trading'] = {**base, **res}; has_res = True
     if res := strategy_doji_rise(df, ticker, region, latest): pkg['doji_rise'] = {**base, **res}; has_res = True
-    if res := strategy_active_etf(ticker, latest['Close']): pkg['active_etf'] = {**base, **res}; has_res = True
     # Low Volatility 已移除
         
     return {"result": pkg if has_res else None, "is_60d_high": is_60d_high, "trade_date": real_trade_date}
@@ -316,9 +437,10 @@ def main():
                         if k in r: res[k].append(r[k])
 
     res['cbas'] = clean_for_json(cbas_results)
+    res['active_etf'] = clean_for_json(fetch_active_etfs())
 
     if detected_market_date and detected_market_date != expected_date:
-        print(f"⚠️ [警告] 日期不符 ({detected_market_date} vs {expected_date})")
+        print(f"[警告] 日期不符 ({detected_market_date} vs {expected_date})")
 
     res['momentum'].sort(key=lambda x: -x['score'])
     res['day_trading'].sort(key=lambda x: -x['rise_20d'])
@@ -328,7 +450,7 @@ def main():
     if stat_total > 0: market_breadth = round((stat_new_high / stat_total) * 100, 2)
     
     final_date = detected_market_date if detected_market_date else expected_date
-    print(f"✅ 確認歸檔日期: {final_date}")
+    print(f"確認歸檔日期: {final_date}")
     
     daily_record = clean_for_json({"date": final_date, "market_breadth": market_breadth, "strategies": res})
     with open(os.path.join(DATA_DIR, f"{final_date}.json"), 'w', encoding='utf-8') as f:
