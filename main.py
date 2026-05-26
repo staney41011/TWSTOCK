@@ -3,9 +3,11 @@ import yfinance as yf
 import pandas as pd
 import twstock
 import json
+import html as html_lib
 import os
 import glob
 import random
+import re
 import math
 import time
 import numpy as np
@@ -17,16 +19,13 @@ DATA_FILE = "data.json"
 DATA_DIR = "data"
 tw_stock_map = twstock.codes 
 
-MOCK_ETF_DB = {
-    "00980A": {"name": "野村台灣創新", "holdings": {"2330.TW": {"shares": 500, "pct": 15.2}, "2317.TW": {"shares": 300, "pct": 8.5}, "2454.TW": {"shares": 100, "pct": 5.1}}},
-    "00981A": {"name": "凱基優選", "holdings": {"2330.TW": {"shares": 800, "pct": 18.1}, "2303.TW": {"shares": 1200, "pct": 6.2}, "2603.TW": {"shares": 500, "pct": 4.3}}},
-    "00982A": {"name": "富邦成長", "holdings": {"2330.TW": {"shares": 600, "pct": 12.0}, "2317.TW": {"shares": 400, "pct": 7.8}, "3008.TW": {"shares": 50, "pct": 3.2}}},
-}
-
 TWSE_FUND_URL = "https://openapi.twse.com.tw/v1/opendata/t187ap47_L"
 TWSE_QUOTE_URL = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 TPEX_CB_ISSUE_URL = "https://www.tpex.org.tw/openapi/v1/bond_ISSBD5_data"
 TPEX_CB_QUOTE_URL = "https://www.tpex.org.tw/www/zh-tw/bond/cbDayQry"
+ETFINFO_ACTIVE_URL = "https://www.etfinfo.tw/active"
+ACTIVE_ETF_BUY_TYPES = {"added", "increased"}
+ACTIVE_ETF_SELL_TYPES = {"removed", "decreased"}
 
 # --- 工具函式 ---
 def fetch_json(url, params=None, timeout=20):
@@ -34,6 +33,12 @@ def fetch_json(url, params=None, timeout=20):
     res = requests.get(url, params=params, headers=headers, timeout=timeout)
     res.raise_for_status()
     return json.loads(res.content.decode("utf-8-sig"))
+
+def fetch_text(url, params=None, timeout=20):
+    headers = {"User-Agent": "Mozilla/5.0"}
+    res = requests.get(url, params=params, headers=headers, timeout=timeout)
+    res.raise_for_status()
+    return res.text
 
 def parse_float(val):
     if val is None: return None
@@ -323,50 +328,130 @@ def fetch_twse_quote_map():
         print(f"TWSE 行情資料抓取失敗: {e}")
         return {}
 
+def revive_nuxt_payload(values):
+    wrappers = {"Reactive", "ShallowReactive", "Ref", "ShallowRef", "Readonly"}
+
+    def revive_ref(ref, seen):
+        if not isinstance(ref, int):
+            return ref
+        if ref in seen:
+            return seen[ref]
+        value = values[ref]
+        if isinstance(value, list):
+            if value and value[0] in wrappers and len(value) >= 2:
+                revived = revive_ref(value[1], seen)
+                seen[ref] = revived
+                return revived
+            if value and value[0] == "Set":
+                revived = set()
+                seen[ref] = revived
+                for item in value[1:]:
+                    revived.add(revive_ref(item, seen) if isinstance(item, int) else item)
+                return revived
+            revived = []
+            seen[ref] = revived
+            revived.extend(revive_ref(item, seen) if isinstance(item, int) else item for item in value)
+            return revived
+        if isinstance(value, dict):
+            revived = {}
+            seen[ref] = revived
+            for key, item in value.items():
+                revived[key] = revive_ref(item, seen) if isinstance(item, int) else item
+            return revived
+        return value
+
+    return revive_ref(0, {})
+
+def extract_etfinfo_active_summary(page_html):
+    match = re.search(
+        r'<script type="application/json"[^>]*id="__NUXT_DATA__"[^>]*>(.*?)</script>',
+        page_html,
+        re.S,
+    )
+    if not match:
+        raise ValueError("找不到 ETFInfo Nuxt payload")
+    payload = json.loads(html_lib.unescape(match.group(1)))
+    root = revive_nuxt_payload(payload)
+    summary = root.get("data", {}).get("active-summary-weekly-0")
+    if not summary:
+        raise ValueError("ETFInfo payload 缺少 active-summary-weekly-0")
+    return summary
+
+def active_etf_side(change_type):
+    if change_type in ACTIVE_ETF_BUY_TYPES:
+        return "buy"
+    if change_type in ACTIVE_ETF_SELL_TYPES:
+        return "sell"
+    return "unknown"
+
 def fetch_active_etfs():
     try:
-        funds = fetch_json(TWSE_FUND_URL)
-        quotes = fetch_twse_quote_map()
+        page_html = fetch_text(ETFINFO_ACTIVE_URL, timeout=25)
+        summary = extract_etfinfo_active_summary(page_html)
+        etf_map = {item.get("code"): item for item in summary.get("etfs", [])}
         results = []
-        for fund in funds:
-            fund_type = fund.get("基金類型") or ""
-            full_name = fund.get("基金中文名稱") or ""
-            if "主動式交易所交易基金" not in fund_type and "主動式ETF" not in full_name:
+        for flow in summary.get("flowRankings", []):
+            raw_details = flow.get("etfDetails") or []
+            if len(raw_details) < 2:
                 continue
 
-            code = fund.get("基金代號")
-            quote = quotes.get(code, {})
-            close = parse_float(quote.get("ClosingPrice"))
-            change = parse_float(quote.get("Change"))
-            prev_close = close - change if close is not None and change is not None else None
-            pct_change = round((change / prev_close) * 100, 2) if prev_close else None
-            trade_value = parse_float(quote.get("TradeValue"))
+            details = []
+            buy_count = 0
+            sell_count = 0
+            for detail in raw_details:
+                side = active_etf_side(detail.get("type"))
+                if side == "buy":
+                    buy_count += 1
+                elif side == "sell":
+                    sell_count += 1
+                etf = etf_map.get(detail.get("etfCode"), {})
+                details.append({
+                    "etf_code": detail.get("etfCode"),
+                    "etf_name": etf.get("name") or detail.get("etfCode"),
+                    "issuer": etf.get("issuer"),
+                    "side": side,
+                    "action": detail.get("type"),
+                    "shares_delta": detail.get("sharesDelta"),
+                    "amount": detail.get("amount"),
+                })
+
+            if buy_count > sell_count:
+                side = "buy"
+            elif sell_count > buy_count:
+                side = "sell"
+            else:
+                side = "mixed"
+
+            same_side_count = max(buy_count, sell_count)
+            stock_code = flow.get("stockCode")
+            stock_name = flow.get("stockName") or get_stock_name(f"{stock_code}.TW", "TW")
 
             results.append({
-                "code": code,
-                "name": fund.get("基金簡稱") or code,
-                "full_name": full_name,
-                "price": close,
-                "change": change,
-                "pct_change": pct_change,
-                "date": roc_or_yyyymmdd_to_iso(quote.get("Date") or fund.get("出表日期")),
-                "fund_type": fund_type,
-                "market": "國內" if "國內" in fund_type else "國外",
-                "asset_class": "債券" if "債券" in fund_type else "股票",
-                "listing_date": roc_or_yyyymmdd_to_iso(fund.get("上市日期")),
-                "manager": fund.get("基金經理人"),
-                "benchmark": fund.get("績效指標中文名稱") or fund.get("標的指數/追蹤指數名稱"),
-                "includes_foreign": fund.get("是否包含國外成分股"),
-                "issued_units": parse_float(fund.get("發行單位數/轉換數")),
-                "trade_volume": parse_float(quote.get("TradeVolume")),
-                "trade_value": trade_value,
-                "source": "TWSE OpenAPI",
+                "code": stock_code,
+                "name": stock_name,
+                "industry": flow.get("industry"),
+                "side": side,
+                "buy_count": buy_count,
+                "sell_count": sell_count,
+                "same_side_count": same_side_count,
+                "etf_count": len(details),
+                "net_signal": buy_count - sell_count,
+                "net_shares": flow.get("netShares"),
+                "net_amount": flow.get("netAmount"),
+                "buy_amount": flow.get("buyAmount"),
+                "sell_amount": flow.get("sellAmount"),
+                "date": summary.get("latestMarketDate") or summary.get("updatedAt"),
+                "updated_at": summary.get("updatedAt"),
+                "details": details,
+                "source": "ETF資訊網主動 ETF 追蹤",
+                "source_url": ETFINFO_ACTIVE_URL,
+                "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。",
             })
-        results.sort(key=lambda x: x.get("trade_value") or 0, reverse=True)
-        print(f"主動式 ETF 資料：{len(results)} 檔")
+        results.sort(key=lambda x: (x.get("same_side_count") or 0, x.get("etf_count") or 0, abs(x.get("net_amount") or 0)), reverse=True)
+        print(f"主動式 ETF 重複買賣標的：{len(results)} 檔")
         return results
     except Exception as e:
-        print(f"主動式 ETF 資料抓取失敗: {e}")
+        print(f"主動式 ETF 重複買賣資料抓取失敗: {e}")
         return []
 
 def analyze_stock(stock_info):

@@ -61,7 +61,7 @@
                 <div class="mt-1 text-2xl font-semibold">{{ strategyCount('cbas') }}</div>
             </div>
             <div class="surface rounded-lg border p-4 border-l-4 border-l-teal-500">
-                <div class="text-xs text-stone-500">主動式 ETF</div>
+                <div class="text-xs text-stone-500">主動 ETF 共振</div>
                 <div class="mt-1 text-2xl font-semibold">{{ strategyCount('active_etf') }}</div>
             </div>
         </section>
@@ -81,18 +81,30 @@
                     <div class="flex items-start justify-between gap-4">
                         <div>
                             <h2 class="text-lg font-semibold text-stone-50">{{ item.name }}</h2>
-                            <p class="text-sm text-stone-400">{{ item.code }} · {{ item.market }}{{ item.asset_class }}</p>
+                            <p class="text-sm text-stone-400">{{ item.code }} · {{ item.industry || '產業未分類' }}</p>
                         </div>
                         <div class="text-right">
-                            <div class="text-xl font-semibold">{{ formatPrice(item.price) }}</div>
-                            <div :class="changeClass(item.pct_change)" class="text-sm">{{ formatPercent(item.pct_change, true) }}</div>
+                            <div :class="flowToneClass(item)" class="text-xl font-semibold">{{ flowLabel(item) }}</div>
+                            <div class="text-sm text-stone-400">買 {{ item.buy_count }} / 賣 {{ item.sell_count }}</div>
                         </div>
                     </div>
+                    <div class="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
+                        <span v-if="item.buy_count" class="rounded-md bg-red-400/15 px-2 py-1 text-red-200">買進 {{ item.buy_count }} 檔</span>
+                        <span v-if="item.sell_count" class="rounded-md bg-emerald-400/15 px-2 py-1 text-emerald-200">賣出 {{ item.sell_count }} 檔</span>
+                        <span class="rounded-md bg-zinc-700 px-2 py-1 text-stone-200">共 {{ item.etf_count }} 檔異動</span>
+                    </div>
                     <dl class="mt-4 grid grid-cols-2 gap-y-2 text-sm">
-                        <dt class="text-stone-500">成交金額</dt><dd class="text-right">{{ formatMoney(item.trade_value) }}</dd>
-                        <dt class="text-stone-500">經理人</dt><dd class="text-right">{{ item.manager || '-' }}</dd>
-                        <dt class="text-stone-500">上市日</dt><dd class="text-right">{{ item.listing_date || '-' }}</dd>
+                        <dt class="text-stone-500">淨估金額</dt><dd :class="changeClass(item.net_amount)" class="text-right">{{ formatMoney(item.net_amount) }}</dd>
+                        <dt class="text-stone-500">淨張數</dt><dd class="text-right">{{ formatNumber(item.net_shares, 0) }}</dd>
+                        <dt class="text-stone-500">資料日期</dt><dd class="text-right">{{ item.date || '-' }}</dd>
                     </dl>
+                    <div v-if="item.details?.length" class="mt-4 flex flex-wrap gap-2">
+                        <span v-for="detail in item.details.slice(0, 4)" :key="detail.etf_code"
+                              :class="sideBadgeClass(detail.side)"
+                              class="rounded-md px-2 py-1 text-xs font-semibold">
+                            {{ detail.etf_code }} {{ sideLabel(detail.side) }}
+                        </span>
+                    </div>
                 </template>
 
                 <template v-else-if="currentStrategy === 'cbas'">
@@ -150,12 +162,36 @@
             <div class="mt-6 space-y-5">
                 <div v-if="currentStrategy === 'active_etf'">
                     <dl class="grid grid-cols-2 gap-y-3 text-sm">
-                        <dt class="text-stone-500">基金全名</dt><dd class="text-right">{{ selectedStock.full_name || '-' }}</dd>
-                        <dt class="text-stone-500">基金類型</dt><dd class="text-right">{{ selectedStock.fund_type || '-' }}</dd>
-                        <dt class="text-stone-500">成交量</dt><dd class="text-right">{{ formatNumber(selectedStock.trade_volume, 0) }}</dd>
-                        <dt class="text-stone-500">發行單位數</dt><dd class="text-right">{{ formatNumber(selectedStock.issued_units, 0) }}</dd>
-                        <dt class="text-stone-500">績效指標</dt><dd class="text-right">{{ selectedStock.benchmark || '-' }}</dd>
+                        <dt class="text-stone-500">買進 ETF</dt><dd class="text-right">{{ formatEtfSide(selectedStock, 'buy') }}</dd>
+                        <dt class="text-stone-500">賣出 ETF</dt><dd class="text-right">{{ formatEtfSide(selectedStock, 'sell') }}</dd>
+                        <dt class="text-stone-500">估算買進金額</dt><dd class="text-right text-red-300">{{ formatMoney(selectedStock.buy_amount) }}</dd>
+                        <dt class="text-stone-500">估算賣出金額</dt><dd class="text-right text-emerald-300">{{ formatMoney(selectedStock.sell_amount) }}</dd>
+                        <dt class="text-stone-500">資料來源</dt><dd class="text-right">{{ selectedStock.source || '-' }}</dd>
                     </dl>
+                    <div v-if="selectedStock.details?.length" class="mt-5 overflow-x-auto">
+                        <table class="w-full border-collapse text-sm">
+                            <thead class="bg-zinc-800 text-stone-400">
+                                <tr>
+                                    <th class="border border-zinc-700 px-3 py-2 text-left">ETF</th>
+                                    <th class="border border-zinc-700 px-3 py-2 text-left">方向</th>
+                                    <th class="border border-zinc-700 px-3 py-2 text-right">張數變化</th>
+                                    <th class="border border-zinc-700 px-3 py-2 text-right">估算金額</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="detail in selectedStock.details" :key="detail.etf_code">
+                                    <td class="border border-zinc-700 px-3 py-2">
+                                        <div class="font-semibold text-stone-100">{{ detail.etf_code }}</div>
+                                        <div class="text-xs text-stone-500">{{ detail.etf_name }}</div>
+                                    </td>
+                                    <td class="border border-zinc-700 px-3 py-2" :class="detail.side === 'buy' ? 'text-red-300' : 'text-emerald-300'">{{ actionLabel(detail.action) }}</td>
+                                    <td class="border border-zinc-700 px-3 py-2 text-right">{{ formatNumber(detail.shares_delta, 0) }}</td>
+                                    <td class="border border-zinc-700 px-3 py-2 text-right">{{ formatMoney(detail.amount) }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-xs text-stone-500">{{ selectedStock.source_note }}</p>
                 </div>
 
                 <div v-else-if="currentStrategy === 'cbas'">
@@ -222,7 +258,7 @@ createApp({
                 { key: 'doji_rise', label: '十字星' },
                 { key: 'day_trading', label: '隔日沖' },
                 { key: 'cbas', label: '可轉債 CBAS' },
-                { key: 'active_etf', label: '主動式 ETF' },
+                { key: 'active_etf', label: '主動 ETF 共振' },
             ],
         };
     },
@@ -263,7 +299,7 @@ createApp({
         },
         modalSubtitle(item) {
             if (!item) return '';
-            if (this.currentStrategy === 'active_etf') return `${item.code} · ${item.date || ''}`;
+            if (this.currentStrategy === 'active_etf') return `${item.code} · ${this.flowLabel(item)} · ${item.date || ''}`;
             if (this.currentStrategy === 'cbas') return `${this.baseCode(item.code)} · ${item.cb_code || ''}`;
             return `${this.baseCode(item.code)} · ${this.strategyLabel}`;
         },
@@ -295,6 +331,41 @@ createApp({
             const number = Number(value);
             if (!Number.isFinite(number) || number === 0) return 'text-stone-400';
             return number > 0 ? 'text-red-300' : 'text-emerald-300';
+        },
+        flowLabel(item) {
+            const buy = Number(item?.buy_count || 0);
+            const sell = Number(item?.sell_count || 0);
+            if (buy >= 2 && sell === 0) return '同步買進';
+            if (sell >= 2 && buy === 0) return '同步賣出';
+            if (buy > sell) return '偏買進';
+            if (sell > buy) return '偏賣出';
+            return '多空分歧';
+        },
+        flowToneClass(item) {
+            const buy = Number(item?.buy_count || 0);
+            const sell = Number(item?.sell_count || 0);
+            if (buy > sell) return 'text-red-300';
+            if (sell > buy) return 'text-emerald-300';
+            return 'text-amber-300';
+        },
+        sideLabel(side) {
+            if (side === 'buy') return '買';
+            if (side === 'sell') return '賣';
+            return '異動';
+        },
+        sideBadgeClass(side) {
+            if (side === 'buy') return 'bg-red-400/15 text-red-200';
+            if (side === 'sell') return 'bg-emerald-400/15 text-emerald-200';
+            return 'bg-zinc-700 text-stone-200';
+        },
+        actionLabel(action) {
+            const labels = { added: '新增', increased: '加碼', decreased: '減碼', removed: '刪除' };
+            return labels[action] || action || '-';
+        },
+        formatEtfSide(item, side) {
+            const details = (item?.details || []).filter(detail => detail.side === side);
+            if (!details.length) return '-';
+            return details.map(detail => detail.etf_code).join('、');
         },
     },
     mounted() { this.loadData(); },
