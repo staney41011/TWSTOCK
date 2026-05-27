@@ -3,235 +3,373 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>台股策略戰情室</title>
+    <title>台股策略雷達</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
         [v-cloak] { display: none; }
-        body { background-color: #0f172a; color: #e2e8f0; }
-        .card { transition: all 0.2s; }
-        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5); }
-        .btn-active { background-color: #2563eb; color: white; border-color: #3b82f6; }
-        .btn-inactive { background-color: #1e293b; color: #94a3b8; border-color: #334155; }
+        body { background: #101114; color: #e7e5e4; }
+        .surface { background: #18181b; border-color: #2d2d32; }
+        .card { transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease; }
+        .card:hover { transform: translateY(-2px); border-color: #52525b; box-shadow: 0 14px 34px rgba(0,0,0,.28); }
+        .tab-active { background: #f5f5f4; color: #18181b; border-color: #f5f5f4; }
+        .tab-inactive { background: #18181b; color: #a8a29e; border-color: #333338; }
     </style>
 </head>
 <body>
-
-<div id="app" v-cloak class="min-h-screen p-4 md:p-8 max-w-6xl mx-auto pb-20">
-    
-    <div v-if="errorMsg" class="bg-red-900/50 border border-red-500 text-white p-4 rounded mb-6 text-center">
-        <h3 class="font-bold text-lg mb-2">⚠️ 資料讀取發生錯誤</h3>
-        <p class="font-mono text-sm">{{ errorMsg }}</p>
-        <button @click="loadData" class="mt-4 bg-red-700 hover:bg-red-600 px-4 py-2 rounded text-sm">重試</button>
-    </div>
-
-    <header class="mb-6 flex flex-col md:flex-row justify-between items-start border-b border-gray-700 pb-4">
+<div id="app" v-cloak class="min-h-screen px-4 py-5 md:px-8 md:py-8 max-w-7xl mx-auto">
+    <header class="mb-6 border-b border-zinc-800 pb-5 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-            <h1 class="text-3xl font-bold text-white mb-2">⚡ 台股策略戰情室</h1>
-            <div class="flex items-center gap-4 mt-2">
-                <select v-model="selectedDateIndex" class="bg-gray-800 border border-gray-600 text-white rounded px-3 py-1 text-sm">
-                    <option v-for="(record, index) in reversedHistory" :value="index">
-                        {{ record.date }}
-                    </option>
+            <p class="text-sm text-teal-300 mb-2">TWSTOCK</p>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-normal text-stone-50">台股策略雷達</h1>
+            <div class="mt-3 flex flex-wrap items-center gap-3 text-sm text-stone-400">
+                <label class="text-stone-500" for="date-select">資料日期</label>
+                <select id="date-select" v-model="selectedDateIndex" class="surface rounded-md px-3 py-2 text-stone-100 outline-none">
+                    <option v-for="(record, index) in reversedHistory" :key="record.date" :value="index">{{ record.date }}</option>
                 </select>
-                <div class="text-gray-400 text-sm" v-if="currentRecord.date">
-                    資料日期: {{ currentRecord.date }}
-                </div>
+                <span v-if="currentRecord.date">市場寬度 {{ formatPercent(currentRecord.market_breadth, true) }}</span>
             </div>
         </div>
-        <div class="mt-4 md:mt-0 text-right">
-             <button @click="loadData" class="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition">
-                ↻ 強制重整 (清除快取)
-             </button>
-        </div>
+        <button @click="loadData" class="surface rounded-md px-4 py-2 text-sm font-medium text-stone-100 hover:bg-zinc-800">
+            重新整理
+        </button>
     </header>
 
-    <div v-if="loading" class="text-center py-20"><p class="text-xl animate-pulse text-blue-400">🔄 正在下載最新策略數據...</p></div>
-
-    <div v-else-if="history.length > 0">
-        
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-            <div class="bg-gray-800 p-3 rounded border border-gray-700 text-center">
-                <div class="text-xs text-gray-400">全市場新高佔比</div>
-                <div class="text-xl font-bold" :class="currentRecord.market_breadth > 2 ? 'text-red-400' : 'text-blue-400'">
-                    {{ currentRecord.market_breadth }}%
-                </div>
-            </div>
-            <div class="bg-gray-800 p-3 rounded border border-gray-700 text-center">
-                <div class="text-xs text-gray-400">動能爆發</div>
-                <div class="text-xl font-bold text-white">{{ (strategyData.momentum || []).length }} 檔</div>
-            </div>
-            <div class="bg-gray-800 p-3 rounded border border-gray-700 text-center border-l-4 border-l-purple-500">
-                <div class="text-xs text-gray-400">CBAS 可轉債</div>
-                <div class="text-xl font-bold text-white">{{ (strategyData.cbas || []).length }} 檔</div>
-            </div>
-        </div>
-
-        <div class="flex space-x-2 mb-6 overflow-x-auto pb-2">
-            <button @click="currentStrategy = 'momentum'" :class="currentStrategy === 'momentum' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🔥 動能爆發</button>
-            <button @click="currentStrategy = 'doji_rise'" :class="currentStrategy === 'doji_rise' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">✨ 十字星</button>
-            <button @click="currentStrategy = 'day_trading'" :class="currentStrategy === 'day_trading' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">⚡ 隔日沖</button>
-            <button @click="currentStrategy = 'cbas'" :class="currentStrategy === 'cbas' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🔄 可轉債 (CBAS)</button>
-            <button @click="currentStrategy = 'etf'" :class="currentStrategy === 'etf' ? 'btn-active' : 'btn-inactive'" class="px-4 py-2 rounded-lg font-bold border transition flex-shrink-0">🏦 主動式 ETF</button>
-        </div>
-
-        <div>
-            <div v-if="currentStrategy === 'cbas'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div v-for="stock in strategyData.cbas" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 border-l-4 border-l-purple-500">
-                    <div class="flex justify-between items-start mb-2">
-                        <div>
-                            <h3 class="text-lg font-bold text-white">{{ stock.name }} <span class="text-sm text-gray-400">({{ stock.code.split('.')[0] }})</span></h3>
-                            <div class="text-purple-300 font-bold text-sm">{{ stock.cb_name }}</div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-xl font-bold text-white">${{ stock.price }}</div>
-                            <div class="text-xs" :class="stock.pct_change > 0 ? 'text-red-400' : 'text-green-400'">{{ formatPercent(stock.pct_change/100) }}</div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-gray-700/40 p-3 rounded text-sm grid grid-cols-2 gap-4 mt-3">
-                        <div class="text-center border-r border-gray-600">
-                            <div class="text-[10px] text-gray-400">雙低指標 (Double Low)</div>
-                            <div class="text-xl font-bold text-yellow-400">{{ stock.double_low }}</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-[10px] text-gray-400">CB 價格 / 溢價率</div>
-                            <div class="font-bold text-white">${{ stock.cb_price }} <span class="text-xs text-gray-400">({{ stock.premium_pct }}%)</span></div>
-                        </div>
-                    </div>
-                    <div class="mt-3 text-xs text-center text-purple-200 bg-purple-900/30 py-1 rounded">
-                        🚀 股價帶量突破 + CB低檔佈局
-                    </div>
-                </div>
-                <div v-if="!strategyData.cbas?.length" class="col-span-full text-center text-gray-500 py-10">尚無符合「股價發動 + 雙低」的可轉債標的</div>
-            </div>
-
-            <div v-if="currentStrategy === 'momentum'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div v-for="stock in strategyData.momentum" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg font-bold" :class="stock.score >= 5 ? 'bg-red-600' : 'bg-gray-600'">{{ stock.score }}分</div>
-                    <div class="flex justify-between items-end mb-4">
-                        <div><h3 class="text-xl font-bold text-white">{{ stock.name }}</h3><p class="text-gray-400 text-sm">{{ stock.code.split('.')[0] }} | ${{ stock.price }}</p></div>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2 text-center bg-gray-700/40 p-2 rounded text-sm">
-                        <div><div class="text-[10px] text-gray-400">EPS成長</div><div class="font-bold text-green-300">{{ formatPercent(stock.fundamentals.growth) }}</div></div>
-                        <div :class="{'ring-1 ring-red-500 bg-red-900/20 rounded': isHighGrowth(stock.fundamentals.rev_yoy)}"><div class="text-[10px] text-gray-400">營收 YoY</div><div class="font-bold" :class="isPositive(stock.fundamentals.rev_yoy) ? 'text-red-400' : 'text-green-400'"><span v-if="isHighGrowth(stock.fundamentals.rev_yoy)">🔥</span>{{ formatPercent(stock.fundamentals.rev_yoy) }}</div></div>
-                        <div><div class="text-[10px] text-gray-400">PE</div><div class="font-bold text-blue-300">{{ stock.fundamentals.pe }}x</div></div>
-                    </div>
-                </div>
-                <div v-if="!strategyData.momentum?.length" class="col-span-full text-center text-gray-500 py-10">無符合標的</div>
-            </div>
-
-            <div v-if="currentStrategy === 'day_trading'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                 <div v-for="stock in strategyData.day_trading" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 border-l-4 border-l-green-500 relative">
-                    <div class="absolute top-0 right-0 bg-green-600 text-white text-xs px-2 py-1 rounded-bl-lg font-bold">漲停回檔</div>
-                    <div class="flex justify-between items-start mb-4">
-                        <div><h3 class="text-xl font-bold text-white">{{ stock.name }}</h3><p class="text-gray-400 text-sm">{{ stock.code.split('.')[0] }} | ${{ stock.price }}</p></div>
-                        <div class="text-right"><div class="text-xs text-gray-400">實體跌幅</div><div class="text-xl font-bold text-green-400">▼ {{ stock.drop_pct }}%</div></div>
-                    </div>
-                </div>
-                <div v-if="!strategyData.day_trading?.length" class="col-span-full text-center text-gray-500 py-10">無符合標的</div>
-            </div>
-            
-            <div v-if="currentStrategy === 'doji_rise'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div v-for="stock in strategyData.doji_rise" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700 border-l-4 border-l-yellow-500 relative">
-                    <div class="absolute top-0 right-0 text-white text-xs px-2 py-1 rounded-bl-lg font-bold" :class="stock.score >= 80 ? 'bg-purple-600' : (stock.score >= 70 ? 'bg-red-600' : 'bg-yellow-600')">{{ stock.score }}分</div>
-                    <div class="flex justify-between items-start mb-4">
-                        <div><h3 class="text-xl font-bold text-white">{{ stock.name }}</h3><p class="text-gray-400 text-sm">{{ stock.code.split('.')[0] }} | ${{ stock.price }}</p></div>
-                    </div>
-                </div>
-                <div v-if="!strategyData.doji_rise?.length" class="col-span-full text-center text-gray-500 py-10">無符合標的</div>
-            </div>
-
-            <div v-if="currentStrategy === 'etf'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div v-for="stock in strategyData.active_etf" :key="stock.code" @click="openModal(stock)" class="card bg-gray-800 rounded-xl p-5 cursor-pointer border border-gray-700">
-                    <div class="flex justify-between items-center mb-4"><div><h3 class="text-xl font-bold text-white">{{ stock.name }}</h3><span class="bg-purple-900 text-purple-200 text-xs px-2 py-1 rounded border border-purple-700">被 {{ stock.count }} 檔 ETF 持有</span></div></div>
-                </div>
-                <div v-if="!strategyData.active_etf?.length" class="col-span-full text-center text-gray-500 py-10">無資料</div>
-            </div>
-
-        </div>
+    <div v-if="errorMsg" class="mb-6 rounded-md border border-red-700 bg-red-950/40 p-4 text-red-100">
+        <div class="font-semibold">資料讀取失敗</div>
+        <div class="mt-1 font-mono text-sm text-red-200">{{ errorMsg }}</div>
     </div>
 
-    <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4" @click.self="showModal = false">
-        <div class="bg-gray-800 rounded-xl max-w-2xl w-full p-6 border border-gray-600 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button @click="showModal = false" class="absolute top-4 right-4 text-gray-400 hover:text-white">✕</button>
-            <h2 class="text-3xl font-bold mb-1">{{ selectedStock.name }}</h2>
-            <div class="text-gray-400 text-sm mb-6 font-mono">{{ selectedStock.code.split('.')[0] }}</div>
+    <div v-if="loading" class="py-24 text-center text-lg text-teal-300">資料載入中</div>
 
-            <div v-if="currentStrategy === 'momentum'" class="bg-gray-700/30 p-4 rounded mb-4"><h4 class="text-yellow-400 font-bold mb-2">🏆 入選理由</h4><ul class="text-sm text-gray-300 space-y-1"><li v-for="r in selectedStock.reasons">✔ {{ r }}</li></ul></div>
-            
-            <div v-if="currentStrategy === 'cbas'" class="bg-purple-900/20 p-4 rounded mb-4 border border-purple-800">
-                <h4 class="text-purple-300 font-bold mb-2">🔄 CBAS 策略數據</h4>
-                <div class="grid grid-cols-2 gap-4 text-sm mb-2">
-                    <div><span class="text-gray-400">CB 名稱：</span><span class="text-white">{{ selectedStock.cb_name }}</span></div>
-                    <div><span class="text-gray-400">CB 價格：</span><span class="text-white">${{ selectedStock.cb_price }}</span></div>
-                    <div><span class="text-gray-400">溢價率：</span><span class="text-white">{{ selectedStock.premium_pct }}%</span></div>
-                    <div><span class="text-gray-400">雙低指標：</span><span class="text-yellow-400 font-bold">{{ selectedStock.double_low }}</span></div>
-                </div>
-                <div class="text-xs text-gray-400 mt-2">雙低 = CB價格 + 溢價率。數值越低，代表可轉債價格便宜且溢價低，下檔有債底保護，上檔跟隨股價發動機率高。</div>
+    <main v-else-if="history.length">
+        <section class="grid grid-cols-2 gap-3 md:grid-cols-5 mb-6">
+            <div class="surface rounded-lg border p-4">
+                <div class="text-xs text-stone-500">動能爆發</div>
+                <div class="mt-1 text-2xl font-semibold">{{ strategyCount('momentum') }}</div>
             </div>
+            <div class="surface rounded-lg border p-4">
+                <div class="text-xs text-stone-500">十字星</div>
+                <div class="mt-1 text-2xl font-semibold">{{ strategyCount('doji_rise') }}</div>
+            </div>
+            <div class="surface rounded-lg border p-4">
+                <div class="text-xs text-stone-500">隔日沖</div>
+                <div class="mt-1 text-2xl font-semibold">{{ strategyCount('day_trading') }}</div>
+            </div>
+            <div class="surface rounded-lg border p-4 border-l-4 border-l-violet-500">
+                <div class="text-xs text-stone-500">可轉債 CBAS</div>
+                <div class="mt-1 text-2xl font-semibold">{{ strategyCount('cbas') }}</div>
+            </div>
+            <div class="surface rounded-lg border p-4 border-l-4 border-l-teal-500">
+                <div class="text-xs text-stone-500">主動 ETF 共振</div>
+                <div class="mt-1 text-2xl font-semibold">{{ strategyCount('active_etf') }}</div>
+            </div>
+        </section>
 
-            <div v-if="selectedStock.fundamentals && selectedStock.fundamentals.quarters?.length">
-                <h4 class="text-white font-bold mb-2">📊 近四季營收趨勢</h4>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left text-gray-300 border-collapse">
-                        <thead class="text-xs text-gray-400 uppercase bg-gray-700 text-center"><tr><th class="px-4 py-3 border border-gray-600">季度</th><th class="px-4 py-3 border border-gray-600">營收</th><th class="px-4 py-3 border border-gray-600">季增(%)</th></tr></thead>
-                        <tbody><tr v-for="q in selectedStock.fundamentals.quarters" :key="q.date" class="border-b border-gray-700 text-center"><td class="px-4 py-3 border border-gray-600">{{ q.date }}</td><td class="px-4 py-3 border border-gray-600">{{ formatBigNumber(q.revenue) }}</td><td class="px-4 py-3 border border-gray-600"><span v-if="q.qoq" :class="q.qoq > 0 ? 'text-red-400' : 'text-green-400'">{{ formatPercent(q.qoq) }}</span><span v-else>-</span></td></tr></tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="pt-4"><a :href="`https://tw.stock.yahoo.com/quote/${selectedStock.code.split('.')[0]}`" target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">前往 Yahoo 股市</a></div>
+        <nav class="mb-6 flex gap-2 overflow-x-auto pb-2">
+            <button v-for="tab in tabs" :key="tab.key" @click="currentStrategy = tab.key"
+                :class="currentStrategy === tab.key ? 'tab-active' : 'tab-inactive'"
+                class="flex-shrink-0 rounded-md border px-4 py-2 text-sm font-semibold">
+                {{ tab.label }}
+            </button>
+        </nav>
+
+        <section v-if="currentItems.length" class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <article v-for="item in currentItems" :key="itemKey(item)" @click="openModal(item)"
+                class="card surface rounded-lg border p-5 cursor-pointer">
+                <template v-if="currentStrategy === 'active_etf'">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <h2 class="text-lg font-semibold text-stone-50">{{ item.name }}</h2>
+                            <p class="text-sm text-stone-400">{{ item.code }} · {{ item.industry || '產業未分類' }}</p>
+                        </div>
+                        <div class="text-right">
+                            <div :class="flowToneClass(item)" class="text-xl font-semibold">{{ flowLabel(item) }}</div>
+                            <div class="text-sm text-stone-400">買 {{ item.buy_count }} / 賣 {{ item.sell_count }}</div>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
+                        <span v-if="item.buy_count" class="rounded-md bg-red-400/15 px-2 py-1 text-red-200">買進 {{ item.buy_count }} 檔</span>
+                        <span v-if="item.sell_count" class="rounded-md bg-emerald-400/15 px-2 py-1 text-emerald-200">賣出 {{ item.sell_count }} 檔</span>
+                        <span class="rounded-md bg-zinc-700 px-2 py-1 text-stone-200">共 {{ item.etf_count }} 檔異動</span>
+                    </div>
+                    <dl class="mt-4 grid grid-cols-2 gap-y-2 text-sm">
+                        <dt class="text-stone-500">淨估金額</dt><dd :class="changeClass(item.net_amount)" class="text-right">{{ formatMoney(item.net_amount) }}</dd>
+                        <dt class="text-stone-500">淨張數</dt><dd class="text-right">{{ formatNumber(item.net_shares, 0) }}</dd>
+                        <dt class="text-stone-500">資料日期</dt><dd class="text-right">{{ item.date || '-' }}</dd>
+                    </dl>
+                    <div v-if="item.details?.length" class="mt-4 flex flex-wrap gap-2">
+                        <span v-for="detail in item.details.slice(0, 4)" :key="detail.etf_code"
+                              :class="sideBadgeClass(detail.side)"
+                              class="rounded-md px-2 py-1 text-xs font-semibold">
+                            {{ detail.etf_code }} {{ sideLabel(detail.side) }}
+                        </span>
+                    </div>
+                </template>
+
+                <template v-else-if="currentStrategy === 'cbas'">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <h2 class="text-lg font-semibold text-stone-50">{{ item.name }}</h2>
+                            <p class="text-sm text-violet-300">{{ item.cb_name }} · {{ item.cb_code }}</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-semibold">{{ formatPrice(item.price) }}</div>
+                            <div :class="changeClass(item.pct_change)" class="text-sm">{{ formatPercent(item.pct_change, true) }}</div>
+                        </div>
+                    </div>
+                    <dl class="mt-4 grid grid-cols-2 gap-y-2 text-sm">
+                        <dt class="text-stone-500">雙低值</dt><dd class="text-right text-amber-300 font-semibold">{{ formatNumber(item.double_low, 2) }}</dd>
+                        <dt class="text-stone-500">CB 收盤價</dt><dd class="text-right">{{ formatPrice(item.cb_price) }}</dd>
+                        <dt class="text-stone-500">溢價率</dt><dd class="text-right">{{ formatPercent(item.premium_pct, true) }}</dd>
+                    </dl>
+                </template>
+
+                <template v-else>
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <h2 class="text-lg font-semibold text-stone-50">{{ item.name }}</h2>
+                            <p class="text-sm text-stone-400">{{ baseCode(item.code) }} · {{ formatPrice(item.price) }}</p>
+                        </div>
+                        <div v-if="item.score" class="rounded-md bg-amber-400 px-2 py-1 text-sm font-bold text-zinc-950">{{ item.score }} 分</div>
+                    </div>
+                    <dl class="mt-4 grid grid-cols-2 gap-y-2 text-sm">
+                        <dt class="text-stone-500">型態</dt><dd class="text-right">{{ item.pattern || strategyLabel }}</dd>
+                        <dt class="text-stone-500">營收 YoY</dt><dd class="text-right">{{ formatPercent(item.fundamentals?.rev_yoy, false) }}</dd>
+                        <dt class="text-stone-500">本益比</dt><dd class="text-right">{{ item.fundamentals?.pe || '-' }}</dd>
+                    </dl>
+                </template>
+            </article>
+        </section>
+
+        <div v-else class="surface rounded-lg border py-16 text-center text-stone-500">
+            目前沒有符合「{{ strategyLabel }}」的資料
         </div>
+    </main>
+
+    <div v-else class="surface rounded-lg border py-16 text-center text-stone-500">尚無資料</div>
+
+    <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4" @click.self="showModal = false">
+        <section class="surface max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg border p-6 shadow-2xl">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-stone-50">{{ selectedStock.name }}</h2>
+                    <p class="mt-1 text-sm text-stone-400">{{ modalSubtitle(selectedStock) }}</p>
+                </div>
+                <button @click="showModal = false" class="rounded-md border border-zinc-700 px-3 py-1 text-stone-300 hover:bg-zinc-800">關閉</button>
+            </div>
+
+            <div class="mt-6 space-y-5">
+                <div v-if="currentStrategy === 'active_etf'">
+                    <dl class="grid grid-cols-2 gap-y-3 text-sm">
+                        <dt class="text-stone-500">買進 ETF</dt><dd class="text-right">{{ formatEtfSide(selectedStock, 'buy') }}</dd>
+                        <dt class="text-stone-500">賣出 ETF</dt><dd class="text-right">{{ formatEtfSide(selectedStock, 'sell') }}</dd>
+                        <dt class="text-stone-500">估算買進金額</dt><dd class="text-right text-red-300">{{ formatMoney(selectedStock.buy_amount) }}</dd>
+                        <dt class="text-stone-500">估算賣出金額</dt><dd class="text-right text-emerald-300">{{ formatMoney(selectedStock.sell_amount) }}</dd>
+                        <dt class="text-stone-500">資料來源</dt><dd class="text-right">{{ selectedStock.source || '-' }}</dd>
+                    </dl>
+                    <div v-if="selectedStock.details?.length" class="mt-5 overflow-x-auto">
+                        <table class="w-full border-collapse text-sm">
+                            <thead class="bg-zinc-800 text-stone-400">
+                                <tr>
+                                    <th class="border border-zinc-700 px-3 py-2 text-left">ETF</th>
+                                    <th class="border border-zinc-700 px-3 py-2 text-left">方向</th>
+                                    <th class="border border-zinc-700 px-3 py-2 text-right">張數變化</th>
+                                    <th class="border border-zinc-700 px-3 py-2 text-right">估算金額</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="detail in selectedStock.details" :key="detail.etf_code">
+                                    <td class="border border-zinc-700 px-3 py-2">
+                                        <div class="font-semibold text-stone-100">{{ detail.etf_code }}</div>
+                                        <div class="text-xs text-stone-500">{{ detail.etf_name }}</div>
+                                    </td>
+                                    <td class="border border-zinc-700 px-3 py-2" :class="detail.side === 'buy' ? 'text-red-300' : 'text-emerald-300'">{{ actionLabel(detail.action) }}</td>
+                                    <td class="border border-zinc-700 px-3 py-2 text-right">{{ formatNumber(detail.shares_delta, 0) }}</td>
+                                    <td class="border border-zinc-700 px-3 py-2 text-right">{{ formatMoney(detail.amount) }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-xs text-stone-500">{{ selectedStock.source_note }}</p>
+                </div>
+
+                <div v-else-if="currentStrategy === 'cbas'">
+                    <dl class="grid grid-cols-2 gap-y-3 text-sm">
+                        <dt class="text-stone-500">轉換價</dt><dd class="text-right">{{ formatPrice(selectedStock.conversion_price) }}</dd>
+                        <dt class="text-stone-500">轉換價值</dt><dd class="text-right">{{ formatNumber(selectedStock.conversion_value, 2) }}</dd>
+                        <dt class="text-stone-500">CB 成交日</dt><dd class="text-right">{{ selectedStock.cb_trade_date || '-' }}</dd>
+                        <dt class="text-stone-500">CB 成交金額</dt><dd class="text-right">{{ formatMoney(selectedStock.cb_trade_value) }}</dd>
+                        <dt class="text-stone-500">到期日</dt><dd class="text-right">{{ selectedStock.maturity_date || '-' }}</dd>
+                        <dt class="text-stone-500">賣回日</dt><dd class="text-right">{{ selectedStock.put_option_date || '-' }}</dd>
+                    </dl>
+                </div>
+
+                <div v-else>
+                    <div v-if="selectedStock.reasons?.length">
+                        <h3 class="mb-2 font-semibold text-amber-300">訊號原因</h3>
+                        <ul class="space-y-1 text-sm text-stone-300">
+                            <li v-for="reason in selectedStock.reasons" :key="reason">{{ reason }}</li>
+                        </ul>
+                    </div>
+                    <div v-if="selectedStock.fundamentals?.quarters?.length">
+                        <h3 class="mb-2 font-semibold text-stone-100">季度營收</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full border-collapse text-sm">
+                                <thead class="bg-zinc-800 text-stone-400">
+                                    <tr><th class="border border-zinc-700 px-3 py-2">季度</th><th class="border border-zinc-700 px-3 py-2">營收</th><th class="border border-zinc-700 px-3 py-2">QoQ</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="q in selectedStock.fundamentals.quarters" :key="q.date">
+                                        <td class="border border-zinc-700 px-3 py-2">{{ q.date }}</td>
+                                        <td class="border border-zinc-700 px-3 py-2 text-right">{{ formatMoney(q.revenue) }}</td>
+                                        <td class="border border-zinc-700 px-3 py-2 text-right">{{ formatPercent(q.qoq, false) }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <a :href="`https://tw.stock.yahoo.com/quote/${quoteCode(selectedStock)}`" target="_blank"
+                   class="block rounded-md bg-teal-500 px-4 py-2 text-center font-semibold text-zinc-950 hover:bg-teal-400">
+                    Yahoo 股市
+                </a>
+            </div>
+        </section>
     </div>
 </div>
 
 <script>
-    const { createApp } = Vue;
-    createApp({
-        data() {
-            return {
-                loading: true, history: [], selectedDateIndex: 0, currentStrategy: 'momentum', errorMsg: '', showModal: false, selectedStock: null
+const { createApp } = Vue;
+
+createApp({
+    data() {
+        return {
+            loading: true,
+            history: [],
+            selectedDateIndex: 0,
+            currentStrategy: 'momentum',
+            errorMsg: '',
+            showModal: false,
+            selectedStock: null,
+            tabs: [
+                { key: 'momentum', label: '動能爆發' },
+                { key: 'doji_rise', label: '十字星' },
+                { key: 'day_trading', label: '隔日沖' },
+                { key: 'cbas', label: '可轉債 CBAS' },
+                { key: 'active_etf', label: '主動 ETF 共振' },
+            ],
+        };
+    },
+    computed: {
+        reversedHistory() { return Array.isArray(this.history) ? [...this.history].reverse() : []; },
+        currentRecord() { return this.reversedHistory[this.selectedDateIndex] || {}; },
+        strategyData() { return this.currentRecord.strategies || {}; },
+        currentItems() { return this.strategyData[this.currentStrategy] || []; },
+        strategyLabel() {
+            return (this.tabs.find(tab => tab.key === this.currentStrategy) || {}).label || '';
+        },
+    },
+    methods: {
+        async loadData() {
+            this.loading = true;
+            this.errorMsg = '';
+            try {
+                const response = await fetch(`./data.json?t=${Date.now()}`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                if (!Array.isArray(data)) throw new Error('data.json 格式不是陣列');
+                this.history = data;
+                this.selectedDateIndex = 0;
+            } catch (error) {
+                this.history = [];
+                this.errorMsg = error.message;
+            } finally {
+                this.loading = false;
             }
         },
-        computed: {
-            reversedHistory() { if (!Array.isArray(this.history)) return []; return [...this.history].reverse(); },
-            currentRecord() { if (this.reversedHistory.length === 0) return {}; return this.reversedHistory[this.selectedDateIndex]; },
-            strategyData() {
-                const rec = this.currentRecord; 
-                if (!rec) return {};
-                const strats = rec.strategies || {};
-                return {
-                    momentum: strats.momentum || rec.buy || [], 
-                    day_trading: strats.day_trading || [],
-                    doji_rise: strats.doji_rise || [],
-                    active_etf: strats.active_etf || [],
-                    cbas: strats.cbas || [] // 新增 CBAS 資料源
-                }; 
-            }
+        strategyCount(key) { return (this.strategyData[key] || []).length; },
+        openModal(item) { this.selectedStock = item; this.showModal = true; },
+        itemKey(item) { return `${this.currentStrategy}-${item.code || ''}-${item.cb_code || ''}-${item.name || ''}`; },
+        baseCode(code) { return String(code || '').split('.')[0]; },
+        quoteCode(item) {
+            if (!item) return '';
+            return this.baseCode(item.code || item.cb_code);
         },
-        methods: {
-            async loadData() { 
-                this.loading = true; this.errorMsg = '';
-                try { 
-                    const t = new Date().getTime();
-                    const r = await fetch(`./data.json?t=${t}`); 
-                    if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
-                    const data = await r.json();
-                    if (!Array.isArray(data)) throw new Error("資料格式錯誤 (非陣列)");
-                    this.history = data; 
-                } catch (e) {
-                    this.history = []; this.errorMsg = e.message; console.error(e);
-                } finally { this.loading = false; } 
-            },
-            openModal(stock) { this.selectedStock = stock; this.showModal = true; },
-            formatPercent(v) { if(!v && v!==0) return '-'; let n=parseFloat(v); if(isNaN(n)) return '-'; if(Math.abs(n)<10) n*=100; return (n>0?'+':'')+n.toFixed(2)+'%'; },
-            isPositive(v) { return v && parseFloat(v) > 0; },
-            isHighGrowth(v) { return v && parseFloat(v) > 0.15; },
-            formatBigNumber(num) { if (!num) return '-'; if (num >= 1e9) return (num / 1e9).toFixed(2) + ' B'; if (num >= 1e6) return (num / 1e6).toFixed(2) + ' M'; return (num / 1e3).toFixed(2) + ' K'; },
-            formatMoney(num) { if (!num) return '0'; if (num >= 1e8) return (num / 1e8).toFixed(1) + '億'; if (num >= 1e4) return (num / 1e4).toFixed(0) + '萬'; return num.toFixed(0); }
+        modalSubtitle(item) {
+            if (!item) return '';
+            if (this.currentStrategy === 'active_etf') return `${item.code} · ${this.flowLabel(item)} · ${item.date || ''}`;
+            if (this.currentStrategy === 'cbas') return `${this.baseCode(item.code)} · ${item.cb_code || ''}`;
+            return `${this.baseCode(item.code)} · ${this.strategyLabel}`;
         },
-        mounted() { this.loadData(); }
-    }).mount('#app');
+        formatPrice(value) {
+            if (value === null || value === undefined || value === '') return '-';
+            const number = Number(value);
+            return Number.isFinite(number) ? number.toFixed(2) : '-';
+        },
+        formatNumber(value, digits = 1) {
+            if (value === null || value === undefined || value === '') return '-';
+            const number = Number(value);
+            return Number.isFinite(number) ? number.toLocaleString('zh-TW', { maximumFractionDigits: digits }) : '-';
+        },
+        formatMoney(value) {
+            const number = Number(value);
+            if (!Number.isFinite(number)) return '-';
+            if (Math.abs(number) >= 1e8) return `${(number / 1e8).toFixed(1)} 億`;
+            if (Math.abs(number) >= 1e4) return `${(number / 1e4).toFixed(0)} 萬`;
+            return number.toLocaleString('zh-TW');
+        },
+        formatPercent(value, alreadyPercent = true) {
+            if (value === null || value === undefined || value === '') return '-';
+            const number = Number(value);
+            if (!Number.isFinite(number)) return '-';
+            const pct = alreadyPercent ? number : number * 100;
+            return `${pct > 0 ? '+' : ''}${pct.toFixed(2)}%`;
+        },
+        changeClass(value) {
+            const number = Number(value);
+            if (!Number.isFinite(number) || number === 0) return 'text-stone-400';
+            return number > 0 ? 'text-red-300' : 'text-emerald-300';
+        },
+        flowLabel(item) {
+            const buy = Number(item?.buy_count || 0);
+            const sell = Number(item?.sell_count || 0);
+            if (buy >= 2 && sell === 0) return '同步買進';
+            if (sell >= 2 && buy === 0) return '同步賣出';
+            if (buy > sell) return '偏買進';
+            if (sell > buy) return '偏賣出';
+            return '多空分歧';
+        },
+        flowToneClass(item) {
+            const buy = Number(item?.buy_count || 0);
+            const sell = Number(item?.sell_count || 0);
+            if (buy > sell) return 'text-red-300';
+            if (sell > buy) return 'text-emerald-300';
+            return 'text-amber-300';
+        },
+        sideLabel(side) {
+            if (side === 'buy') return '買';
+            if (side === 'sell') return '賣';
+            return '異動';
+        },
+        sideBadgeClass(side) {
+            if (side === 'buy') return 'bg-red-400/15 text-red-200';
+            if (side === 'sell') return 'bg-emerald-400/15 text-emerald-200';
+            return 'bg-zinc-700 text-stone-200';
+        },
+        actionLabel(action) {
+            const labels = { added: '新增', increased: '加碼', decreased: '減碼', removed: '刪除' };
+            return labels[action] || action || '-';
+        },
+        formatEtfSide(item, side) {
+            const details = (item?.details || []).filter(detail => detail.side === side);
+            if (!details.length) return '-';
+            return details.map(detail => detail.etf_code).join('、');
+        },
+    },
+    mounted() { this.loadData(); },
+}).mount('#app');
 </script>
 </body>
 </html>
