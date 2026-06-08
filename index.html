@@ -43,7 +43,7 @@
     <div v-if="loading" class="py-24 text-center text-lg text-teal-300">資料載入中</div>
 
     <main v-else-if="history.length">
-        <section class="grid grid-cols-2 gap-3 md:grid-cols-5 mb-6">
+        <section class="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6 mb-6">
             <div class="surface rounded-lg border p-4">
                 <div class="text-xs text-stone-500">動能爆發</div>
                 <div class="mt-1 text-2xl font-semibold">{{ strategyCount('momentum') }}</div>
@@ -55,6 +55,10 @@
             <div class="surface rounded-lg border p-4">
                 <div class="text-xs text-stone-500">隔日沖</div>
                 <div class="mt-1 text-2xl font-semibold">{{ strategyCount('day_trading') }}</div>
+            </div>
+            <div class="surface rounded-lg border p-4 border-l-4 border-l-amber-500">
+                <div class="text-xs text-stone-500">MACD翻紅</div>
+                <div class="mt-1 text-2xl font-semibold">{{ strategyCount('macd_turn_red') }}</div>
             </div>
             <div class="surface rounded-lg border p-4 border-l-4 border-l-violet-500">
                 <div class="text-xs text-stone-500">可轉債 CBAS</div>
@@ -122,6 +126,21 @@
                         <dt class="text-stone-500">雙低值</dt><dd class="text-right text-amber-300 font-semibold">{{ formatNumber(item.double_low, 2) }}</dd>
                         <dt class="text-stone-500">CB 收盤價</dt><dd class="text-right">{{ formatPrice(item.cb_price) }}</dd>
                         <dt class="text-stone-500">溢價率</dt><dd class="text-right">{{ formatPercent(item.premium_pct, true) }}</dd>
+                    </dl>
+                </template>
+
+                <template v-else-if="currentStrategy === 'macd_turn_red'">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <h2 class="text-lg font-semibold text-stone-50">{{ item.name }}</h2>
+                            <p class="text-sm text-stone-400">{{ baseCode(item.code) }} · {{ formatPrice(item.price) }}</p>
+                        </div>
+                        <div class="rounded-md bg-amber-400 px-2 py-1 text-sm font-bold text-zinc-950">{{ macdDayLabel(item.macd_day) }}</div>
+                    </div>
+                    <dl class="mt-4 grid grid-cols-2 gap-y-2 text-sm">
+                        <dt class="text-stone-500">柱狀體</dt><dd :class="changeClass(item.histogram)" class="text-right">{{ formatNumber(item.histogram, 4) }}</dd>
+                        <dt class="text-stone-500">DIF</dt><dd class="text-right">{{ formatNumber(item.dif, 4) }}</dd>
+                        <dt class="text-stone-500">翻紅日</dt><dd class="text-right">{{ item.cross_date || '-' }}</dd>
                     </dl>
                 </template>
 
@@ -205,6 +224,36 @@
                     </dl>
                 </div>
 
+                <div v-else-if="currentStrategy === 'macd_turn_red'">
+                    <dl class="grid grid-cols-2 gap-y-3 text-sm">
+                        <dt class="text-stone-500">翻紅狀態</dt><dd class="text-right text-amber-300 font-semibold">{{ macdDayLabel(selectedStock.macd_day) }}</dd>
+                        <dt class="text-stone-500">翻紅日期</dt><dd class="text-right">{{ selectedStock.cross_date || '-' }}</dd>
+                        <dt class="text-stone-500">DIF</dt><dd class="text-right">{{ formatNumber(selectedStock.dif, 4) }}</dd>
+                        <dt class="text-stone-500">Signal</dt><dd class="text-right">{{ formatNumber(selectedStock.macd_signal, 4) }}</dd>
+                        <dt class="text-stone-500">目前柱狀體</dt><dd :class="changeClass(selectedStock.histogram)" class="text-right">{{ formatNumber(selectedStock.histogram, 4) }}</dd>
+                        <dt class="text-stone-500">前一日柱狀體</dt><dd :class="changeClass(selectedStock.histogram_prev)" class="text-right">{{ formatNumber(selectedStock.histogram_prev, 4) }}</dd>
+                    </dl>
+                    <div v-if="selectedStock.hist_sequence?.length" class="mt-5 overflow-x-auto">
+                        <table class="w-full border-collapse text-sm">
+                            <thead class="bg-zinc-800 text-stone-400">
+                                <tr><th class="border border-zinc-700 px-3 py-2 text-left">日期</th><th class="border border-zinc-700 px-3 py-2 text-right">柱狀體</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="row in selectedStock.hist_sequence" :key="row.date">
+                                    <td class="border border-zinc-700 px-3 py-2">{{ row.date }}</td>
+                                    <td class="border border-zinc-700 px-3 py-2 text-right" :class="changeClass(row.value)">{{ formatNumber(row.value, 4) }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div v-if="selectedStock.reasons?.length" class="mt-5">
+                        <h3 class="mb-2 font-semibold text-amber-300">訊號原因</h3>
+                        <ul class="space-y-1 text-sm text-stone-300">
+                            <li v-for="reason in selectedStock.reasons" :key="reason">{{ reason }}</li>
+                        </ul>
+                    </div>
+                </div>
+
                 <div v-else>
                     <div v-if="selectedStock.reasons?.length">
                         <h3 class="mb-2 font-semibold text-amber-300">訊號原因</h3>
@@ -257,6 +306,7 @@ createApp({
                 { key: 'momentum', label: '動能爆發' },
                 { key: 'doji_rise', label: '十字星' },
                 { key: 'day_trading', label: '隔日沖' },
+                { key: 'macd_turn_red', label: 'MACD翻紅' },
                 { key: 'cbas', label: '可轉債 CBAS' },
                 { key: 'active_etf', label: '主動 ETF 共振' },
             ],
@@ -300,6 +350,7 @@ createApp({
         modalSubtitle(item) {
             if (!item) return '';
             if (this.currentStrategy === 'active_etf') return `${item.code} · ${this.flowLabel(item)} · ${item.date || ''}`;
+            if (this.currentStrategy === 'macd_turn_red') return `${this.baseCode(item.code)} · ${this.macdDayLabel(item.macd_day)} · ${item.date || ''}`;
             if (this.currentStrategy === 'cbas') return `${this.baseCode(item.code)} · ${item.cb_code || ''}`;
             return `${this.baseCode(item.code)} · ${this.strategyLabel}`;
         },
@@ -366,6 +417,13 @@ createApp({
             const details = (item?.details || []).filter(detail => detail.side === side);
             if (!details.length) return '-';
             return details.map(detail => detail.etf_code).join('、');
+        },
+        macdDayLabel(day) {
+            const number = Number(day);
+            if (number === 1) return '翻紅第一天';
+            if (number === 2) return '翻紅第二天';
+            if (number === 3) return '翻紅第三天';
+            return '翻紅';
         },
     },
     mounted() { this.loadData(); },

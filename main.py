@@ -320,6 +320,54 @@ def strategy_doji_rise(df, ticker, region, latest):
     if score < 60: return None
     return {"score": score, "pattern": "標準十字星", "vol_ratio": round(vol_ratio * 100, 1), "vol_avg_val": round((ma5_vol * df['Close'][-5:].mean()) / 100000000, 1), "trend": "多頭整理", "reasons": reasons}
 
+def strategy_macd_turn_red(df):
+    if len(df) < 120:
+        return None
+
+    close = df['Close']
+    ema_fast = close.ewm(span=21, adjust=False).mean()
+    ema_slow = close.ewm(span=55, adjust=False).mean()
+    dif = ema_fast - ema_slow
+    macd_signal = dif.ewm(span=89, adjust=False).mean()
+    histogram = dif - macd_signal
+
+    if histogram.isna().iloc[-1] or histogram.iloc[-1] <= 0:
+        return None
+
+    for offset in range(3):
+        cross_idx = len(histogram) - 1 - offset
+        prev_idx = cross_idx - 1
+        if prev_idx < 0:
+            continue
+        if histogram.iloc[cross_idx] > 0 and histogram.iloc[prev_idx] <= 0:
+            current_positive = histogram.iloc[cross_idx:].dropna()
+            if current_positive.empty or not (current_positive > 0).all():
+                continue
+            day = offset + 1
+            cross_date = histogram.index[cross_idx].strftime('%Y-%m-%d')
+            recent_hist = histogram.iloc[max(0, len(histogram) - 5):].dropna()
+            hist_sequence = [
+                {"date": idx.strftime('%Y-%m-%d'), "value": round(float(value), 4)}
+                for idx, value in recent_hist.items()
+            ]
+            return {
+                "pattern": f"MACD翻紅第{day}天",
+                "macd_day": day,
+                "macd_label": f"第{day}天",
+                "cross_date": cross_date,
+                "dif": round(float(dif.iloc[-1]), 4),
+                "macd_signal": round(float(macd_signal.iloc[-1]), 4),
+                "histogram": round(float(histogram.iloc[-1]), 4),
+                "histogram_prev": round(float(histogram.iloc[-2]), 4),
+                "histogram_cross": round(float(histogram.iloc[cross_idx]), 4),
+                "hist_sequence": hist_sequence,
+                "reasons": [
+                    f"MACD(21,55,89) 柱狀體於 {cross_date} 由綠翻紅",
+                    f"目前為翻紅第{day}天，柱狀體 {round(float(histogram.iloc[-1]), 4)}",
+                ],
+            }
+    return None
+
 def fetch_twse_quote_map():
     try:
         rows = fetch_json(TWSE_QUOTE_URL)
@@ -447,7 +495,7 @@ def fetch_active_etfs():
                 "source_url": ETFINFO_ACTIVE_URL,
                 "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。",
             })
-        results.sort(key=lambda x: (x.get("same_side_count") or 0, x.get("etf_count") or 0, abs(x.get("net_amount") or 0)), reverse=True)
+        results.sort(key=lambda x: x.get("net_amount") or 0, reverse=True)
         print(f"主動式 ETF 重複買賣標的：{len(results)} 檔")
         return results
     except Exception as e:
@@ -474,6 +522,7 @@ def analyze_stock(stock_info):
     if res := strategy_momentum(df, ticker, region, latest, prev, fin_data): pkg['momentum'] = {**base, **res}; has_res = True
     if res := strategy_day_trading(df, ticker, region, latest): pkg['day_trading'] = {**base, **res}; has_res = True
     if res := strategy_doji_rise(df, ticker, region, latest): pkg['doji_rise'] = {**base, **res}; has_res = True
+    if res := strategy_macd_turn_red(df): pkg['macd_turn_red'] = {**base, **res}; has_res = True
     # Low Volatility 已移除
         
     return {"result": pkg if has_res else None, "is_60d_high": is_60d_high, "trade_date": real_trade_date}
@@ -506,7 +555,7 @@ def main():
     cbas_results = run_cbas_scanner()
     
     # 2. 執行一般個股掃描
-    res = {"momentum": [], "day_trading": [], "doji_rise": [], "active_etf": []}
+    res = {"momentum": [], "day_trading": [], "doji_rise": [], "macd_turn_red": [], "active_etf": []}
     stat_total = 0; stat_new_high = 0; detected_market_date = None
     
     with ThreadPoolExecutor(max_workers=20) as exc:
@@ -530,6 +579,7 @@ def main():
     res['momentum'].sort(key=lambda x: -x['score'])
     res['day_trading'].sort(key=lambda x: -x['rise_20d'])
     res['doji_rise'].sort(key=lambda x: -x['score'])
+    res['macd_turn_red'].sort(key=lambda x: (x.get('macd_day') or 99, -(x.get('histogram') or 0)))
     
     market_breadth = 0
     if stat_total > 0: market_breadth = round((stat_new_high / stat_total) * 100, 2)
