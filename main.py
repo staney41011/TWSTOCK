@@ -13,6 +13,7 @@ import time
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
+from holy_grail import generate_holy_grail_report_from_yfinance
 
 # --- 全域設定 ---
 DATA_FILE = "data.json"
@@ -67,6 +68,26 @@ def clean_for_json(obj):
     elif isinstance(obj, list):
         return [clean_for_json(v) for v in obj]
     return obj
+
+def empty_holy_grail_report(error_msg=None):
+    return {
+        "title": "台股聖杯雷達",
+        "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
+        "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
+        "generatedAt": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "market": {
+            "state": "Unknown",
+            "label": "資料不足",
+            "suggested_exposure": "0%～10%",
+            "description": "台股聖杯雷達暫時沒有足夠資料。",
+            "risk_note": error_msg or "等待下一次資料更新。",
+        },
+        "industries": [],
+        "candidates": {"breakout": [], "pullback": [], "overheated": [], "exit": []},
+        "rules": [
+            "本工具僅供研究與教育用途，不構成投資建議。",
+        ],
+    }
 
 def get_stock_name(ticker, region, stock_obj=None):
     display_name = ticker
@@ -555,7 +576,7 @@ def main():
     cbas_results = run_cbas_scanner()
     
     # 2. 執行一般個股掃描
-    res = {"momentum": [], "day_trading": [], "doji_rise": [], "macd_turn_red": [], "active_etf": []}
+    res = {"momentum": [], "day_trading": [], "doji_rise": [], "macd_turn_red": [], "active_etf": [], "holy_grail": empty_holy_grail_report()}
     stat_total = 0; stat_new_high = 0; detected_market_date = None
     
     with ThreadPoolExecutor(max_workers=20) as exc:
@@ -567,11 +588,18 @@ def main():
                 stat_total += 1
                 if ret['is_60d_high']: stat_new_high += 1
                 if r := ret['result']:
-                    for k in res.keys():
+                    for k in ("momentum", "day_trading", "doji_rise", "macd_turn_red"):
                         if k in r: res[k].append(r[k])
 
     res['cbas'] = clean_for_json(cbas_results)
     res['active_etf'] = clean_for_json(fetch_active_etfs())
+    holy_grail_date = detected_market_date if detected_market_date else expected_date
+    try:
+        print(f"產生台股聖杯雷達：{holy_grail_date}")
+        res['holy_grail'] = clean_for_json(generate_holy_grail_report_from_yfinance(target_date=holy_grail_date))
+    except Exception as e:
+        print(f"台股聖杯雷達產生失敗: {e}")
+        res['holy_grail'] = empty_holy_grail_report(str(e))
 
     if detected_market_date and detected_market_date != expected_date:
         print(f"[警告] 日期不符 ({detected_market_date} vs {expected_date})")

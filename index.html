@@ -43,7 +43,7 @@
     <div v-if="loading" class="py-24 text-center text-lg text-teal-300">資料載入中</div>
 
     <main v-else-if="history.length">
-        <section class="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6 mb-6">
+        <section class="grid grid-cols-2 gap-3 md:grid-cols-4 xl:grid-cols-7 mb-6">
             <div class="surface rounded-lg border p-4">
                 <div class="text-xs text-stone-500">動能爆發</div>
                 <div class="mt-1 text-2xl font-semibold">{{ strategyCount('momentum') }}</div>
@@ -68,6 +68,10 @@
                 <div class="text-xs text-stone-500">主動 ETF 共振</div>
                 <div class="mt-1 text-2xl font-semibold">{{ strategyCount('active_etf') }}</div>
             </div>
+            <div class="surface rounded-lg border p-4 border-l-4 border-l-sky-500">
+                <div class="text-xs text-stone-500">台股聖杯</div>
+                <div class="mt-1 text-2xl font-semibold">{{ strategyCount('holy_grail') }}</div>
+            </div>
         </section>
 
         <nav class="mb-6 flex gap-2 overflow-x-auto pb-2">
@@ -78,7 +82,220 @@
             </button>
         </nav>
 
-        <section v-if="currentItems.length" class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <section v-if="currentStrategy === 'holy_grail' && holyGrailReady" class="space-y-6">
+            <div class="rounded-lg border border-amber-500/40 bg-amber-500/10 p-4 text-sm text-amber-100">
+                {{ holyGrailReport.disclaimer }}
+            </div>
+
+            <section class="grid min-w-0 gap-4 xl:grid-cols-[0.9fr_1.4fr]">
+                <div class="surface min-w-0 rounded-lg border p-5">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <p class="text-sm text-sky-300">{{ holyGrailReport.title }}</p>
+                            <h2 class="mt-2 text-2xl font-bold text-stone-50">{{ holyGrailMarket.label || '資料不足' }}</h2>
+                        </div>
+                        <span :class="marketRegimeClass(holyGrailMarket.state)" class="rounded-md px-3 py-1 text-sm font-semibold">
+                            {{ holyGrailMarket.state || 'Unknown' }}
+                        </span>
+                    </div>
+                    <p class="mt-4 text-sm leading-6 text-stone-300">{{ holyGrailMarket.description || holyGrailReport.subtitle }}</p>
+                    <dl class="mt-5 grid grid-cols-2 gap-y-3 text-sm">
+                        <dt class="text-stone-500">建議曝險</dt><dd class="text-right text-sky-200 font-semibold">{{ holyGrailMarket.suggested_exposure || '-' }}</dd>
+                        <dt class="text-stone-500">加權指數</dt><dd class="text-right">{{ formatNumber(holyGrailMarket.close, 2) }}</dd>
+                        <dt class="text-stone-500">MA20 / MA60 / MA120</dt>
+                        <dd class="text-right">{{ formatNumber(holyGrailMarket.ma20, 0) }} / {{ formatNumber(holyGrailMarket.ma60, 0) }} / {{ formatNumber(holyGrailMarket.ma120, 0) }}</dd>
+                        <dt class="text-stone-500">量能狀態</dt><dd class="text-right">{{ holyGrailMarket.volume_status || '-' }}</dd>
+                        <dt class="text-stone-500">資料日期</dt><dd class="text-right">{{ holyGrailReport.targetDate || currentRecord.date || '-' }}</dd>
+                    </dl>
+                    <p class="mt-5 text-xs leading-5 text-stone-500">{{ holyGrailMarket.risk_note }}</p>
+                </div>
+
+                <div class="surface min-w-0 rounded-lg border p-5">
+                    <div class="mb-4 flex items-end justify-between gap-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-stone-50">產業輪動排行</h2>
+                            <p class="mt-1 text-sm text-stone-400">以前 5 / 20 / 60 日報酬、相對強度與量能計分</p>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-[760px] w-full border-collapse text-sm">
+                            <thead class="bg-zinc-800 text-stone-400">
+                                <tr>
+                                    <th class="border border-zinc-700 px-3 py-2 text-left">排名</th>
+                                    <th class="border border-zinc-700 px-3 py-2 text-left">產業</th>
+                                    <th class="border border-zinc-700 px-3 py-2 text-right">5日</th>
+                                    <th class="border border-zinc-700 px-3 py-2 text-right">20日</th>
+                                    <th class="border border-zinc-700 px-3 py-2 text-right">60日</th>
+                                    <th class="border border-zinc-700 px-3 py-2 text-right">相對強度</th>
+                                    <th class="border border-zinc-700 px-3 py-2 text-right">量能</th>
+                                    <th class="border border-zinc-700 px-3 py-2 text-right">分數</th>
+                                    <th class="border border-zinc-700 px-3 py-2 text-left">狀態</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="industry in holyGrailIndustries" :key="industry.industry" class="hover:bg-zinc-800/60">
+                                    <td class="border border-zinc-700 px-3 py-2">#{{ industry.rank }}</td>
+                                    <td class="border border-zinc-700 px-3 py-2 font-semibold text-stone-100">{{ industry.industry }}</td>
+                                    <td :class="changeClass(industry.return5)" class="border border-zinc-700 px-3 py-2 text-right">{{ formatPercent(industry.return5, false) }}</td>
+                                    <td :class="changeClass(industry.return20)" class="border border-zinc-700 px-3 py-2 text-right">{{ formatPercent(industry.return20, false) }}</td>
+                                    <td :class="changeClass(industry.return60)" class="border border-zinc-700 px-3 py-2 text-right">{{ formatPercent(industry.return60, false) }}</td>
+                                    <td :class="changeClass(industry.relativeStrength20)" class="border border-zinc-700 px-3 py-2 text-right">{{ formatPercent(industry.relativeStrength20, false) }}</td>
+                                    <td class="border border-zinc-700 px-3 py-2 text-right">{{ formatRatio(industry.volumeRatio) }}</td>
+                                    <td class="border border-zinc-700 px-3 py-2 text-right font-semibold text-sky-200">{{ formatNumber(industry.industryScore, 1) }}</td>
+                                    <td class="border border-zinc-700 px-3 py-2">{{ industry.status }}</td>
+                                </tr>
+                                <tr v-if="!holyGrailIndustries.length">
+                                    <td colspan="9" class="border border-zinc-700 px-3 py-8 text-center text-stone-500">尚無足夠產業資料</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="surface min-w-0 rounded-lg border p-5">
+                <div class="mb-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold text-stone-50">個股候選清單</h2>
+                        <p class="mt-1 text-sm text-stone-400">只從強勢產業裡挑突破、回檔轉強、過熱觀察與出場警示</p>
+                    </div>
+                    <div class="flex gap-2 overflow-x-auto pb-1">
+                        <button v-for="tab in holyGrailCandidateTabs" :key="tab.key"
+                                @click="holyGrailCandidateTab = tab.key; holyGrailSelectedCode = ''"
+                                :class="holyGrailCandidateTab === tab.key ? 'tab-active' : 'tab-inactive'"
+                                class="flex-shrink-0 rounded-md border px-3 py-2 text-sm font-semibold">
+                            {{ tab.label }} {{ holyGrailCandidateCount(tab.key) }}
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-[900px] w-full border-collapse text-sm">
+                        <thead class="bg-zinc-800 text-stone-400">
+                            <tr>
+                                <th class="border border-zinc-700 px-3 py-2 text-left">股票</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-left">名稱</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-left">產業</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-right">收盤</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-right">5日</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-right">20日</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-right">相對強度</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-right">量能</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-left">訊號</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-right">分數</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-left">建議</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="stock in holyGrailCurrentCandidates" :key="stock.code"
+                                @click="pickHolyGrailStock(stock)"
+                                :class="holyGrailSelectedStock?.code === stock.code ? 'bg-sky-500/10' : 'hover:bg-zinc-800/60'"
+                                class="cursor-pointer">
+                                <td class="border border-zinc-700 px-3 py-2 font-mono">{{ baseCode(stock.code) }}</td>
+                                <td class="border border-zinc-700 px-3 py-2 font-semibold text-stone-100">{{ stock.name }}</td>
+                                <td class="border border-zinc-700 px-3 py-2 text-stone-300">{{ stock.industry }}</td>
+                                <td class="border border-zinc-700 px-3 py-2 text-right">{{ formatPrice(stock.close) }}</td>
+                                <td :class="changeClass(stock.return5)" class="border border-zinc-700 px-3 py-2 text-right">{{ formatPercent(stock.return5, true) }}</td>
+                                <td :class="changeClass(stock.return20)" class="border border-zinc-700 px-3 py-2 text-right">{{ formatPercent(stock.return20, true) }}</td>
+                                <td :class="changeClass(stock.relativeStrength20)" class="border border-zinc-700 px-3 py-2 text-right">{{ formatPercent(stock.relativeStrength20, true) }}</td>
+                                <td class="border border-zinc-700 px-3 py-2 text-right">{{ formatRatio(stock.volumeRatio) }}</td>
+                                <td class="border border-zinc-700 px-3 py-2">{{ stock.signal }}</td>
+                                <td class="border border-zinc-700 px-3 py-2 text-right font-semibold text-sky-200">{{ formatNumber(stock.score, 1) }}</td>
+                                <td class="border border-zinc-700 px-3 py-2">{{ stock.action }}</td>
+                            </tr>
+                            <tr v-if="!holyGrailCurrentCandidates.length">
+                                <td colspan="11" class="border border-zinc-700 px-3 py-8 text-center text-stone-500">此類別目前沒有候選股</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="grid min-w-0 gap-4 lg:grid-cols-[1fr_0.9fr]">
+                <div class="surface min-w-0 rounded-lg border p-5">
+                    <h2 class="text-xl font-bold text-stone-50">個股風控試算</h2>
+                    <div v-if="holyGrailSelectedStock" class="mt-4 space-y-5">
+                        <div class="flex flex-wrap items-end justify-between gap-4">
+                            <div>
+                                <div class="text-2xl font-bold text-stone-50">{{ holyGrailSelectedStock.name }}</div>
+                                <div class="mt-1 text-sm text-stone-400">{{ baseCode(holyGrailSelectedStock.code) }} · {{ holyGrailSelectedStock.industry }} · {{ holyGrailSelectedStock.signal }}</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm text-stone-500">收盤價</div>
+                                <div class="text-2xl font-semibold">{{ formatPrice(holyGrailSelectedStock.close) }}</div>
+                            </div>
+                        </div>
+                        <dl class="grid grid-cols-2 gap-y-3 text-sm md:grid-cols-4">
+                            <dt class="text-stone-500">MA10</dt><dd class="text-right md:text-left">{{ formatPrice(holyGrailSelectedStock.ma10) }}</dd>
+                            <dt class="text-stone-500">MA20</dt><dd class="text-right md:text-left">{{ formatPrice(holyGrailSelectedStock.ma20) }}</dd>
+                            <dt class="text-stone-500">停損價</dt><dd class="text-right md:text-left text-amber-200">{{ formatPrice(holyGrailPosition.stopPrice) }}</dd>
+                            <dt class="text-stone-500">風險報酬比</dt><dd class="text-right md:text-left">{{ formatNumber(holyGrailPosition.riskRewardTo8Pct, 2) }}</dd>
+                        </dl>
+                        <dl class="grid grid-cols-2 gap-y-3 text-sm">
+                            <dt class="text-stone-500">建議部位金額</dt><dd class="text-right text-sky-200 font-semibold">{{ formatMoney(holyGrailPosition.positionValue) }}</dd>
+                            <dt class="text-stone-500">建議股數</dt><dd class="text-right">{{ formatNumber(holyGrailPosition.shares, 0) }} 股（{{ holyGrailPosition.lots || 0 }} 張 {{ holyGrailPosition.oddLot || 0 }} 股）</dd>
+                            <dt class="text-stone-500">最大可能虧損</dt><dd class="text-right text-amber-200">{{ formatMoney(holyGrailPosition.maxLoss) }}</dd>
+                            <dt class="text-stone-500">停利節奏</dt><dd class="text-right">+8% {{ formatPrice(holyGrailPosition.firstTakeProfit) }} / +15% {{ formatPrice(holyGrailPosition.secondTakeProfit) }}</dd>
+                        </dl>
+                        <div class="rounded-md border border-zinc-700 p-3 text-sm text-stone-300">
+                            <span v-if="holyGrailPosition.exceedsSingleLimit">原始部位已超過單一股票上限，已自動縮小。</span>
+                            <span v-else>部位未超過單一股票上限。</span>
+                        </div>
+                    </div>
+                    <div v-else class="mt-4 py-12 text-center text-stone-500">請先從候選清單選擇一檔股票</div>
+                </div>
+
+                <div class="surface min-w-0 rounded-lg border p-5">
+                    <h2 class="text-xl font-bold text-stone-50">風控參數</h2>
+                    <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <label class="text-sm text-stone-400">
+                            帳戶資金
+                            <input v-model.number="riskConfig.capital" type="number" min="0" step="10000"
+                                   class="mt-2 w-full rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-stone-100 outline-none">
+                        </label>
+                        <label class="text-sm text-stone-400">
+                            單筆風險 %
+                            <input v-model.number="riskConfig.riskPerTradePct" type="number" min="0.1" max="5" step="0.1"
+                                   class="mt-2 w-full rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-stone-100 outline-none">
+                        </label>
+                        <label class="text-sm text-stone-400">
+                            單股上限 %
+                            <input v-model.number="riskConfig.maxSinglePositionPct" type="number" min="1" max="100" step="1"
+                                   class="mt-2 w-full rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-stone-100 outline-none">
+                        </label>
+                        <label class="text-sm text-stone-400">
+                            產業上限 %
+                            <input v-model.number="riskConfig.maxIndustryExposurePct" type="number" min="1" max="100" step="1"
+                                   class="mt-2 w-full rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-stone-100 outline-none">
+                        </label>
+                        <label class="text-sm text-stone-400 sm:col-span-2">
+                            停損模式
+                            <select v-model="riskConfig.stopMode"
+                                    class="mt-2 w-full rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-stone-100 outline-none">
+                                <option value="MA20">MA20</option>
+                                <option value="最近回檔低點">最近回檔低點</option>
+                                <option value="固定 7%">固定 7%</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="mt-5 text-sm leading-6 text-stone-400">
+                        部位公式：帳戶資金 × 單筆風險 ÷ 每股風險，再用單股上限截斷。張數以 1000 股為一張顯示。
+                    </div>
+                </div>
+            </section>
+
+            <section class="surface rounded-lg border p-5">
+                <h2 class="text-xl font-bold text-stone-50">策略鐵律</h2>
+                <ul class="mt-4 grid gap-2 text-sm text-stone-300 md:grid-cols-2 xl:grid-cols-3">
+                    <li v-for="rule in holyGrailReport.rules" :key="rule" class="rounded-md border border-zinc-700 px-3 py-2">{{ rule }}</li>
+                </ul>
+            </section>
+        </section>
+
+        <div v-else-if="currentStrategy === 'holy_grail'" class="surface rounded-lg border py-16 text-center text-stone-500">
+            台股聖杯雷達尚未產生資料
+        </div>
+
+        <section v-else-if="currentItems.length" class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             <article v-for="item in currentItems" :key="itemKey(item)" @click="openModal(item)"
                 class="card surface rounded-lg border p-5 cursor-pointer">
                 <template v-if="currentStrategy === 'active_etf'">
@@ -302,6 +519,21 @@ createApp({
             errorMsg: '',
             showModal: false,
             selectedStock: null,
+            holyGrailCandidateTab: 'breakout',
+            holyGrailSelectedCode: '',
+            riskConfig: {
+                capital: 1000000,
+                riskPerTradePct: 1,
+                maxSinglePositionPct: 20,
+                maxIndustryExposurePct: 40,
+                stopMode: 'MA20',
+            },
+            holyGrailCandidateTabs: [
+                { key: 'breakout', label: '強勢突破' },
+                { key: 'pullback', label: '回檔轉強' },
+                { key: 'overheated', label: '過熱觀察' },
+                { key: 'exit', label: '出場警示' },
+            ],
             tabs: [
                 { key: 'momentum', label: '動能爆發' },
                 { key: 'doji_rise', label: '十字星' },
@@ -309,6 +541,7 @@ createApp({
                 { key: 'macd_turn_red', label: 'MACD翻紅' },
                 { key: 'cbas', label: '可轉債 CBAS' },
                 { key: 'active_etf', label: '主動 ETF 共振' },
+                { key: 'holy_grail', label: '台股聖杯雷達' },
             ],
         };
     },
@@ -316,10 +549,33 @@ createApp({
         reversedHistory() { return Array.isArray(this.history) ? [...this.history].reverse() : []; },
         currentRecord() { return this.reversedHistory[this.selectedDateIndex] || {}; },
         strategyData() { return this.currentRecord.strategies || {}; },
-        currentItems() { return this.strategyData[this.currentStrategy] || []; },
+        currentItems() {
+            if (this.currentStrategy === 'holy_grail') return [];
+            const rows = this.strategyData[this.currentStrategy];
+            return Array.isArray(rows) ? rows : [];
+        },
         strategyLabel() {
             return (this.tabs.find(tab => tab.key === this.currentStrategy) || {}).label || '';
         },
+        holyGrailReport() {
+            const report = this.strategyData.holy_grail;
+            return report && !Array.isArray(report) ? report : {};
+        },
+        holyGrailReady() { return Object.keys(this.holyGrailReport).length > 0; },
+        holyGrailMarket() { return this.holyGrailReport.market || {}; },
+        holyGrailIndustries() { return Array.isArray(this.holyGrailReport.industries) ? this.holyGrailReport.industries : []; },
+        holyGrailCandidates() { return this.holyGrailReport.candidates || {}; },
+        holyGrailCurrentCandidates() {
+            const rows = this.holyGrailCandidates[this.holyGrailCandidateTab];
+            return Array.isArray(rows) ? rows : [];
+        },
+        holyGrailSelectedStock() {
+            const rows = this.holyGrailCurrentCandidates;
+            if (!rows.length) return null;
+            if (!this.holyGrailSelectedCode) return rows[0];
+            return rows.find(stock => stock.code === this.holyGrailSelectedCode) || rows[0];
+        },
+        holyGrailPosition() { return this.positionSizingFor(this.holyGrailSelectedStock); },
     },
     methods: {
         async loadData() {
@@ -339,7 +595,19 @@ createApp({
                 this.loading = false;
             }
         },
-        strategyCount(key) { return (this.strategyData[key] || []).length; },
+        strategyCount(key) {
+            if (key === 'holy_grail') return this.holyGrailCandidateTotal();
+            const rows = this.strategyData[key];
+            return Array.isArray(rows) ? rows.length : 0;
+        },
+        holyGrailCandidateTotal() {
+            return Object.values(this.holyGrailCandidates).reduce((sum, rows) => sum + (Array.isArray(rows) ? rows.length : 0), 0);
+        },
+        holyGrailCandidateCount(key) {
+            const rows = this.holyGrailCandidates[key];
+            return Array.isArray(rows) ? rows.length : 0;
+        },
+        pickHolyGrailStock(stock) { this.holyGrailSelectedCode = stock?.code || ''; },
         openModal(item) { this.selectedStock = item; this.showModal = true; },
         itemKey(item) { return `${this.currentStrategy}-${item.code || ''}-${item.cb_code || ''}-${item.name || ''}`; },
         baseCode(code) { return String(code || '').split('.')[0]; },
@@ -365,6 +633,7 @@ createApp({
             return Number.isFinite(number) ? number.toLocaleString('zh-TW', { maximumFractionDigits: digits }) : '-';
         },
         formatMoney(value) {
+            if (value === null || value === undefined || value === '') return '-';
             const number = Number(value);
             if (!Number.isFinite(number)) return '-';
             if (Math.abs(number) >= 1e8) return `${(number / 1e8).toFixed(1)} 億`;
@@ -382,6 +651,65 @@ createApp({
             const number = Number(value);
             if (!Number.isFinite(number) || number === 0) return 'text-stone-400';
             return number > 0 ? 'text-red-300' : 'text-emerald-300';
+        },
+        formatRatio(value) {
+            const number = Number(value);
+            return Number.isFinite(number) ? `${number.toFixed(2)}x` : '-';
+        },
+        marketRegimeClass(state) {
+            if (state === 'Bull') return 'bg-red-400 text-zinc-950';
+            if (state === 'Caution') return 'bg-amber-400 text-zinc-950';
+            if (state === 'RiskOff') return 'bg-sky-500 text-zinc-950';
+            if (state === 'Bear') return 'bg-emerald-500 text-zinc-950';
+            return 'bg-zinc-700 text-stone-100';
+        },
+        emptyPosition() {
+            return {
+                valid: false,
+                stopPrice: null,
+                riskRewardTo8Pct: null,
+                positionValue: null,
+                shares: 0,
+                lots: 0,
+                oddLot: 0,
+                maxLoss: null,
+                firstTakeProfit: null,
+                secondTakeProfit: null,
+                exceedsSingleLimit: false,
+            };
+        },
+        positionSizingFor(stock) {
+            if (!stock) return this.emptyPosition();
+            const entry = Number(stock.close || stock.price);
+            const stop = Number((stock.stopPrices || {})[this.riskConfig.stopMode]);
+            if (!Number.isFinite(entry) || !Number.isFinite(stop) || stop >= entry) return this.emptyPosition();
+
+            const capital = Math.max(0, Number(this.riskConfig.capital) || 0);
+            const riskPerTrade = Math.max(0, Number(this.riskConfig.riskPerTradePct) || 0) / 100;
+            const maxSingle = Math.max(0, Number(this.riskConfig.maxSinglePositionPct) || 0) / 100;
+            const riskAmount = capital * riskPerTrade;
+            const riskPerShare = Math.abs(entry - stop);
+            const rawPositionValue = riskPerShare > 0 ? (riskAmount / riskPerShare) * entry : 0;
+            const maxPositionValue = capital * maxSingle;
+            const positionValue = Math.min(rawPositionValue, maxPositionValue);
+            const shares = Math.max(0, Math.floor(positionValue / entry));
+            const firstTakeProfit = entry * 1.08;
+            const secondTakeProfit = entry * 1.15;
+
+            return {
+                valid: true,
+                stopPrice: stop,
+                riskRewardTo8Pct: riskPerShare > 0 ? (firstTakeProfit - entry) / riskPerShare : null,
+                positionValue,
+                rawPositionValue,
+                shares,
+                lots: Math.floor(shares / 1000),
+                oddLot: shares % 1000,
+                maxLoss: shares * riskPerShare,
+                firstTakeProfit,
+                secondTakeProfit,
+                exceedsSingleLimit: rawPositionValue > maxPositionValue,
+            };
         },
         flowLabel(item) {
             const buy = Number(item?.buy_count || 0);
