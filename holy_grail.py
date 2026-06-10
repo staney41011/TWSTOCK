@@ -17,6 +17,70 @@ class RiskConfig:
     stop_mode: str = "MA20"
 
 
+FINE_INDUSTRY_RULES = [
+    {"industry": "半導體-晶圓代工", "bases": {"半導體業"}, "codes": {"2303", "2330", "5347", "6770"}, "keywords": ["台積電", "聯電", "世界", "力積電"]},
+    {"industry": "半導體-IC設計", "bases": {"半導體業"}, "codes": {"2379", "2454", "3034", "3443", "3529", "3661", "4919", "4966", "5269", "5274", "6531", "6669"}, "keywords": ["聯發科", "瑞昱", "聯詠", "創意", "智原", "譜瑞", "祥碩", "世芯", "力旺"]},
+    {"industry": "半導體-封測", "bases": {"半導體業"}, "codes": {"2449", "3264", "3711", "6239", "6257", "8150"}, "keywords": ["日月光", "京元", "力成", "矽格", "南茂", "欣銓"]},
+    {"industry": "半導體-設備材料", "bases": {"半導體業"}, "codes": {"1560", "3131", "3413", "3583", "3680", "4770", "6196", "6510", "6643"}, "keywords": ["中砂", "弘塑", "辛耘", "家登", "帆宣", "洋基", "均豪", "萬潤"]},
+    {"industry": "半導體-矽晶圓", "bases": {"半導體業"}, "codes": {"3016", "3532", "3707", "5483", "6182", "6488"}, "keywords": ["嘉晶", "台勝科", "中美晶", "合晶", "環球晶"]},
+    {"industry": "電子零組件-PCB", "bases": {"電子零組件業"}, "codes": {"2313", "2368", "2383", "3037", "3189", "3533", "4958", "6191", "6269", "6274"}, "keywords": ["華通", "金像電", "健鼎", "欣興", "台光電", "臻鼎", "定穎", "楠梓電"]},
+    {"industry": "電子零組件-被動元件", "bases": {"電子零組件業"}, "codes": {"2327", "2492", "3026", "6173", "6207"}, "keywords": ["國巨", "華新科", "禾伸堂", "信昌電"]},
+    {"industry": "電子零組件-連接器線束", "bases": {"電子零組件業"}, "codes": {"2392", "3003", "3015", "3023", "3324", "3653", "3665", "4915"}, "keywords": ["正崴", "信邦", "台達電", "嘉澤", "貿聯", "良維"]},
+    {"industry": "電子零組件-電源散熱", "bases": {"電子零組件業"}, "codes": {"2308", "3017", "3324", "3653", "6230", "6278", "6412"}, "keywords": ["台達電", "奇鋐", "雙鴻", "建準", "尼得科"]},
+    {"industry": "電腦週邊-伺服器AI", "bases": {"電腦及週邊設備業"}, "codes": {"2356", "2376", "2382", "3017", "3231", "6669"}, "keywords": ["英業達", "技嘉", "廣達", "緯創", "奇鋐", "緯穎"]},
+    {"industry": "電腦週邊-品牌通路", "bases": {"電腦及週邊設備業"}, "codes": {"2353", "2357", "2377", "2395"}, "keywords": ["宏碁", "華碩", "微星", "研華"]},
+    {"industry": "光電-面板", "bases": {"光電業"}, "codes": {"2409", "3481", "6116"}, "keywords": ["友達", "群創", "彩晶"]},
+    {"industry": "光電-光學鏡頭", "bases": {"光電業"}, "codes": {"3008", "3019", "3406", "3362"}, "keywords": ["大立光", "亞光", "玉晶光", "先進光"]},
+    {"industry": "光電-LED", "bases": {"光電業"}, "codes": {"2393", "2448", "2499", "3031", "3714"}, "keywords": ["億光", "晶電", "隆達", "聯嘉"]},
+    {"industry": "通信網路-網通設備", "bases": {"通信網路業"}, "codes": {"2345", "2419", "3025", "4906", "5388", "6285"}, "keywords": ["智邦", "仲琦", "星通", "正文", "中磊", "啟碁"]},
+    {"industry": "通信網路-射頻天線", "bases": {"通信網路業"}, "codes": {"2455", "3596", "4908", "4977", "6284"}, "keywords": ["全新", "聯德控股", "前鼎", "眾達", "佳邦"]},
+    {"industry": "資訊服務-資安雲端", "bases": {"資訊服務業"}, "codes": {"2480", "3029", "5203", "6214", "6590", "6680"}, "keywords": ["敦陽科", "零壹", "訊連", "精誠", "安碁", "鑫創"]},
+    {"industry": "金融-金控銀行", "bases": {"金融保險業"}, "keywords": ["金", "銀行", "合庫", "彰銀", "臺企銀"]},
+    {"industry": "金融-證券期貨", "bases": {"金融保險業"}, "keywords": ["證", "期"]},
+    {"industry": "金融-保險", "bases": {"金融保險業"}, "keywords": ["壽", "產險"]},
+    {"industry": "電機機械-工具機", "bases": {"電機機械"}, "keywords": ["上銀", "亞德客", "直得", "程泰", "東台", "協易機"]},
+    {"industry": "電機機械-自動化設備", "bases": {"電機機械"}, "keywords": ["盟立", "廣運", "均豪", "鈞興", "氣立"]},
+    {"industry": "生技醫療-製藥", "bases": {"生技醫療業"}, "keywords": ["藥", "生技", "製藥"]},
+    {"industry": "生技醫療-醫材通路", "bases": {"生技醫療業"}, "keywords": ["醫材", "醫療", "保瑞", "大樹"]},
+    {"industry": "航運-貨櫃", "bases": {"航運業"}, "codes": {"2603", "2609", "2615"}, "keywords": ["長榮", "陽明", "萬海"]},
+    {"industry": "航運-散裝航空", "bases": {"航運業"}, "keywords": ["裕民", "新興", "慧洋", "華航", "長榮航"]},
+    {"industry": "鋼鐵-上游原料", "bases": {"鋼鐵工業"}, "keywords": ["中鋼", "中鴻", "燁輝", "東和"]},
+    {"industry": "鋼鐵-不鏽鋼扣件", "bases": {"鋼鐵工業"}, "keywords": ["彰源", "大成鋼", "世豐", "聚亨"]},
+]
+
+US_INDUSTRY_ETFS = [
+    {"symbol": "SMH", "name": "美股半導體", "mappedIndustries": ["半導體-晶圓代工", "半導體-IC設計", "半導體-封測", "半導體-設備材料", "半導體-矽晶圓"]},
+    {"symbol": "XLK", "name": "美股科技", "mappedIndustries": ["半導體-IC設計", "半導體-晶圓代工", "電腦週邊-伺服器AI", "資訊服務-資安雲端", "電子零組件-PCB"]},
+    {"symbol": "IGV", "name": "美股軟體", "mappedIndustries": ["資訊服務-資安雲端"]},
+    {"symbol": "XLC", "name": "美股通訊服務", "mappedIndustries": ["通信網路-網通設備", "通信網路-射頻天線"]},
+    {"symbol": "XLI", "name": "美股工業", "mappedIndustries": ["電機機械-工具機", "電機機械-自動化設備", "航運-散裝航空"]},
+    {"symbol": "XLF", "name": "美股金融", "mappedIndustries": ["金融-金控銀行", "金融-證券期貨", "金融-保險"]},
+    {"symbol": "XLV", "name": "美股醫療", "mappedIndustries": ["生技醫療-製藥", "生技醫療-醫材通路"]},
+    {"symbol": "XLE", "name": "美股能源", "mappedIndustries": ["油電燃氣業", "化學工業", "塑膠工業"]},
+    {"symbol": "XLB", "name": "美股原物料", "mappedIndustries": ["鋼鐵-上游原料", "鋼鐵-不鏽鋼扣件", "水泥工業", "玻璃陶瓷"]},
+    {"symbol": "XLY", "name": "美股非必需消費", "mappedIndustries": ["汽車工業", "貿易百貨業", "觀光餐旅"]},
+    {"symbol": "XLP", "name": "美股民生消費", "mappedIndustries": ["食品工業", "貿易百貨業"]},
+]
+
+
+def clean_stock_code(code):
+    return str(code or "").split(".")[0]
+
+
+def classify_taiwan_industry(code, name, base_industry):
+    base = base_industry or "未分類"
+    stock_code = clean_stock_code(code)
+    stock_name = str(name or "")
+    for rule in FINE_INDUSTRY_RULES:
+        if base not in rule.get("bases", set()):
+            continue
+        if stock_code in rule.get("codes", set()):
+            return rule["industry"]
+        if any(keyword and keyword in stock_name for keyword in rule.get("keywords", [])):
+            return rule["industry"]
+    return base
+
+
 def safe_float(value, default=None):
     try:
         number = float(value)
@@ -184,6 +248,7 @@ def rank_industries(industries, market_bars):
             continue
         avg = {
             "industry": industry_name,
+            "baseIndustries": sorted(set(stock.get("baseIndustry") or stock.get("industry") or "未分類" for stock in stocks)),
             "return5": sum(item["return5"] for item in stock_metrics) / len(stock_metrics),
             "return20": sum(item["return20"] for item in stock_metrics) / len(stock_metrics),
             "return60": sum(item["return60"] for item in stock_metrics) / len(stock_metrics),
@@ -413,6 +478,7 @@ def analyze_stock(stock, industry_score, market_bars):
         "code": stock["code"],
         "name": stock["name"],
         "industry": stock.get("industry") or "未分類",
+        "baseIndustry": stock.get("baseIndustry") or stock.get("industry") or "未分類",
         "close": round(close, 2),
         "price": round(close, 2),
         "date": bars[-1]["date"],
@@ -435,13 +501,128 @@ def analyze_stock(stock, industry_score, market_bars):
     }
 
 
+def stock_snapshot(stock, industry_score, market_bars):
+    bars = stock.get("bars", [])
+    if len(bars) < 120:
+        return None
+    market_return20 = calculate_return(market_bars, 20) or 0
+    ma = moving_average_map(bars)
+    close = bars[-1]["close"]
+    ret5 = calculate_return(bars, 5) or 0
+    ret20 = calculate_return(bars, 20) or 0
+    ret60 = calculate_return(bars, 60) or 0
+    rs20 = calculate_relative_strength(ret20, market_return20) or 0
+    volume_ratio = calculate_volume_ratio(bars) or 0
+    signal = analyze_stock(stock, industry_score, market_bars)
+    return {
+        "code": stock["code"],
+        "name": stock["name"],
+        "industry": stock.get("industry") or "未分類",
+        "baseIndustry": stock.get("baseIndustry") or stock.get("industry") or "未分類",
+        "close": round(close, 2),
+        "date": bars[-1]["date"],
+        "return5": round(ret5 * 100, 2),
+        "return20": round(ret20 * 100, 2),
+        "return60": round(ret60 * 100, 2),
+        "relativeStrength20": round(rs20 * 100, 2),
+        "volumeRatio": round(volume_ratio, 2),
+        "score": stock_score(stock, industry_score, market_return20),
+        "signal": signal["signal"] if signal else "趨勢觀察",
+        "action": signal["action"] if signal else "觀察",
+        "ma20": round(ma["ma20"], 2) if ma["ma20"] else None,
+        "ma60": round(ma["ma60"], 2) if ma["ma60"] else None,
+    }
+
+
+def rank_us_industries(us_industries, market_bars):
+    market_return20 = calculate_return(market_bars, 20) or 0
+    rows = []
+    for item in us_industries:
+        bars = item.get("bars", [])
+        if len(bars) < 60:
+            continue
+        ret5 = calculate_return(bars, 5)
+        ret20 = calculate_return(bars, 20)
+        ret60 = calculate_return(bars, 60)
+        vol_ratio = calculate_volume_ratio(bars)
+        rs20 = calculate_relative_strength(ret20, market_return20)
+        if ret5 is None or ret20 is None or ret60 is None:
+            continue
+        rows.append({
+            "symbol": item["symbol"],
+            "name": item["name"],
+            "mappedIndustries": item.get("mappedIndustries", []),
+            "return5": ret5,
+            "return20": ret20,
+            "return60": ret60,
+            "volumeRatio": vol_ratio or 0,
+            "relativeStrength20": rs20 or 0,
+        })
+
+    ret5_values = [row["return5"] for row in rows]
+    ret20_values = [row["return20"] for row in rows]
+    ret60_values = [row["return60"] for row in rows]
+    rs_values = [row["relativeStrength20"] for row in rows]
+    volume_values = [row["volumeRatio"] for row in rows]
+
+    for row in rows:
+        score = (
+            rank_score(ret5_values, row["return5"]) * 0.20
+            + rank_score(ret20_values, row["return20"]) * 0.35
+            + rank_score(ret60_values, row["return60"]) * 0.20
+            + rank_score(rs_values, row["relativeStrength20"]) * 0.20
+            + rank_score(volume_values, row["volumeRatio"]) * 0.05
+        )
+        row["industryScore"] = round(score, 1)
+        row["status"] = industry_label(score)
+
+    rows.sort(key=lambda item: item["industryScore"], reverse=True)
+    for index, row in enumerate(rows, 1):
+        row["rank"] = index
+    return rows
+
+
+def build_us_taiwan_matches(us_industries, stocks, market_bars, limit_per_us_industry=8):
+    matches = []
+    for us_row in us_industries[:6]:
+        mapped = set(us_row.get("mappedIndustries", []))
+        if not mapped:
+            continue
+        snapshots = []
+        for stock in stocks:
+            if stock.get("industry") not in mapped and stock.get("baseIndustry") not in mapped:
+                continue
+            snapshot = stock_snapshot(stock, us_row["industryScore"], market_bars)
+            if snapshot:
+                snapshots.append(snapshot)
+        snapshots.sort(key=lambda item: (item["score"], item["return20"], item["volumeRatio"]), reverse=True)
+        matches.append({
+            "symbol": us_row["symbol"],
+            "name": us_row["name"],
+            "rank": us_row["rank"],
+            "industryScore": us_row["industryScore"],
+            "status": us_row["status"],
+            "return5": round(us_row["return5"] * 100, 2),
+            "return20": round(us_row["return20"] * 100, 2),
+            "return60": round(us_row["return60"] * 100, 2),
+            "relativeStrength20": round(us_row["relativeStrength20"] * 100, 2),
+            "volumeRatio": round(us_row["volumeRatio"], 2),
+            "mappedIndustries": sorted(mapped),
+            "stocks": snapshots[:limit_per_us_industry],
+        })
+    return matches
+
+
 def generate_taiwan_holy_grail_report(data, config=None):
     config = config or RiskConfig()
     market_bars = data.get("marketBars", [])
     industries = data.get("industries", {})
+    loaded_stocks = data.get("stocks", [])
+    us_industries = data.get("usIndustries", [])
     market = get_market_regime(market_bars)
     industry_rankings = rank_industries(industries, market_bars)
     strong_industries = {row["industry"]: row for row in industry_rankings if row["industryScore"] >= 65}
+    us_taiwan_matches = build_us_taiwan_matches(us_industries, loaded_stocks, market_bars)
 
     candidates = {"breakout": [], "pullback": [], "overheated": [], "exit": []}
     for industry_name, stocks in industries.items():
@@ -472,7 +653,13 @@ def generate_taiwan_holy_grail_report(data, config=None):
             "stopMode": config.stop_mode,
         },
         "industries": industry_rankings[:10],
+        "usIndustries": us_industries[:10],
+        "usTaiwanMatches": us_taiwan_matches,
         "candidates": candidates,
+        "rerun": {
+            "githubActions": "Actions > Daily Stock Scan > Run workflow，可選只重跑台股聖杯與美股產業資料。",
+            "localCommand": "python rerun_holy_grail.py --date YYYY-MM-DD",
+        },
         "rules": [
             "我只在大盤多頭時積極做多。",
             "我只買強勢產業。",
@@ -495,6 +682,21 @@ def fetch_history(symbol, start_dt, end_dt):
         return []
 
 
+def fetch_us_industries(start_dt, end_dt, target_date):
+    market_bars = fetch_history("SPY", start_dt, end_dt)
+    if not market_bars:
+        market_bars = fetch_history("^GSPC", start_dt, end_dt)
+    market_bars = [bar for bar in market_bars if bar["date"] <= target_date]
+    rows = []
+    for spec in US_INDUSTRY_ETFS:
+        bars = fetch_history(spec["symbol"], start_dt, end_dt)
+        bars = [bar for bar in bars if bar["date"] <= target_date]
+        if len(bars) < 60:
+            continue
+        rows.append({**spec, "bars": bars})
+    return rank_us_industries(rows, market_bars)
+
+
 def get_taiwan_stock_universe(max_per_industry=8):
     groups = {}
     for code, info in twstock.codes.items():
@@ -505,10 +707,12 @@ def get_taiwan_stock_universe(max_per_industry=8):
         if info.market not in {"上市", "上櫃"}:
             continue
         suffix = ".TW" if info.market == "上市" else ".TWO"
-        groups.setdefault(info.group, []).append({
+        fine_industry = classify_taiwan_industry(code, info.name, info.group)
+        groups.setdefault(fine_industry, []).append({
             "code": f"{code}{suffix}",
             "name": info.name,
-            "industry": info.group,
+            "industry": fine_industry,
+            "baseIndustry": info.group,
         })
     stocks = []
     for industry, rows in groups.items():
@@ -523,14 +727,16 @@ def generate_holy_grail_report_from_yfinance(target_date=None, max_per_industry=
     market_bars = fetch_history("^TWII", start_dt, end_dt)
     if not market_bars:
         market_bars = fetch_history("0050.TW", start_dt, end_dt)
-    market_bars = [bar for bar in market_bars if bar["date"] <= target_dt.strftime("%Y-%m-%d")]
+    target_date_text = target_dt.strftime("%Y-%m-%d")
+    market_bars = [bar for bar in market_bars if bar["date"] <= target_date_text]
 
     universe = get_taiwan_stock_universe(max_per_industry=max_per_industry)
     industries = {}
+    loaded_stocks = []
 
     def load_stock(stock):
         bars = fetch_history(stock["code"], start_dt, end_dt)
-        bars = [bar for bar in bars if bar["date"] <= target_dt.strftime("%Y-%m-%d")]
+        bars = [bar for bar in bars if bar["date"] <= target_date_text]
         if len(bars) < 120:
             return None
         return {**stock, "bars": bars}
@@ -541,12 +747,17 @@ def generate_holy_grail_report_from_yfinance(target_date=None, max_per_industry=
             stock = future.result()
             if not stock:
                 continue
+            loaded_stocks.append(stock)
             industries.setdefault(stock["industry"], []).append(stock)
+
+    us_industries = fetch_us_industries(start_dt, end_dt, target_date_text)
 
     return generate_taiwan_holy_grail_report({
         "marketBars": market_bars,
         "industries": industries,
-        "targetDate": target_dt.strftime("%Y-%m-%d"),
+        "stocks": loaded_stocks,
+        "usIndustries": us_industries,
+        "targetDate": target_date_text,
         "dataSource": "twstock universe + yfinance history",
     })
 
@@ -565,3 +776,4 @@ detectExitWarning = detect_exit_warning
 calculateStopPrice = calculate_stop_price
 calculatePositionSize = calculate_position_size
 generateTaiwanHolyGrailReport = generate_taiwan_holy_grail_report
+classifyTaiwanIndustry = classify_taiwan_industry

@@ -86,6 +86,11 @@
             <div class="rounded-lg border border-amber-500/40 bg-amber-500/10 p-4 text-sm text-amber-100">
                 {{ holyGrailReport.disclaimer }}
             </div>
+            <div class="surface rounded-lg border p-4 text-sm text-stone-300">
+                <div class="font-semibold text-stone-100">查無資料時可手動重跑</div>
+                <div class="mt-2">{{ holyGrailRerun.githubActions || 'GitHub Actions 可手動執行 Daily Stock Scan。' }}</div>
+                <code class="mt-2 block overflow-x-auto rounded-md bg-zinc-900 px-3 py-2 text-xs text-sky-200">{{ rerunCommand }}</code>
+            </div>
 
             <section class="grid min-w-0 gap-4 xl:grid-cols-[0.9fr_1.4fr]">
                 <div class="surface min-w-0 rounded-lg border p-5">
@@ -118,11 +123,12 @@
                         </div>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="min-w-[760px] w-full border-collapse text-sm">
+                        <table class="min-w-[860px] w-full border-collapse text-sm">
                             <thead class="bg-zinc-800 text-stone-400">
                                 <tr>
                                     <th class="border border-zinc-700 px-3 py-2 text-left">排名</th>
-                                    <th class="border border-zinc-700 px-3 py-2 text-left">產業</th>
+                                    <th class="border border-zinc-700 px-3 py-2 text-left">細分類</th>
+                                    <th class="border border-zinc-700 px-3 py-2 text-left">原分類</th>
                                     <th class="border border-zinc-700 px-3 py-2 text-right">5日</th>
                                     <th class="border border-zinc-700 px-3 py-2 text-right">20日</th>
                                     <th class="border border-zinc-700 px-3 py-2 text-right">60日</th>
@@ -136,6 +142,7 @@
                                 <tr v-for="industry in holyGrailIndustries" :key="industry.industry" class="hover:bg-zinc-800/60">
                                     <td class="border border-zinc-700 px-3 py-2">#{{ industry.rank }}</td>
                                     <td class="border border-zinc-700 px-3 py-2 font-semibold text-stone-100">{{ industry.industry }}</td>
+                                    <td class="border border-zinc-700 px-3 py-2 text-stone-400">{{ joinList(industry.baseIndustries, 2) }}</td>
                                     <td :class="changeClass(industry.return5)" class="border border-zinc-700 px-3 py-2 text-right">{{ formatPercent(industry.return5, false) }}</td>
                                     <td :class="changeClass(industry.return20)" class="border border-zinc-700 px-3 py-2 text-right">{{ formatPercent(industry.return20, false) }}</td>
                                     <td :class="changeClass(industry.return60)" class="border border-zinc-700 px-3 py-2 text-right">{{ formatPercent(industry.return60, false) }}</td>
@@ -145,11 +152,58 @@
                                     <td class="border border-zinc-700 px-3 py-2">{{ industry.status }}</td>
                                 </tr>
                                 <tr v-if="!holyGrailIndustries.length">
-                                    <td colspan="9" class="border border-zinc-700 px-3 py-8 text-center text-stone-500">尚無足夠產業資料</td>
+                                    <td colspan="10" class="border border-zinc-700 px-3 py-8 text-center text-stone-500">尚無足夠產業資料</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </section>
+
+            <section class="surface min-w-0 rounded-lg border p-5">
+                <div class="mb-4">
+                    <h2 class="text-xl font-bold text-stone-50">美股產業對應台股</h2>
+                    <p class="mt-1 text-sm text-stone-400">以美股產業 ETF 排行，映射到台股細分類後列出相對強勢個股</p>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-[920px] w-full border-collapse text-sm">
+                        <thead class="bg-zinc-800 text-stone-400">
+                            <tr>
+                                <th class="border border-zinc-700 px-3 py-2 text-left">美股產業</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-right">20日</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-right">相對強度</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-right">量能</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-right">分數</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-left">對應台股細分類</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-left">台股候選</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="match in holyGrailUsTaiwanMatches" :key="match.symbol" class="hover:bg-zinc-800/60">
+                                <td class="border border-zinc-700 px-3 py-2">
+                                    <div class="font-semibold text-stone-100">{{ match.name }}</div>
+                                    <div class="text-xs text-stone-500">{{ match.symbol }} · #{{ match.rank }} · {{ match.status }}</div>
+                                </td>
+                                <td :class="changeClass(match.return20)" class="border border-zinc-700 px-3 py-2 text-right">{{ formatPercent(match.return20, true) }}</td>
+                                <td :class="changeClass(match.relativeStrength20)" class="border border-zinc-700 px-3 py-2 text-right">{{ formatPercent(match.relativeStrength20, true) }}</td>
+                                <td class="border border-zinc-700 px-3 py-2 text-right">{{ formatRatio(match.volumeRatio) }}</td>
+                                <td class="border border-zinc-700 px-3 py-2 text-right font-semibold text-sky-200">{{ formatNumber(match.industryScore, 1) }}</td>
+                                <td class="border border-zinc-700 px-3 py-2 text-stone-300">{{ joinList(match.mappedIndustries, 4) }}</td>
+                                <td class="border border-zinc-700 px-3 py-2">
+                                    <div v-if="match.stocks?.length" class="flex flex-wrap gap-2">
+                                        <span v-for="stock in match.stocks.slice(0, 5)" :key="`${match.symbol}-${stock.code}`"
+                                              class="rounded-md bg-sky-400/10 px-2 py-1 text-xs text-sky-100">
+                                            {{ baseCode(stock.code) }} {{ stock.name }} {{ formatNumber(stock.score, 0) }}
+                                        </span>
+                                    </div>
+                                    <span v-else class="text-stone-500">暫無對應資料</span>
+                                </td>
+                            </tr>
+                            <tr v-if="!holyGrailUsTaiwanMatches.length">
+                                <td colspan="7" class="border border-zinc-700 px-3 py-8 text-center text-stone-500">尚無美股產業對應資料</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
 
@@ -192,7 +246,10 @@
                                 class="cursor-pointer">
                                 <td class="border border-zinc-700 px-3 py-2 font-mono">{{ baseCode(stock.code) }}</td>
                                 <td class="border border-zinc-700 px-3 py-2 font-semibold text-stone-100">{{ stock.name }}</td>
-                                <td class="border border-zinc-700 px-3 py-2 text-stone-300">{{ stock.industry }}</td>
+                                <td class="border border-zinc-700 px-3 py-2 text-stone-300">
+                                    <div>{{ stock.industry }}</div>
+                                    <div class="text-xs text-stone-500">{{ stock.baseIndustry || '-' }}</div>
+                                </td>
                                 <td class="border border-zinc-700 px-3 py-2 text-right">{{ formatPrice(stock.close) }}</td>
                                 <td :class="changeClass(stock.return5)" class="border border-zinc-700 px-3 py-2 text-right">{{ formatPercent(stock.return5, true) }}</td>
                                 <td :class="changeClass(stock.return20)" class="border border-zinc-700 px-3 py-2 text-right">{{ formatPercent(stock.return20, true) }}</td>
@@ -564,6 +621,12 @@ createApp({
         holyGrailReady() { return Object.keys(this.holyGrailReport).length > 0; },
         holyGrailMarket() { return this.holyGrailReport.market || {}; },
         holyGrailIndustries() { return Array.isArray(this.holyGrailReport.industries) ? this.holyGrailReport.industries : []; },
+        holyGrailUsTaiwanMatches() { return Array.isArray(this.holyGrailReport.usTaiwanMatches) ? this.holyGrailReport.usTaiwanMatches : []; },
+        holyGrailRerun() { return this.holyGrailReport.rerun || {}; },
+        rerunCommand() {
+            const date = this.holyGrailReport.targetDate || this.currentRecord.date || 'YYYY-MM-DD';
+            return (this.holyGrailRerun.localCommand || 'python rerun_holy_grail.py --date YYYY-MM-DD').replace('YYYY-MM-DD', date);
+        },
         holyGrailCandidates() { return this.holyGrailReport.candidates || {}; },
         holyGrailCurrentCandidates() {
             const rows = this.holyGrailCandidates[this.holyGrailCandidateTab];
@@ -655,6 +718,11 @@ createApp({
         formatRatio(value) {
             const number = Number(value);
             return Number.isFinite(number) ? `${number.toFixed(2)}x` : '-';
+        },
+        joinList(values, limit = 3) {
+            if (!Array.isArray(values) || !values.length) return '-';
+            const shown = values.slice(0, limit).join('、');
+            return values.length > limit ? `${shown} +${values.length - limit}` : shown;
         },
         marketRegimeClass(state) {
             if (state === 'Bull') return 'bg-red-400 text-zinc-950';

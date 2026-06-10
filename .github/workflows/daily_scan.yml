@@ -13,6 +13,15 @@ on:
         required: false
         type: boolean
         default: false
+      run_holy_grail_only:
+        description: '只重新產生台股聖杯雷達與美股產業對應資料'
+        required: false
+        type: boolean
+        default: false
+      target_date:
+        description: '手動重跑日期，格式 YYYY-MM-DD；空白時使用 data.json 最新日期'
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -36,8 +45,15 @@ jobs:
 
     - name: Run Strategy Script
       run: |
-        # 判斷是否為手動觸發且勾選了 backfill
-        if [ "${{ github.event.inputs.run_backfill }}" == "true" ]; then
+        TARGET_DATE="${{ github.event.inputs.target_date }}"
+        if [ "${{ github.event.inputs.run_holy_grail_only }}" == "true" ]; then
+            echo "偵測到聖杯雷達重跑指令：啟動 rerun_holy_grail.py ..."
+            if [ -n "$TARGET_DATE" ]; then
+                python rerun_holy_grail.py --date "$TARGET_DATE"
+            else
+                python rerun_holy_grail.py
+            fi
+        elif [ "${{ github.event.inputs.run_backfill }}" == "true" ]; then
             echo "偵測到回補指令：啟動 backfill.py ..."
             if [ -f "backfill.py" ]; then
                 python backfill.py

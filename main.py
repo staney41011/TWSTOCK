@@ -83,7 +83,13 @@ def empty_holy_grail_report(error_msg=None):
             "risk_note": error_msg or "等待下一次資料更新。",
         },
         "industries": [],
+        "usIndustries": [],
+        "usTaiwanMatches": [],
         "candidates": {"breakout": [], "pullback": [], "overheated": [], "exit": []},
+        "rerun": {
+            "githubActions": "Actions > Daily Stock Scan > Run workflow，可選只重跑台股聖杯與美股產業資料。",
+            "localCommand": "python rerun_holy_grail.py --date YYYY-MM-DD",
+        },
         "rules": [
             "本工具僅供研究與教育用途，不構成投資建議。",
         ],

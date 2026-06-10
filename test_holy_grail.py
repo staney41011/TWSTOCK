@@ -5,6 +5,7 @@ from holy_grail import (
     RiskConfig,
     calculate_position_size,
     calculate_sma,
+    classify_taiwan_industry,
     detect_breakout,
     generate_taiwan_holy_grail_report,
     get_market_regime,
@@ -56,6 +57,11 @@ class HolyGrailStrategyTest(unittest.TestCase):
         self.assertEqual(result["positionValue"], 200000)
         self.assertEqual(result["shares"], 2000)
 
+    def test_classify_taiwan_industry(self):
+        self.assertEqual(classify_taiwan_industry("2330", "台積電", "半導體業"), "半導體-晶圓代工")
+        self.assertEqual(classify_taiwan_industry("2454", "聯發科", "半導體業"), "半導體-IC設計")
+        self.assertEqual(classify_taiwan_industry("9999", "未知公司", "其他業"), "其他業")
+
     def test_generate_report_from_mock_data(self):
         market_bars = make_bars([100 + index for index in range(130)])
         stock_closes = [80 + index * 0.3 for index in range(129)] + [123]
@@ -67,14 +73,37 @@ class HolyGrailStrategyTest(unittest.TestCase):
                     "code": "2330.TW",
                     "name": "台積電",
                     "industry": "半導體業",
+                    "baseIndustry": "半導體業",
                     "bars": stock_bars,
                 }],
             },
+            "stocks": [{
+                "code": "2330.TW",
+                "name": "台積電",
+                "industry": "半導體業",
+                "baseIndustry": "半導體業",
+                "bars": stock_bars,
+            }],
+            "usIndustries": [{
+                "symbol": "SMH",
+                "name": "美股半導體",
+                "rank": 1,
+                "industryScore": 90,
+                "status": "主流強勢",
+                "return5": 0.03,
+                "return20": 0.08,
+                "return60": 0.12,
+                "relativeStrength20": 0.04,
+                "volumeRatio": 1.2,
+                "mappedIndustries": ["半導體業"],
+            }],
             "targetDate": "2025-05-10",
         })
         self.assertEqual(report["market"]["state"], "Bull")
         self.assertEqual(report["industries"][0]["industry"], "半導體業")
         self.assertGreaterEqual(len(report["candidates"]["breakout"]), 1)
+        self.assertEqual(report["usTaiwanMatches"][0]["symbol"], "SMH")
+        self.assertGreaterEqual(len(report["usTaiwanMatches"][0]["stocks"]), 1)
 
 
 if __name__ == "__main__":
