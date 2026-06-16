@@ -28,6 +28,8 @@
                     <option v-for="(record, index) in reversedHistory" :key="record.date" :value="index">{{ record.date }}</option>
                 </select>
                 <span v-if="currentRecord.date">市場寬度 {{ formatPercent(currentRecord.market_breadth, true) }}</span>
+                <span v-if="lastLoadedAt">頁面更新 {{ lastLoadedAt }}</span>
+                <span class="text-stone-500">每小時自動刷新</span>
             </div>
         </div>
         <button @click="loadData" class="surface rounded-md px-4 py-2 text-sm font-medium text-stone-100 hover:bg-zinc-800">
@@ -574,6 +576,9 @@ createApp({
             selectedDateIndex: 0,
             currentStrategy: 'momentum',
             errorMsg: '',
+            lastLoadedAt: '',
+            refreshTimer: null,
+            autoRefreshMs: 60 * 60 * 1000,
             showModal: false,
             selectedStock: null,
             holyGrailCandidateTab: 'breakout',
@@ -641,8 +646,10 @@ createApp({
         holyGrailPosition() { return this.positionSizingFor(this.holyGrailSelectedStock); },
     },
     methods: {
-        async loadData() {
-            this.loading = true;
+        async loadData(options = {}) {
+            const silent = options?.silent === true;
+            const previousDate = this.currentRecord.date;
+            if (!silent) this.loading = true;
             this.errorMsg = '';
             try {
                 const response = await fetch(`./data.json?t=${Date.now()}`);
@@ -650,12 +657,15 @@ createApp({
                 const data = await response.json();
                 if (!Array.isArray(data)) throw new Error('data.json 格式不是陣列');
                 this.history = data;
-                this.selectedDateIndex = 0;
+                const reversed = [...data].reverse();
+                const previousIndex = previousDate ? reversed.findIndex(record => record.date === previousDate) : -1;
+                this.selectedDateIndex = previousIndex >= 0 ? previousIndex : 0;
+                this.lastLoadedAt = new Date().toLocaleString('zh-TW', { hour12: false });
             } catch (error) {
-                this.history = [];
+                if (!silent) this.history = [];
                 this.errorMsg = error.message;
             } finally {
-                this.loading = false;
+                if (!silent) this.loading = false;
             }
         },
         strategyCount(key) {
@@ -822,7 +832,13 @@ createApp({
             return '翻紅';
         },
     },
-    mounted() { this.loadData(); },
+    mounted() {
+        this.loadData();
+        this.refreshTimer = window.setInterval(() => this.loadData({ silent: true }), this.autoRefreshMs);
+    },
+    beforeUnmount() {
+        if (this.refreshTimer) window.clearInterval(this.refreshTimer);
+    },
 }).mount('#app');
 </script>
 </body>

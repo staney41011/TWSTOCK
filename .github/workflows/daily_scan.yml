@@ -1,9 +1,9 @@
 name: Daily Stock Scan
 
 on:
-  # 1. 每天早上 06:00 (UTC+8) 自動執行 -> 只跑 main.py
+  # 1. 週一到週五每小時自動執行 -> 只跑 main.py
   schedule:
-    - cron: '0 22 * * 1-5'
+    - cron: '0 * * * 1-5'
   
   # 2. 手動觸發 -> 提供選項讓您決定要不要跑 Backfill
   workflow_dispatch:
