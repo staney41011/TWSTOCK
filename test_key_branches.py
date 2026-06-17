@@ -1,9 +1,11 @@
 import unittest
 
+import key_branches
 from key_branches import (
     aggregate_branch_rows,
     branch_signal_for_stock,
     generate_key_branch_report,
+    is_finmind_permission_error,
     strategy_contexts,
 )
 
@@ -51,6 +53,22 @@ class KeyBranchesTest(unittest.TestCase):
         report = generate_key_branch_report(strategies, "2026-06-15", token="")
         self.assertEqual(report["status"], "needs_token")
         self.assertEqual(report["targets"], 1)
+
+    def test_report_marks_finmind_sponsor_permission_error(self):
+        strategies = {"macd_turn_red": [{"code": "2330.TW", "name": "台積電"}]}
+        original_fetch = key_branches.fetch_finmind_branch_rows
+
+        def blocked(*args, **kwargs):
+            raise RuntimeError("Your level is register. Please update your user level.")
+
+        try:
+            key_branches.fetch_finmind_branch_rows = blocked
+            report = generate_key_branch_report(strategies, "2026-06-15", token="token")
+        finally:
+            key_branches.fetch_finmind_branch_rows = original_fetch
+
+        self.assertEqual(report["status"], "needs_sponsor")
+        self.assertTrue(is_finmind_permission_error(report["errors"]))
 
 
 if __name__ == "__main__":

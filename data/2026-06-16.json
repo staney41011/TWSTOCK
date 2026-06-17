@@ -3390,13 +3390,65 @@
     "key_branches": {
       "title": "關鍵分點",
       "subtitle": "追蹤高共振股票的主買分點、主賣分點與分點籌碼偏向。",
-      "status": "needs_token",
+      "status": "needs_sponsor",
       "source": "FinMind TaiwanStockTradingDailyReport",
-      "sourceNote": "需要在 GitHub Secrets 或本機環境設定 FINMIND_TOKEN，才能抓取券商分點資料。",
-      "generatedAt": "2026-06-17 08:17:02",
+      "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
+      "generatedAt": "2026-06-17 08:22:49",
       "date": "2026-06-16",
       "targets": 28,
-      "items": []
+      "items": [],
+      "errors": [
+        {
+          "code": "2431",
+          "name": "聯昌",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "2534",
+          "name": "宏盛",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "2023",
+          "name": "燁輝",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "1232",
+          "name": "大統益",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "1734",
+          "name": "杏輝",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "1736",
+          "name": "喬山",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "1473",
+          "name": "台南",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "1437",
+          "name": "勤益控",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "1438",
+          "name": "三地開發",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "2107",
+          "name": "厚生",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        }
+      ]
     }
   }
 }

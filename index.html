@@ -107,6 +107,12 @@
                     <span v-if="keyBranchReport.status === 'needs_token'" class="block mt-2 text-amber-200">
                         請在 GitHub Secrets 設定 FINMIND_TOKEN，或本機執行前設定環境變數。
                     </span>
+                    <span v-else-if="keyBranchReport.status === 'needs_sponsor'" class="block mt-2 text-amber-200">
+                        目前的 FinMind 帳號等級不足，升級 Sponsor 後下一次排程會自動重抓。
+                    </span>
+                    <span v-if="keyBranchReport.errors?.length" class="block mt-2 font-mono text-xs text-stone-500">
+                        {{ keyBranchReport.errors[0].message }}
+                    </span>
                 </div>
             </section>
 
@@ -731,6 +737,7 @@ createApp({
         keyBranchStatusLabel() {
             if (this.keyBranchReport.status === 'ok') return '分點資料已更新';
             if (this.keyBranchReport.status === 'needs_token') return '尚未設定分點資料來源';
+            if (this.keyBranchReport.status === 'needs_sponsor') return 'FinMind 權限不足';
             if (this.keyBranchReport.status === 'no_data') return '查無分點資料';
             return '分點資料狀態未知';
         },

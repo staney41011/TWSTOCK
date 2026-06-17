@@ -186,6 +186,15 @@ def branch_signal_for_stock(context, rows):
     }
 
 
+def is_finmind_permission_error(errors):
+    messages = " ".join(str(item.get("message", "")) for item in errors).lower()
+    return (
+        "sponsor" in messages
+        or "update your user level" in messages
+        or "your level is" in messages
+    )
+
+
 def generate_key_branch_report(strategies, target_date, token=None, max_targets=36, max_workers=8):
     token = token if token is not None else os.getenv("FINMIND_TOKEN")
     if not token:
@@ -216,12 +225,19 @@ def generate_key_branch_report(strategies, target_date, token=None, max_targets=
 
     items.sort(key=lambda item: (item["branchScore"], abs(item["netPressureLots"])), reverse=True)
     status = "ok" if items else "no_data"
+    source_note = "分點資料需 FINMIND_TOKEN；資料通常於盤後更新，實際時間以來源為準。"
+    if not items and errors and is_finmind_permission_error(errors):
+        status = "needs_sponsor"
+        source_note = "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。"
+    elif not items and errors:
+        source_note = "分點資料未產生，請檢查 token、資料日期或 FinMind 服務狀態；錯誤摘要已記錄。"
+
     return {
         "title": "關鍵分點",
         "subtitle": "追蹤高共振股票的主買分點、主賣分點與分點籌碼偏向。",
         "status": status,
         "source": "FinMind TaiwanStockTradingDailyReport",
-        "sourceNote": "分點資料需 FINMIND_TOKEN；資料通常於盤後更新，實際時間以來源為準。",
+        "sourceNote": source_note,
         "generatedAt": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "date": target_date,
         "targets": len(targets),
