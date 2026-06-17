@@ -14,6 +14,7 @@ import numpy as np
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
 from holy_grail import generate_holy_grail_report_from_yfinance
+from key_branches import empty_key_branch_report, generate_key_branch_report
 
 # --- 全域設定 ---
 DATA_FILE = "data.json"
@@ -582,7 +583,15 @@ def main():
     cbas_results = run_cbas_scanner()
     
     # 2. 執行一般個股掃描
-    res = {"momentum": [], "day_trading": [], "doji_rise": [], "macd_turn_red": [], "active_etf": [], "holy_grail": empty_holy_grail_report()}
+    res = {
+        "momentum": [],
+        "day_trading": [],
+        "doji_rise": [],
+        "macd_turn_red": [],
+        "active_etf": [],
+        "holy_grail": empty_holy_grail_report(),
+        "key_branches": empty_key_branch_report(),
+    }
     stat_total = 0; stat_new_high = 0; detected_market_date = None
     
     with ThreadPoolExecutor(max_workers=20) as exc:
@@ -620,6 +629,18 @@ def main():
     
     final_date = detected_market_date if detected_market_date else expected_date
     print(f"確認歸檔日期: {final_date}")
+
+    try:
+        print(f"產生關鍵分點：{final_date}")
+        res['key_branches'] = clean_for_json(generate_key_branch_report(
+            res,
+            final_date,
+            token=os.getenv("FINMIND_TOKEN"),
+        ))
+    except Exception as e:
+        print(f"關鍵分點產生失敗: {e}")
+        res['key_branches'] = empty_key_branch_report(str(e))
+        res['key_branches']["date"] = final_date
     
     daily_record = clean_for_json({"date": final_date, "market_breadth": market_breadth, "strategies": res})
     with open(os.path.join(DATA_DIR, f"{final_date}.json"), 'w', encoding='utf-8') as f:

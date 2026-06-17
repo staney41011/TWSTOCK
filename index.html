@@ -45,7 +45,7 @@
     <div v-if="loading" class="py-24 text-center text-lg text-teal-300">資料載入中</div>
 
     <main v-else-if="history.length">
-        <section class="grid grid-cols-2 gap-3 md:grid-cols-4 xl:grid-cols-7 mb-6">
+        <section class="grid grid-cols-2 gap-3 md:grid-cols-4 xl:grid-cols-8 mb-6">
             <div class="surface rounded-lg border p-4">
                 <div class="text-xs text-stone-500">動能爆發</div>
                 <div class="mt-1 text-2xl font-semibold">{{ strategyCount('momentum') }}</div>
@@ -74,6 +74,10 @@
                 <div class="text-xs text-stone-500">台股聖杯</div>
                 <div class="mt-1 text-2xl font-semibold">{{ strategyCount('holy_grail') }}</div>
             </div>
+            <div class="surface rounded-lg border p-4 border-l-4 border-l-rose-500">
+                <div class="text-xs text-stone-500">關鍵分點</div>
+                <div class="mt-1 text-2xl font-semibold">{{ strategyCount('key_branches') }}</div>
+            </div>
         </section>
 
         <nav class="mb-6 flex gap-2 overflow-x-auto pb-2">
@@ -84,7 +88,81 @@
             </button>
         </nav>
 
-        <section v-if="currentStrategy === 'holy_grail' && holyGrailReady" class="space-y-6">
+        <section v-if="currentStrategy === 'key_branches'" class="space-y-6">
+            <section class="surface rounded-lg border p-5">
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                    <div>
+                        <p class="text-sm text-rose-300">{{ keyBranchReport.title || '關鍵分點' }}</p>
+                        <h2 class="mt-2 text-2xl font-bold text-stone-50">{{ keyBranchStatusLabel }}</h2>
+                        <p class="mt-3 max-w-3xl text-sm leading-6 text-stone-300">{{ keyBranchReport.subtitle || '追蹤高共振股票的主買分點、主賣分點與分點籌碼偏向。' }}</p>
+                    </div>
+                    <dl class="grid min-w-[220px] grid-cols-2 gap-y-2 text-sm">
+                        <dt class="text-stone-500">資料日期</dt><dd class="text-right">{{ keyBranchReport.date || currentRecord.date || '-' }}</dd>
+                        <dt class="text-stone-500">追蹤股票</dt><dd class="text-right">{{ formatNumber(keyBranchReport.targets, 0) }}</dd>
+                        <dt class="text-stone-500">產生時間</dt><dd class="text-right">{{ keyBranchReport.generatedAt || '-' }}</dd>
+                    </dl>
+                </div>
+                <div class="mt-4 rounded-md border border-zinc-700 bg-zinc-900/60 p-3 text-sm text-stone-300">
+                    {{ keyBranchReport.sourceNote || '分點資料通常盤後更新。' }}
+                    <span v-if="keyBranchReport.status === 'needs_token'" class="block mt-2 text-amber-200">
+                        請在 GitHub Secrets 設定 FINMIND_TOKEN，或本機執行前設定環境變數。
+                    </span>
+                </div>
+            </section>
+
+            <section v-if="keyBranchItems.length" class="surface min-w-0 rounded-lg border p-5">
+                <div class="mb-4">
+                    <h2 class="text-xl font-bold text-stone-50">分點籌碼排行</h2>
+                    <p class="mt-1 text-sm text-stone-400">分數結合主買/主賣集中度與策略共振，只作為籌碼觀察，不構成投資建議。</p>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-[980px] w-full border-collapse text-sm">
+                        <thead class="bg-zinc-800 text-stone-400">
+                            <tr>
+                                <th class="border border-zinc-700 px-3 py-2 text-left">股票</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-left">偏向</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-right">分點分數</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-right">策略分數</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-right">Top買超</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-right">Top賣超</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-right">集中度</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-left">主買分點</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-left">主賣分點</th>
+                                <th class="border border-zinc-700 px-3 py-2 text-left">共振來源</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in keyBranchItems" :key="item.code" class="hover:bg-zinc-800/60">
+                                <td class="border border-zinc-700 px-3 py-2">
+                                    <div class="font-mono text-stone-100">{{ item.code }}</div>
+                                    <div class="text-xs text-stone-400">{{ item.name }}</div>
+                                </td>
+                                <td class="border border-zinc-700 px-3 py-2">
+                                    <span :class="branchBiasClass(item.bias)" class="rounded-md px-2 py-1 text-xs font-semibold">{{ item.bias }}</span>
+                                </td>
+                                <td class="border border-zinc-700 px-3 py-2 text-right font-semibold text-rose-200">{{ formatNumber(item.branchScore, 1) }}</td>
+                                <td class="border border-zinc-700 px-3 py-2 text-right">{{ formatNumber(item.strategyScore, 1) }}</td>
+                                <td class="border border-zinc-700 px-3 py-2 text-right text-red-300">{{ formatNumber(item.topBuyNetLots, 1) }}</td>
+                                <td class="border border-zinc-700 px-3 py-2 text-right text-emerald-300">{{ formatNumber(item.topSellNetLots, 1) }}</td>
+                                <td class="border border-zinc-700 px-3 py-2 text-right">{{ formatPercent(item.concentrationPct, true) }}</td>
+                                <td class="border border-zinc-700 px-3 py-2">{{ branchList(item.buyers, true) }}</td>
+                                <td class="border border-zinc-700 px-3 py-2">{{ branchList(item.sellers, false) }}</td>
+                                <td class="border border-zinc-700 px-3 py-2">
+                                    <div>{{ joinList(item.strategySources, 4) }}</div>
+                                    <div v-if="item.warnings?.length" class="mt-1 text-xs text-amber-200">{{ joinList(item.warnings, 2) }}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <div v-else class="surface rounded-lg border py-16 text-center text-stone-500">
+                尚無關鍵分點資料
+            </div>
+        </section>
+
+        <section v-else-if="currentStrategy === 'holy_grail' && holyGrailReady" class="space-y-6">
             <div class="rounded-lg border border-amber-500/40 bg-amber-500/10 p-4 text-sm text-amber-100">
                 {{ holyGrailReport.disclaimer }}
             </div>
@@ -604,6 +682,7 @@ createApp({
                 { key: 'cbas', label: '可轉債 CBAS' },
                 { key: 'active_etf', label: '主動 ETF 共振' },
                 { key: 'holy_grail', label: '台股聖杯雷達' },
+                { key: 'key_branches', label: '關鍵分點' },
             ],
         };
     },
@@ -612,7 +691,7 @@ createApp({
         currentRecord() { return this.reversedHistory[this.selectedDateIndex] || {}; },
         strategyData() { return this.currentRecord.strategies || {}; },
         currentItems() {
-            if (this.currentStrategy === 'holy_grail') return [];
+            if (['holy_grail', 'key_branches'].includes(this.currentStrategy)) return [];
             const rows = this.strategyData[this.currentStrategy];
             return Array.isArray(rows) ? rows : [];
         },
@@ -644,6 +723,17 @@ createApp({
             return rows.find(stock => stock.code === this.holyGrailSelectedCode) || rows[0];
         },
         holyGrailPosition() { return this.positionSizingFor(this.holyGrailSelectedStock); },
+        keyBranchReport() {
+            const report = this.strategyData.key_branches;
+            return report && !Array.isArray(report) ? report : {};
+        },
+        keyBranchItems() { return Array.isArray(this.keyBranchReport.items) ? this.keyBranchReport.items : []; },
+        keyBranchStatusLabel() {
+            if (this.keyBranchReport.status === 'ok') return '分點資料已更新';
+            if (this.keyBranchReport.status === 'needs_token') return '尚未設定分點資料來源';
+            if (this.keyBranchReport.status === 'no_data') return '查無分點資料';
+            return '分點資料狀態未知';
+        },
     },
     methods: {
         async loadData(options = {}) {
@@ -670,6 +760,7 @@ createApp({
         },
         strategyCount(key) {
             if (key === 'holy_grail') return this.holyGrailCandidateTotal();
+            if (key === 'key_branches') return this.keyBranchItems.length;
             const rows = this.strategyData[key];
             return Array.isArray(rows) ? rows.length : 0;
         },
@@ -733,6 +824,15 @@ createApp({
             if (!Array.isArray(values) || !values.length) return '-';
             const shown = values.slice(0, limit).join('、');
             return values.length > limit ? `${shown} +${values.length - limit}` : shown;
+        },
+        branchList(values, positive = true) {
+            if (!Array.isArray(values) || !values.length) return '-';
+            return values.slice(0, 3).map(item => `${item.branchName} ${positive ? '+' : ''}${this.formatNumber(item.netLots, 1)}`).join('、');
+        },
+        branchBiasClass(bias) {
+            if (bias === '偏多') return 'bg-red-400/20 text-red-200';
+            if (bias === '偏空') return 'bg-emerald-400/20 text-emerald-200';
+            return 'bg-amber-400/20 text-amber-200';
         },
         marketRegimeClass(state) {
             if (state === 'Bull') return 'bg-red-400 text-zinc-950';

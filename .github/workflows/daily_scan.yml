@@ -29,6 +29,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      FINMIND_TOKEN: ${{ secrets.FINMIND_TOKEN }}
 
     steps:
     - name: Checkout code
