@@ -448,10 +448,33 @@ def extract_etfinfo_active_summary(page_html):
         raise ValueError("找不到 ETFInfo Nuxt payload")
     payload = json.loads(html_lib.unescape(match.group(1)))
     root = revive_nuxt_payload(payload)
-    summary = root.get("data", {}).get("active-summary-weekly-0")
+    summary = find_etfinfo_active_summary(root.get("data", {}))
     if not summary:
-        raise ValueError("ETFInfo payload 缺少 active-summary-weekly-0")
+        raise ValueError("ETFInfo payload 缺少主動 ETF summary")
     return summary
+
+def find_etfinfo_active_summary(data):
+    if not isinstance(data, dict):
+        return None
+
+    exact = data.get("active-summary-weekly-0")
+    if is_etfinfo_active_summary(exact):
+        return exact
+
+    for key, value in data.items():
+        if str(key).startswith("active-summary-weekly-") and is_etfinfo_active_summary(value):
+            return value
+
+    for value in data.values():
+        if is_etfinfo_active_summary(value):
+            return value
+
+    return None
+
+def is_etfinfo_active_summary(value):
+    if not isinstance(value, dict):
+        return False
+    return isinstance(value.get("etfs"), list) and isinstance(value.get("flowRankings"), list)
 
 def active_etf_side(change_type):
     if change_type in ACTIVE_ETF_BUY_TYPES:
