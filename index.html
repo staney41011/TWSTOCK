@@ -45,7 +45,7 @@
     <div v-if="loading" class="py-24 text-center text-lg text-teal-300">資料載入中</div>
 
     <main v-else-if="history.length">
-        <section class="grid grid-cols-2 gap-3 md:grid-cols-4 xl:grid-cols-8 mb-6">
+        <section class="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-9 mb-6">
             <div class="surface rounded-lg border p-4">
                 <div class="text-xs text-stone-500">動能爆發</div>
                 <div class="mt-1 text-2xl font-semibold">{{ strategyCount('momentum') }}</div>
@@ -69,6 +69,10 @@
             <div class="surface rounded-lg border p-4 border-l-4 border-l-teal-500">
                 <div class="text-xs text-stone-500">主動 ETF 共振</div>
                 <div class="mt-1 text-2xl font-semibold">{{ strategyCount('active_etf') }}</div>
+            </div>
+            <div class="surface rounded-lg border p-4 border-l-4 border-l-fuchsia-500">
+                <div class="text-xs text-stone-500">Druck 雷達</div>
+                <div class="mt-1 text-2xl font-semibold">{{ strategyCount('druckenmiller') }}</div>
             </div>
             <div class="surface rounded-lg border p-4 border-l-4 border-l-sky-500">
                 <div class="text-xs text-stone-500">台股聖杯</div>
@@ -165,6 +169,84 @@
 
             <div v-else class="surface rounded-lg border py-16 text-center text-stone-500">
                 尚無關鍵分點資料
+            </div>
+        </section>
+
+        <section v-else-if="currentStrategy === 'druckenmiller'" class="space-y-6">
+            <section class="surface rounded-lg border p-5">
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                    <div>
+                        <p class="text-sm text-fuchsia-300">{{ druckReport.title || 'Druckenmiller 風格雷達' }}</p>
+                        <h2 class="mt-2 text-2xl font-bold text-stone-50">{{ druckMarket.label || '資料不足' }}</h2>
+                        <p class="mt-3 max-w-3xl text-sm leading-6 text-stone-300">{{ druckReport.subtitle || '先看大盤與產業，再找高信念標的。' }}</p>
+                    </div>
+                    <dl class="grid min-w-[220px] grid-cols-2 gap-y-2 text-sm">
+                        <dt class="text-stone-500">資料日期</dt><dd class="text-right">{{ druckReport.targetDate || currentRecord.date || '-' }}</dd>
+                        <dt class="text-stone-500">新高廣度</dt><dd class="text-right">{{ formatPercent(druckMarket.breadth, true) }}</dd>
+                        <dt class="text-stone-500">建議倉位</dt><dd class="text-right">{{ druckMarket.suggested_exposure || '-' }}</dd>
+                    </dl>
+                </div>
+                <div class="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
+                    <span :class="druckStateClass(druckMarket.state)" class="rounded-md px-2 py-1">{{ druckMarket.state || 'Unknown' }}</span>
+                    <span v-for="note in (druckReport.sourceNotes || [])" :key="note" class="rounded-md bg-zinc-800 px-2 py-1 text-stone-300">{{ note }}</span>
+                </div>
+                <p class="mt-4 text-sm leading-6 text-stone-400">{{ druckMarket.description || druckReport.disclaimer }}</p>
+            </section>
+
+            <section v-if="druckIndustries.length" class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                <article v-for="industry in druckIndustries" :key="industry.name" class="surface rounded-lg border p-4">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <h2 class="text-base font-semibold text-stone-50">{{ industry.name }}</h2>
+                            <p class="mt-1 text-xs text-stone-500">{{ joinList(industry.sources, 3) }}</p>
+                        </div>
+                        <div class="text-right text-lg font-semibold text-fuchsia-200">{{ formatNumber(industry.score, 1) }}</div>
+                    </div>
+                    <dl class="mt-4 grid grid-cols-2 gap-y-2 text-sm">
+                        <dt class="text-stone-500">淨估金額</dt><dd :class="changeClass(industry.netAmount)" class="text-right">{{ formatMoney(industry.netAmount) }}</dd>
+                        <dt class="text-stone-500">訊號數</dt><dd class="text-right">{{ industry.signals }}</dd>
+                    </dl>
+                </article>
+            </section>
+
+            <section v-if="druckCandidates.length" class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                <article v-for="item in druckCandidates" :key="item.code" class="surface rounded-lg border p-5">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <h2 class="text-lg font-semibold text-stone-50">{{ item.name }}</h2>
+                            <p class="text-sm text-stone-400">{{ item.code }} · {{ item.industry || '產業未分類' }}</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-fuchsia-200">{{ formatNumber(item.score, 1) }}</div>
+                            <div :class="druckConvictionClass(item.conviction)" class="mt-1 rounded-md px-2 py-1 text-xs font-semibold">{{ item.conviction }}</div>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
+                        <span v-for="signal in item.signals" :key="signal" class="rounded-md bg-zinc-700 px-2 py-1 text-stone-200">{{ signal }}</span>
+                    </div>
+                    <dl class="mt-4 grid grid-cols-2 gap-y-2 text-sm">
+                        <dt class="text-stone-500">價格</dt><dd class="text-right">{{ formatPrice(item.price) }}</dd>
+                        <dt class="text-stone-500">訊號數</dt><dd class="text-right">{{ item.signalCount }}</dd>
+                        <dt class="text-stone-500">ETF 流向</dt><dd class="text-right">{{ item.activeEtf ? flowLabel(item.activeEtf) : '-' }}</dd>
+                    </dl>
+                    <div class="mt-4 grid gap-3 text-sm md:grid-cols-2">
+                        <div>
+                            <div class="text-xs font-semibold text-stone-500">Thesis</div>
+                            <div class="mt-1 leading-6 text-stone-300">{{ joinList(item.thesis, 4) }}</div>
+                        </div>
+                        <div>
+                            <div class="text-xs font-semibold text-stone-500">Thesis Break</div>
+                            <div class="mt-1 leading-6 text-amber-200">{{ joinList(item.thesisBreak, 3) }}</div>
+                        </div>
+                    </div>
+                    <div v-if="item.warnings?.length" class="mt-3 rounded-md border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-amber-100">
+                        {{ joinList(item.warnings, 3) }}
+                    </div>
+                </article>
+            </section>
+
+            <div v-else class="surface rounded-lg border py-16 text-center text-stone-500">
+                尚無 Druckenmiller 風格候選資料
             </div>
         </section>
 
@@ -687,6 +769,7 @@ createApp({
                 { key: 'macd_turn_red', label: 'MACD翻紅' },
                 { key: 'cbas', label: '可轉債 CBAS' },
                 { key: 'active_etf', label: '主動 ETF 共振' },
+                { key: 'druckenmiller', label: 'Druck 雷達' },
                 { key: 'holy_grail', label: '台股聖杯雷達' },
                 { key: 'key_branches', label: '關鍵分點' },
             ],
@@ -697,7 +780,7 @@ createApp({
         currentRecord() { return this.reversedHistory[this.selectedDateIndex] || {}; },
         strategyData() { return this.currentRecord.strategies || {}; },
         currentItems() {
-            if (['holy_grail', 'key_branches'].includes(this.currentStrategy)) return [];
+            if (['holy_grail', 'key_branches', 'druckenmiller'].includes(this.currentStrategy)) return [];
             const rows = this.strategyData[this.currentStrategy];
             return Array.isArray(rows) ? rows : [];
         },
@@ -741,6 +824,13 @@ createApp({
             if (this.keyBranchReport.status === 'no_data') return '查無分點資料';
             return '分點資料狀態未知';
         },
+        druckReport() {
+            const report = this.strategyData.druckenmiller;
+            return report && !Array.isArray(report) ? report : {};
+        },
+        druckMarket() { return this.druckReport.market || {}; },
+        druckCandidates() { return Array.isArray(this.druckReport.candidates) ? this.druckReport.candidates : []; },
+        druckIndustries() { return Array.isArray(this.druckReport.industries) ? this.druckReport.industries : []; },
     },
     methods: {
         async loadData(options = {}) {
@@ -768,6 +858,7 @@ createApp({
         strategyCount(key) {
             if (key === 'holy_grail') return this.holyGrailCandidateTotal();
             if (key === 'key_branches') return this.keyBranchItems.length;
+            if (key === 'druckenmiller') return this.druckCandidates.length;
             const rows = this.strategyData[key];
             return Array.isArray(rows) ? rows.length : 0;
         },
@@ -841,6 +932,19 @@ createApp({
             if (bias === '偏空') return 'bg-emerald-400/20 text-emerald-200';
             return 'bg-amber-400/20 text-amber-200';
         },
+        druckStateClass(state) {
+            if (state === 'RiskOn') return 'bg-red-400 text-zinc-950';
+            if (state === 'Selective') return 'bg-fuchsia-400 text-zinc-950';
+            if (state === 'Tactical') return 'bg-amber-400 text-zinc-950';
+            if (state === 'Defense') return 'bg-emerald-500 text-zinc-950';
+            return 'bg-zinc-700 text-stone-100';
+        },
+        druckConvictionClass(label) {
+            if (label === '高信念') return 'bg-red-400/20 text-red-200';
+            if (label === '觀察核心') return 'bg-fuchsia-400/20 text-fuchsia-200';
+            if (label === '小部位試單') return 'bg-amber-400/20 text-amber-200';
+            return 'bg-zinc-700 text-stone-200';
+        },
         marketRegimeClass(state) {
             if (state === 'Bull') return 'bg-red-400 text-zinc-950';
             if (state === 'Caution') return 'bg-amber-400 text-zinc-950';
@@ -897,8 +1001,8 @@ createApp({
             };
         },
         flowLabel(item) {
-            const buy = Number(item?.buy_count || 0);
-            const sell = Number(item?.sell_count || 0);
+            const buy = Number(item?.buy_count ?? item?.buyCount ?? 0);
+            const sell = Number(item?.sell_count ?? item?.sellCount ?? 0);
             if (buy >= 2 && sell === 0) return '同步買進';
             if (sell >= 2 && buy === 0) return '同步賣出';
             if (buy > sell) return '偏買進';
@@ -906,8 +1010,8 @@ createApp({
             return '多空分歧';
         },
         flowToneClass(item) {
-            const buy = Number(item?.buy_count || 0);
-            const sell = Number(item?.sell_count || 0);
+            const buy = Number(item?.buy_count ?? item?.buyCount ?? 0);
+            const sell = Number(item?.sell_count ?? item?.sellCount ?? 0);
             if (buy > sell) return 'text-red-300';
             if (sell > buy) return 'text-emerald-300';
             return 'text-amber-300';

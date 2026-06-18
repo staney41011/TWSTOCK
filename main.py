@@ -13,6 +13,7 @@ import time
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
+from druckenmiller import generate_druckenmiller_report
 from holy_grail import generate_holy_grail_report_from_yfinance
 from key_branches import empty_key_branch_report, generate_key_branch_report
 
@@ -612,6 +613,7 @@ def main():
         "doji_rise": [],
         "macd_turn_red": [],
         "active_etf": [],
+        "druckenmiller": {},
         "holy_grail": empty_holy_grail_report(),
         "key_branches": empty_key_branch_report(),
     }
@@ -652,6 +654,24 @@ def main():
     
     final_date = detected_market_date if detected_market_date else expected_date
     print(f"確認歸檔日期: {final_date}")
+
+    try:
+        print(f"產生 Druckenmiller 風格雷達：{final_date}")
+        res['druckenmiller'] = clean_for_json(generate_druckenmiller_report(
+            res,
+            market_breadth=market_breadth,
+            target_date=final_date,
+        ))
+    except Exception as e:
+        print(f"Druckenmiller 風格雷達產生失敗: {e}")
+        res['druckenmiller'] = {
+            "title": "Druckenmiller 風格雷達",
+            "status": "error",
+            "targetDate": final_date,
+            "candidates": [],
+            "industries": [],
+            "error": str(e),
+        }
 
     try:
         print(f"產生關鍵分點：{final_date}")
