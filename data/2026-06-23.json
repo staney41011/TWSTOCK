@@ -1,6 +1,6 @@
 {
   "date": "2026-06-23",
-  "market_breadth": 2.25,
+  "market_breadth": 2.42,
   "strategies": {
     "momentum": [
       {
@@ -138,7 +138,7 @@
         "price": 170.0,
         "date": "2026-06-23",
         "fundamentals": {
-          "pe": 43.14721,
+          "pe": 40.669857,
           "growth": 1.081,
           "rev_yoy": 0.055,
           "rev_qoq": null,
@@ -259,32 +259,13 @@
     ],
     "day_trading": [
       {
-        "code": "2408.TW",
-        "name": "南亞科",
-        "region": "TW",
-        "price": 454.5,
-        "date": "2026-06-23",
-        "fundamentals": {
-          "pe": 999,
-          "growth": null,
-          "rev_yoy": null,
-          "rev_qoq": null,
-          "quarters": []
-        },
-        "drop_pct": 6.86,
-        "rise_20d": 53.55,
-        "vol_lots": 158743,
-        "amount_yi": 721.49,
-        "pattern": "連紅漲停後黑K"
-      },
-      {
         "code": "2059.TW",
         "name": "川湖",
         "region": "TW",
         "price": 7475.0,
         "date": "2026-06-23",
         "fundamentals": {
-          "pe": 74.44477,
+          "pe": 74.075905,
           "growth": 0.383,
           "rev_yoy": 0.378,
           "rev_qoq": null,
@@ -364,7 +345,7 @@
         "price": 170.0,
         "date": "2026-06-23",
         "fundamentals": {
-          "pe": 43.14721,
+          "pe": 40.669857,
           "growth": 1.081,
           "rev_yoy": 0.055,
           "rev_qoq": null,
@@ -491,32 +472,11 @@
         "price": 5700.0,
         "date": "2026-06-23",
         "fundamentals": {
-          "pe": 123.85919,
+          "pe": 123.456795,
           "growth": 0.532,
           "rev_yoy": 0.525,
           "rev_qoq": null,
-          "quarters": [
-            {
-              "date": "2026-03",
-              "revenue": 33067261000.0,
-              "qoq": 0.3265545341714975
-            },
-            {
-              "date": "2025-12",
-              "revenue": 24927178000.0,
-              "qoq": 0.10749586341452838
-            },
-            {
-              "date": "2025-06",
-              "revenue": 22507694000.0,
-              "qoq": 0.03817470280530537
-            },
-            {
-              "date": "2025-03",
-              "revenue": 21680064000.0,
-              "qoq": 0.1679744925467501
-            }
-          ]
+          "quarters": []
         },
         "score": 60,
         "pattern": "標準十字星",
@@ -539,32 +499,11 @@
         "price": 79.6,
         "date": "2026-06-23",
         "fundamentals": {
-          "pe": 663.3333,
-          "growth": 3.0,
-          "rev_yoy": 0.043,
+          "pe": 999,
+          "growth": null,
+          "rev_yoy": null,
           "rev_qoq": null,
-          "quarters": [
-            {
-              "date": "2025-12",
-              "revenue": 3048533000.0,
-              "qoq": 0.3134776383768289
-            },
-            {
-              "date": "2025-09",
-              "revenue": 2320963000.0,
-              "qoq": 0.09248624838666251
-            },
-            {
-              "date": "2025-06",
-              "revenue": 2124478000.0,
-              "qoq": 0.035091651262342545
-            },
-            {
-              "date": "2025-03",
-              "revenue": 2052454000.0,
-              "qoq": -0.6266154813693777
-            }
-          ]
+          "quarters": []
         },
         "pattern": "MACD翻紅第1天",
         "macd_day": 1,
@@ -810,55 +749,6 @@
         "reasons": [
           "MACD(21,55,89) 柱狀體於 2026-06-23 由綠翻紅",
           "目前為翻紅第1天，柱狀體 0.0116"
-        ]
-      },
-      {
-        "code": "8424.TWO",
-        "name": "惠普",
-        "region": "TW",
-        "price": 69.3,
-        "date": "2026-06-23",
-        "fundamentals": {
-          "pe": 999,
-          "growth": null,
-          "rev_yoy": null,
-          "rev_qoq": null,
-          "quarters": []
-        },
-        "pattern": "MACD翻紅第1天",
-        "macd_day": 1,
-        "macd_label": "第1天",
-        "cross_date": "2026-06-23",
-        "dif": -0.0094,
-        "macd_signal": -0.0194,
-        "histogram": 0.01,
-        "histogram_prev": -0.0275,
-        "histogram_cross": 0.01,
-        "hist_sequence": [
-          {
-            "date": "2026-06-16",
-            "value": -0.1316
-          },
-          {
-            "date": "2026-06-17",
-            "value": -0.1022
-          },
-          {
-            "date": "2026-06-18",
-            "value": -0.071
-          },
-          {
-            "date": "2026-06-22",
-            "value": -0.0275
-          },
-          {
-            "date": "2026-06-23",
-            "value": 0.01
-          }
-        ],
-        "reasons": [
-          "MACD(21,55,89) 柱狀體於 2026-06-23 由綠翻紅",
-          "目前為翻紅第1天，柱狀體 0.01"
         ]
       },
       {
@@ -2589,7 +2479,7 @@
       "title": "Druckenmiller 風格雷達",
       "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
       "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-06-23 19:07:03",
+      "generatedAt": "2026-06-23 21:27:51",
       "targetDate": "2026-06-23",
       "status": "ok",
       "market": {
@@ -2598,7 +2488,7 @@
         "suggested_exposure": "0%～20%",
         "score": 0,
         "description": "市場廣度偏弱，保留現金比追高更重要。",
-        "breadth": 2.25
+        "breadth": 2.42
       },
       "industries": [
         {
@@ -2694,7 +2584,7 @@
             "主動 ETF 同向加碼"
           ],
           "fundamentals": {
-            "pe": 43.14721,
+            "pe": 40.669857,
             "growth": 1.081,
             "rev_yoy": 0.055,
             "rev_qoq": null,
@@ -3254,7 +3144,7 @@
       "title": "台股聖杯雷達",
       "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
       "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-06-23 19:07:03",
+      "generatedAt": "2026-06-23 21:27:51",
       "targetDate": "2026-06-23",
       "dataSource": "twstock universe + yfinance history",
       "market": {
@@ -3302,19 +3192,14 @@
       "status": "needs_sponsor",
       "source": "FinMind TaiwanStockTradingDailyReport",
       "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-      "generatedAt": "2026-06-23 19:07:05",
+      "generatedAt": "2026-06-23 21:27:54",
       "date": "2026-06-23",
       "targets": 36,
       "items": [],
       "errors": [
         {
-          "code": "2327",
-          "name": "國巨*",
-          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "2303",
-          "name": "聯電",
+          "code": "2454",
+          "name": "聯發科",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
@@ -3323,8 +3208,13 @@
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "2454",
-          "name": "聯發科",
+          "code": "2344",
+          "name": "華邦電",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "2303",
+          "name": "聯電",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
@@ -3338,27 +3228,133 @@
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
+          "code": "2327",
+          "name": "國巨*",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
           "code": "2369",
           "name": "菱生",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "2344",
-          "name": "華邦電",
+          "code": "3257",
+          "name": "虹冠電",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "1326",
-          "name": "台化",
-          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "2388",
-          "name": "威盛",
+          "code": "6243",
+          "name": "迅杰",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         }
       ]
     },
-    "cbas": []
+    "cbas": [
+      {
+        "code": "3591.TW",
+        "name": "艾笛森",
+        "price": 27.55,
+        "pct_change": 6.17,
+        "cb_code": "35914",
+        "cb_name": "艾笛森四",
+        "cb_price": 119.0,
+        "conversion_price": 25.5,
+        "conversion_value": 108.04,
+        "premium_pct": 10.15,
+        "double_low": 129.15,
+        "cb_trade_date": "2026-06-23",
+        "cb_units": 12.0,
+        "cb_trade_value": 1416000.0,
+        "maturity_date": "2027-11-22",
+        "put_option_date": null,
+        "put_option_price": 0.0,
+        "guaranteed": false,
+        "desc": "CB:艾笛森四 | 雙低:129.15"
+      },
+      {
+        "code": "3257.TW",
+        "name": "虹冠電",
+        "price": 73.9,
+        "pct_change": 9.97,
+        "cb_code": "32571",
+        "cb_name": "虹冠電一",
+        "cb_price": 121.5,
+        "conversion_price": 75.0,
+        "conversion_value": 98.53,
+        "premium_pct": 23.31,
+        "double_low": 144.81,
+        "cb_trade_date": "2026-06-23",
+        "cb_units": 26.0,
+        "cb_trade_value": 3100250.0,
+        "maturity_date": "2029-11-01",
+        "put_option_date": "2027-11-01",
+        "put_option_price": 101.5075,
+        "guaranteed": false,
+        "desc": "CB:虹冠電一 | 雙低:144.81"
+      },
+      {
+        "code": "3522.TWO",
+        "name": "御嵿",
+        "price": 13.7,
+        "pct_change": 5.79,
+        "cb_code": "35221",
+        "cb_name": "御嵿一",
+        "cb_price": 103.0,
+        "conversion_price": 19.5,
+        "conversion_value": 70.26,
+        "premium_pct": 46.61,
+        "double_low": 149.61,
+        "cb_trade_date": "2026-06-05",
+        "cb_units": 21.0,
+        "cb_trade_value": 2164000.0,
+        "maturity_date": "2026-12-18",
+        "put_option_date": "2025-12-18",
+        "put_option_price": 101.0025,
+        "guaranteed": true,
+        "desc": "CB:御嵿一 | 雙低:149.61"
+      },
+      {
+        "code": "6243.TW",
+        "name": "迅杰",
+        "price": 41.5,
+        "pct_change": 8.21,
+        "cb_code": "62433",
+        "cb_name": "迅杰三",
+        "cb_price": 96.9,
+        "conversion_price": 65.8,
+        "conversion_value": 63.07,
+        "premium_pct": 53.64,
+        "double_low": 150.54,
+        "cb_trade_date": "2026-06-23",
+        "cb_units": 2.0,
+        "cb_trade_value": 192800.0,
+        "maturity_date": "2027-06-25",
+        "put_option_date": null,
+        "put_option_price": 0.0,
+        "guaranteed": false,
+        "desc": "CB:迅杰三 | 雙低:150.54"
+      },
+      {
+        "code": "4923.TWO",
+        "name": "力士",
+        "price": 63.3,
+        "pct_change": -0.16,
+        "cb_code": "49231",
+        "cb_name": "力士一",
+        "cb_price": 184.0,
+        "conversion_price": 34.66,
+        "conversion_value": 182.63,
+        "premium_pct": 0.75,
+        "double_low": 184.75,
+        "cb_trade_date": "2026-06-23",
+        "cb_units": 26.0,
+        "cb_trade_value": 4756000.0,
+        "maturity_date": "2029-01-29",
+        "put_option_date": "2028-01-29",
+        "put_option_price": 100.0,
+        "guaranteed": false,
+        "desc": "CB:力士一 | 雙低:184.75"
+      }
+    ]
   }
 }
