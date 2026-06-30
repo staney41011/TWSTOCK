@@ -1,6 +1,6 @@
 {
   "date": "2026-06-30",
-  "market_breadth": 5.49,
+  "market_breadth": 5.57,
   "strategies": {
     "momentum": [
       {
@@ -95,7 +95,7 @@
         "price": 166.5,
         "date": "2026-06-30",
         "fundamentals": {
-          "pe": 287.06897,
+          "pe": 264.2857,
           "growth": 30.46,
           "rev_yoy": 0.046,
           "rev_qoq": null,
@@ -173,6 +173,48 @@
         ]
       },
       {
+        "code": "1617.TW",
+        "name": "榮星",
+        "region": "TW",
+        "price": 20.8,
+        "date": "2026-06-30",
+        "fundamentals": {
+          "pe": 27.733332,
+          "growth": null,
+          "rev_yoy": 0.184,
+          "rev_qoq": null,
+          "quarters": [
+            {
+              "date": "2025-12",
+              "revenue": 909860000.0,
+              "qoq": 0.0711683064342384
+            },
+            {
+              "date": "2025-09",
+              "revenue": 849409000.0,
+              "qoq": 0.01806952379925042
+            },
+            {
+              "date": "2025-06",
+              "revenue": 834333000.0,
+              "qoq": 0.08418437292492097
+            },
+            {
+              "date": "2025-03",
+              "revenue": 769549000.0,
+              "qoq": -0.12607955519770694
+            }
+          ]
+        },
+        "score": 7,
+        "reasons": [
+          "(基礎) 創季新高 +3分",
+          "(基礎) 量增1.2倍",
+          "★營收年增>15% (+3分)",
+          "(加分) 本益比合理 (+1分)"
+        ]
+      },
+      {
         "code": "1718.TW",
         "name": "中纖",
         "region": "TW",
@@ -246,47 +288,6 @@
               "date": "2025-03",
               "revenue": 1932171000.0,
               "qoq": -0.10421274826108867
-            }
-          ]
-        },
-        "score": 6,
-        "reasons": [
-          "(基礎) 創季新高 +3分",
-          "(基礎) 量增1.2倍",
-          "★營收年增>15% (+3分)"
-        ]
-      },
-      {
-        "code": "1617.TW",
-        "name": "榮星",
-        "region": "TW",
-        "price": 20.8,
-        "date": "2026-06-30",
-        "fundamentals": {
-          "pe": 30.588234,
-          "growth": null,
-          "rev_yoy": 0.184,
-          "rev_qoq": null,
-          "quarters": [
-            {
-              "date": "2025-12",
-              "revenue": 909860000.0,
-              "qoq": 0.0711683064342384
-            },
-            {
-              "date": "2025-09",
-              "revenue": 849409000.0,
-              "qoq": 0.01806952379925042
-            },
-            {
-              "date": "2025-06",
-              "revenue": 834333000.0,
-              "qoq": 0.08418437292492097
-            },
-            {
-              "date": "2025-03",
-              "revenue": 769549000.0,
-              "qoq": -0.12607955519770694
             }
           ]
         },
@@ -387,7 +388,7 @@
         "price": 20.45,
         "date": "2026-06-30",
         "fundamentals": {
-          "pe": 75.74074,
+          "pe": 73.03571,
           "growth": 1.5,
           "rev_yoy": -0.007,
           "rev_qoq": null,
@@ -646,7 +647,28 @@
           "growth": -0.092,
           "rev_yoy": 0.04,
           "rev_qoq": null,
-          "quarters": []
+          "quarters": [
+            {
+              "date": "2025-12",
+              "revenue": 26278474000.0,
+              "qoq": -0.10893661991149274
+            },
+            {
+              "date": "2025-09",
+              "revenue": 29491139000.0,
+              "qoq": -0.07592894772801825
+            },
+            {
+              "date": "2025-06",
+              "revenue": 31914363000.0,
+              "qoq": -0.08874415673901923
+            },
+            {
+              "date": "2025-03",
+              "revenue": 35022396000.0,
+              "qoq": 0.329394515510604
+            }
+          ]
         },
         "score": 65,
         "pattern": "標準十字星",
@@ -899,7 +921,7 @@
         "price": 39.0,
         "date": "2026-06-30",
         "fundamentals": {
-          "pe": 13.2653055,
+          "pe": 13.175675,
           "growth": 0.115,
           "rev_yoy": 0.077,
           "rev_qoq": null,
@@ -1332,15 +1354,6 @@
         "updated_at": "2026-06-30",
         "details": [
           {
-            "etf_code": "00403A",
-            "etf_name": "主動統一升級50",
-            "issuer": "統一",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 130000,
-            "amount": 328250000
-          },
-          {
             "etf_code": "00400A",
             "etf_name": "主動國泰動能高息",
             "issuer": "國泰",
@@ -1348,6 +1361,15 @@
             "action": "increased",
             "shares_delta": 16000,
             "amount": 40400000
+          },
+          {
+            "etf_code": "00403A",
+            "etf_name": "主動統一升級50",
+            "issuer": "統一",
+            "side": "buy",
+            "action": "increased",
+            "shares_delta": 130000,
+            "amount": 328250000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -1461,15 +1483,6 @@
             "amount": 115710000
           },
           {
-            "etf_code": "00980A",
-            "etf_name": "主動野村臺灣優選",
-            "issuer": "野村",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -8000,
-            "amount": -48720000
-          },
-          {
             "etf_code": "00981A",
             "etf_name": "主動統一台股增長",
             "issuer": "統一",
@@ -1477,6 +1490,15 @@
             "action": "increased",
             "shares_delta": 15000,
             "amount": 91350000
+          },
+          {
+            "etf_code": "00980A",
+            "etf_name": "主動野村臺灣優選",
+            "issuer": "野村",
+            "side": "sell",
+            "action": "decreased",
+            "shares_delta": -8000,
+            "amount": -48720000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -1688,7 +1710,7 @@
       "title": "Druckenmiller 風格雷達",
       "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
       "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-06-30 18:33:03",
+      "generatedAt": "2026-06-30 20:55:21",
       "targetDate": "2026-06-30",
       "status": "ok",
       "market": {
@@ -1697,7 +1719,7 @@
         "suggested_exposure": "15%～35%",
         "score": 5,
         "description": "強勢股仍有機會，但需要小部位、快確認、嚴守 thesis break。",
-        "breadth": 5.49
+        "breadth": 5.57
       },
       "industries": [
         {
@@ -1967,6 +1989,72 @@
           ]
         },
         {
+          "code": "1617",
+          "name": "榮星",
+          "industry": null,
+          "price": 20.8,
+          "date": "2026-06-30",
+          "score": 57.0,
+          "scoreParts": [
+            {
+              "source": "動能突破",
+              "points": 40.0
+            },
+            {
+              "source": "基本面改善",
+              "points": 12
+            },
+            {
+              "source": "大盤環境",
+              "points": 5
+            }
+          ],
+          "signals": [
+            "動能突破"
+          ],
+          "warnings": [],
+          "thesis": [
+            "創高後仍有基本面支撐",
+            "營收 YoY > 15%",
+            "估值未過熱"
+          ],
+          "fundamentals": {
+            "pe": 27.733332,
+            "growth": null,
+            "rev_yoy": 0.184,
+            "rev_qoq": null,
+            "quarters": [
+              {
+                "date": "2025-12",
+                "revenue": 909860000.0,
+                "qoq": 0.0711683064342384
+              },
+              {
+                "date": "2025-09",
+                "revenue": 849409000.0,
+                "qoq": 0.01806952379925042
+              },
+              {
+                "date": "2025-06",
+                "revenue": 834333000.0,
+                "qoq": 0.08418437292492097
+              },
+              {
+                "date": "2025-03",
+                "revenue": 769549000.0,
+                "qoq": -0.12607955519770694
+              }
+            ]
+          },
+          "conviction": "小部位試單",
+          "signalCount": 1,
+          "thesisBreak": [
+            "主動 ETF 流向轉為連續賣超",
+            "MACD 柱狀體翻回綠色或突破失敗",
+            "營收 / EPS 成長 thesis 消失"
+          ]
+        },
+        {
           "code": "1444",
           "name": "力麗",
           "industry": null,
@@ -2063,7 +2151,7 @@
             "估值偏高"
           ],
           "fundamentals": {
-            "pe": 287.06897,
+            "pe": 264.2857,
             "growth": 30.46,
             "rev_yoy": 0.046,
             "rev_qoq": null,
@@ -2154,71 +2242,6 @@
                 "date": "2025-03",
                 "revenue": 10823440000.0,
                 "qoq": 0.005389478534046976
-              }
-            ]
-          },
-          "conviction": "小部位試單",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
-          "code": "1617",
-          "name": "榮星",
-          "industry": null,
-          "price": 20.8,
-          "date": "2026-06-30",
-          "score": 52.0,
-          "scoreParts": [
-            {
-              "source": "動能突破",
-              "points": 38.0
-            },
-            {
-              "source": "基本面改善",
-              "points": 9
-            },
-            {
-              "source": "大盤環境",
-              "points": 5
-            }
-          ],
-          "signals": [
-            "動能突破"
-          ],
-          "warnings": [],
-          "thesis": [
-            "創高後仍有基本面支撐",
-            "營收 YoY > 15%"
-          ],
-          "fundamentals": {
-            "pe": 30.588234,
-            "growth": null,
-            "rev_yoy": 0.184,
-            "rev_qoq": null,
-            "quarters": [
-              {
-                "date": "2025-12",
-                "revenue": 909860000.0,
-                "qoq": 0.0711683064342384
-              },
-              {
-                "date": "2025-09",
-                "revenue": 849409000.0,
-                "qoq": 0.01806952379925042
-              },
-              {
-                "date": "2025-06",
-                "revenue": 834333000.0,
-                "qoq": 0.08418437292492097
-              },
-              {
-                "date": "2025-03",
-                "revenue": 769549000.0,
-                "qoq": -0.12607955519770694
               }
             ]
           },
@@ -2618,7 +2641,7 @@
       "title": "台股聖杯雷達",
       "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
       "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-06-30 18:33:03",
+      "generatedAt": "2026-06-30 20:55:21",
       "targetDate": "2026-06-30",
       "dataSource": "twstock universe + yfinance history",
       "market": {
@@ -2635,23 +2658,7 @@
         "maxIndustryExposure": 0.4,
         "stopMode": "MA20"
       },
-      "industries": [
-        {
-          "industry": "數位雲端",
-          "baseIndustries": [
-            "數位雲端"
-          ],
-          "return5": 0.0,
-          "return20": 0.053651914200380124,
-          "return60": 0.020783132530120478,
-          "volumeRatio": 1.1597609940175437,
-          "relativeStrength20": 0.053651914200380124,
-          "stockCount": 2,
-          "industryScore": 100.0,
-          "status": "主流強勢",
-          "rank": 1
-        }
-      ],
+      "industries": [],
       "usIndustries": [],
       "usTaiwanMatches": [],
       "candidates": {
@@ -2682,34 +2689,24 @@
       "status": "needs_sponsor",
       "source": "FinMind TaiwanStockTradingDailyReport",
       "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-      "generatedAt": "2026-06-30 18:33:06",
+      "generatedAt": "2026-06-30 20:55:23",
       "date": "2026-06-30",
       "targets": 28,
       "items": [],
       "errors": [
+        {
+          "code": "3017",
+          "name": "奇鋐",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
         {
           "code": "2345",
           "name": "智邦",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "2327",
-          "name": "國巨*",
-          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "1472",
-          "name": "三洋實業",
-          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
           "code": "6223",
           "name": "旺矽",
-          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "3017",
-          "name": "奇鋐",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
@@ -2723,13 +2720,23 @@
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
+          "code": "2327",
+          "name": "國巨*",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "1472",
+          "name": "三洋實業",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
           "code": "6139",
           "name": "亞翔",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "1626",
-          "name": "艾美特-KY",
+          "code": "1604",
+          "name": "聲寶",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
