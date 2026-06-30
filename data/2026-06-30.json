@@ -1,6 +1,6 @@
 {
   "date": "2026-06-30",
-  "market_breadth": 5.54,
+  "market_breadth": 6.06,
   "strategies": {
     "momentum": [
       {
@@ -337,6 +337,46 @@
           "(基礎) 量增1.2倍",
           "(加分) EPS高成長 (+1分)",
           "(加分) 本益比合理 (+1分)"
+        ]
+      },
+      {
+        "code": "7795.TW",
+        "name": "長廣",
+        "region": "TW",
+        "price": 556.0,
+        "date": "2026-06-30",
+        "fundamentals": {
+          "pe": 999,
+          "growth": null,
+          "rev_yoy": null,
+          "rev_qoq": null,
+          "quarters": []
+        },
+        "score": 5,
+        "reasons": [
+          "(基礎) 創季新高 +3分",
+          "(基礎) 量增1.2倍",
+          "(加分) 兩年新高 +2分"
+        ]
+      },
+      {
+        "code": "8016.TW",
+        "name": "矽創",
+        "region": "TW",
+        "price": 332.0,
+        "date": "2026-06-30",
+        "fundamentals": {
+          "pe": 999,
+          "growth": null,
+          "rev_yoy": null,
+          "rev_qoq": null,
+          "quarters": []
+        },
+        "score": 5,
+        "reasons": [
+          "(基礎) 創季新高 +3分",
+          "(基礎) 量增1.2倍",
+          "(加分) 兩年新高 +2分"
         ]
       },
       {
@@ -1008,6 +1048,55 @@
         ]
       },
       {
+        "code": "7795.TW",
+        "name": "長廣",
+        "region": "TW",
+        "price": 556.0,
+        "date": "2026-06-30",
+        "fundamentals": {
+          "pe": 999,
+          "growth": null,
+          "rev_yoy": null,
+          "rev_qoq": null,
+          "quarters": []
+        },
+        "pattern": "MACD翻紅第2天",
+        "macd_day": 2,
+        "macd_label": "第2天",
+        "cross_date": "2026-06-29",
+        "dif": 26.8696,
+        "macd_signal": 16.6021,
+        "histogram": 10.2674,
+        "histogram_prev": 3.3572,
+        "histogram_cross": 3.3572,
+        "hist_sequence": [
+          {
+            "date": "2026-06-24",
+            "value": -5.5877
+          },
+          {
+            "date": "2026-06-25",
+            "value": -4.6551
+          },
+          {
+            "date": "2026-06-26",
+            "value": -1.6404
+          },
+          {
+            "date": "2026-06-29",
+            "value": 3.3572
+          },
+          {
+            "date": "2026-06-30",
+            "value": 10.2674
+          }
+        ],
+        "reasons": [
+          "MACD(21,55,89) 柱狀體於 2026-06-29 由綠翻紅",
+          "目前為翻紅第2天，柱狀體 10.2674"
+        ]
+      },
+      {
         "code": "1789.TW",
         "name": "神隆",
         "region": "TW",
@@ -1307,15 +1396,6 @@
         "updated_at": "2026-06-30",
         "details": [
           {
-            "etf_code": "00400A",
-            "etf_name": "主動國泰動能高息",
-            "issuer": "國泰",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 16000,
-            "amount": 40400000
-          },
-          {
             "etf_code": "00403A",
             "etf_name": "主動統一升級50",
             "issuer": "統一",
@@ -1323,6 +1403,15 @@
             "action": "increased",
             "shares_delta": 130000,
             "amount": 328250000
+          },
+          {
+            "etf_code": "00400A",
+            "etf_name": "主動國泰動能高息",
+            "issuer": "國泰",
+            "side": "buy",
+            "action": "increased",
+            "shares_delta": 16000,
+            "amount": 40400000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -1347,6 +1436,15 @@
         "updated_at": "2026-06-30",
         "details": [
           {
+            "etf_code": "00980A",
+            "etf_name": "主動野村臺灣優選",
+            "issuer": "野村",
+            "side": "sell",
+            "action": "decreased",
+            "shares_delta": -8000,
+            "amount": -48720000
+          },
+          {
             "etf_code": "00400A",
             "etf_name": "主動國泰動能高息",
             "issuer": "國泰",
@@ -1363,15 +1461,46 @@
             "action": "increased",
             "shares_delta": 15000,
             "amount": 91350000
-          },
+          }
+        ],
+        "source": "ETF資訊網主動 ETF 追蹤",
+        "source_url": "https://www.etfinfo.tw/active",
+        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
+      },
+      {
+        "code": "6515",
+        "name": "穎崴",
+        "industry": "半導體業",
+        "side": "sell",
+        "buy_count": 0,
+        "sell_count": 2,
+        "same_side_count": 2,
+        "etf_count": 2,
+        "net_signal": -2,
+        "net_shares": -30000,
+        "net_amount": -242550000,
+        "buy_amount": 0,
+        "sell_amount": -242550000,
+        "date": "2026-06-30",
+        "updated_at": "2026-06-30",
+        "details": [
           {
-            "etf_code": "00980A",
-            "etf_name": "主動野村臺灣優選",
-            "issuer": "野村",
+            "etf_code": "00405A",
+            "etf_name": "主動富邦台灣龍耀",
+            "issuer": "富邦",
             "side": "sell",
             "action": "decreased",
-            "shares_delta": -8000,
-            "amount": -48720000
+            "shares_delta": -1000,
+            "amount": -8085000
+          },
+          {
+            "etf_code": "00981A",
+            "etf_name": "主動統一台股增長",
+            "issuer": "統一",
+            "side": "sell",
+            "action": "decreased",
+            "shares_delta": -29000,
+            "amount": -234465000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -1383,7 +1512,7 @@
       "title": "Druckenmiller 風格雷達",
       "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
       "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-06-30 10:28:57",
+      "generatedAt": "2026-06-30 13:07:52",
       "targetDate": "2026-06-30",
       "status": "ok",
       "market": {
@@ -1392,7 +1521,7 @@
         "suggested_exposure": "15%～35%",
         "score": 5,
         "description": "強勢股仍有機會，但需要小部位、快確認、嚴守 thesis break。",
-        "breadth": 5.54
+        "breadth": 6.06
       },
       "industries": [
         {
@@ -1406,20 +1535,11 @@
         },
         {
           "name": "半導體業",
-          "score": 18.6,
-          "netAmount": 158340000.0,
-          "signals": 1,
+          "score": 7.2,
+          "netAmount": -84210000.0,
+          "signals": 2,
           "sources": [
             "主動 ETF"
-          ]
-        },
-        {
-          "name": "橡膠工業",
-          "score": -12.0,
-          "netAmount": 0.0,
-          "signals": 1,
-          "sources": [
-            "聖杯出場警示"
           ]
         }
       ],
@@ -1824,6 +1944,51 @@
           ]
         },
         {
+          "code": "7795",
+          "name": "長廣",
+          "industry": null,
+          "price": 556.0,
+          "date": "2026-06-30",
+          "score": 52.0,
+          "scoreParts": [
+            {
+              "source": "動能突破",
+              "points": 36.0
+            },
+            {
+              "source": "MACD 翻紅",
+              "points": 11
+            },
+            {
+              "source": "大盤環境",
+              "points": 5
+            }
+          ],
+          "signals": [
+            "動能突破",
+            "MACD 翻紅"
+          ],
+          "warnings": [],
+          "thesis": [
+            "創高後仍有基本面支撐",
+            "MACD翻紅第2天"
+          ],
+          "fundamentals": {
+            "pe": 999,
+            "growth": null,
+            "rev_yoy": null,
+            "rev_qoq": null,
+            "quarters": []
+          },
+          "conviction": "小部位試單",
+          "signalCount": 2,
+          "thesisBreak": [
+            "主動 ETF 流向轉為連續賣超",
+            "MACD 柱狀體翻回綠色或突破失敗",
+            "營收 / EPS 成長 thesis 消失"
+          ]
+        },
+        {
           "code": "1617",
           "name": "榮星",
           "industry": null,
@@ -2099,6 +2264,45 @@
             "MACD 柱狀體翻回綠色或突破失敗",
             "營收 / EPS 成長 thesis 消失"
           ]
+        },
+        {
+          "code": "8016",
+          "name": "矽創",
+          "industry": null,
+          "price": 332.0,
+          "date": "2026-06-30",
+          "score": 41.0,
+          "scoreParts": [
+            {
+              "source": "動能突破",
+              "points": 36.0
+            },
+            {
+              "source": "大盤環境",
+              "points": 5
+            }
+          ],
+          "signals": [
+            "動能突破"
+          ],
+          "warnings": [],
+          "thesis": [
+            "創高後仍有基本面支撐"
+          ],
+          "fundamentals": {
+            "pe": 999,
+            "growth": null,
+            "rev_yoy": null,
+            "rev_qoq": null,
+            "quarters": []
+          },
+          "conviction": "只觀察",
+          "signalCount": 1,
+          "thesisBreak": [
+            "主動 ETF 流向轉為連續賣超",
+            "MACD 柱狀體翻回綠色或突破失敗",
+            "營收 / EPS 成長 thesis 消失"
+          ]
         }
       ],
       "principles": [
@@ -2116,7 +2320,7 @@
       "title": "台股聖杯雷達",
       "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
       "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-06-30 10:28:57",
+      "generatedAt": "2026-06-30 13:07:52",
       "targetDate": "2026-06-30",
       "dataSource": "twstock universe + yfinance history",
       "market": {
@@ -2133,63 +2337,14 @@
         "maxIndustryExposure": 0.4,
         "stopMode": "MA20"
       },
-      "industries": [
-        {
-          "industry": "橡膠工業",
-          "baseIndustries": [
-            "橡膠工業"
-          ],
-          "return5": -0.030035282580784306,
-          "return20": 0.0073394775390625,
-          "return60": 0.05984560491268209,
-          "volumeRatio": 0.4151874747290118,
-          "relativeStrength20": 0.0073394775390625,
-          "stockCount": 1,
-          "industryScore": 100.0,
-          "status": "主流強勢",
-          "rank": 1
-        }
-      ],
+      "industries": [],
       "usIndustries": [],
       "usTaiwanMatches": [],
       "candidates": {
         "breakout": [],
         "pullback": [],
         "overheated": [],
-        "exit": [
-          {
-            "code": "2108.TW",
-            "name": "南帝",
-            "industry": "橡膠工業",
-            "baseIndustry": "橡膠工業",
-            "close": 27.45,
-            "price": 27.45,
-            "date": "2026-06-30",
-            "return5": -3.0,
-            "return20": 0.73,
-            "return60": 5.98,
-            "relativeStrength20": 0.73,
-            "volumeRatio": 0.42,
-            "signal": "出場警示",
-            "bucket": "exit",
-            "score": 44.3,
-            "action": "出場",
-            "ma5": 27.7,
-            "ma10": 28.27,
-            "ma20": 28.97,
-            "ma60": 27.59,
-            "ma120": 26.17,
-            "stopPrices": {
-              "MA20": 28.97,
-              "最近回檔低點": 26.9,
-              "固定 7%": 25.53
-            },
-            "positionSizing": {
-              "valid": false,
-              "message": "停損價高於或等於進場價，無法計算部位。"
-            }
-          }
-        ]
+        "exit": []
       },
       "rerun": {
         "githubActions": "Actions > Daily Stock Scan > Run workflow，可選只重跑台股聖杯與美股產業資料。",
@@ -2213,11 +2368,26 @@
       "status": "needs_sponsor",
       "source": "FinMind TaiwanStockTradingDailyReport",
       "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-      "generatedAt": "2026-06-30 10:28:59",
+      "generatedAt": "2026-06-30 13:07:54",
       "date": "2026-06-30",
       "targets": 28,
       "items": [],
       "errors": [
+        {
+          "code": "7402",
+          "name": "邑錡",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "3717",
+          "name": "聯嘉投控",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "4503",
+          "name": "金雨",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
         {
           "code": "6223",
           "name": "旺矽",
@@ -2229,18 +2399,8 @@
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "3717",
-          "name": "聯嘉投控",
-          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
           "code": "3346",
           "name": "麗清",
-          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "1472",
-          "name": "三洋實業",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
@@ -2249,23 +2409,18 @@
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "4503",
-          "name": "金雨",
+          "code": "7795",
+          "name": "長廣",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "7402",
-          "name": "邑錡",
+          "code": "1472",
+          "name": "三洋實業",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "1604",
-          "name": "聲寶",
-          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "1789",
-          "name": "神隆",
+          "code": "1626",
+          "name": "艾美特-KY",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         }
       ]
