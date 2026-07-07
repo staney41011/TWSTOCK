@@ -1,6 +1,6 @@
 {
   "date": "2026-07-07",
-  "market_breadth": 3.0,
+  "market_breadth": 2.94,
   "strategies": {
     "momentum": [
       {
@@ -422,6 +422,25 @@
         "pattern": "連紅漲停後黑K"
       },
       {
+        "code": "2415.TW",
+        "name": "錩新",
+        "region": "TW",
+        "price": 37.65,
+        "date": "2026-07-07",
+        "fundamentals": {
+          "pe": 999,
+          "growth": null,
+          "rev_yoy": null,
+          "rev_qoq": null,
+          "quarters": []
+        },
+        "drop_pct": 10.36,
+        "rise_20d": 37.16,
+        "vol_lots": 2978,
+        "amount_yi": 1.12,
+        "pattern": "連紅漲停後黑K"
+      },
+      {
         "code": "2369.TW",
         "name": "菱生",
         "region": "TW",
@@ -474,28 +493,7 @@
           "growth": 0.059,
           "rev_yoy": 0.666,
           "rev_qoq": null,
-          "quarters": [
-            {
-              "date": "2025-12",
-              "revenue": 638637424000.0,
-              "qoq": 0.2895035167511885
-            },
-            {
-              "date": "2025-09",
-              "revenue": 495258381000.0,
-              "qoq": -0.01758161143215487
-            },
-            {
-              "date": "2025-06",
-              "revenue": 504121652000.0,
-              "qoq": 0.03798790619982017
-            },
-            {
-              "date": "2025-03",
-              "revenue": 485671990000.0,
-              "qoq": 0.16380773162231604
-            }
-          ]
+          "quarters": []
         },
         "score": 70,
         "pattern": "標準十字星",
@@ -2001,6 +1999,55 @@
         ]
       },
       {
+        "code": "3694.TW",
+        "name": "海華",
+        "region": "TW",
+        "price": 61.4,
+        "date": "2026-07-07",
+        "fundamentals": {
+          "pe": 999,
+          "growth": null,
+          "rev_yoy": null,
+          "rev_qoq": null,
+          "quarters": []
+        },
+        "pattern": "MACD翻紅第3天",
+        "macd_day": 3,
+        "macd_label": "第3天",
+        "cross_date": "2026-07-03",
+        "dif": 0.2893,
+        "macd_signal": 0.1456,
+        "histogram": 0.1437,
+        "histogram_prev": 0.2357,
+        "histogram_cross": 0.0827,
+        "hist_sequence": [
+          {
+            "date": "2026-07-01",
+            "value": -0.3528
+          },
+          {
+            "date": "2026-07-02",
+            "value": -0.1913
+          },
+          {
+            "date": "2026-07-03",
+            "value": 0.0827
+          },
+          {
+            "date": "2026-07-06",
+            "value": 0.2357
+          },
+          {
+            "date": "2026-07-07",
+            "value": 0.1437
+          }
+        ],
+        "reasons": [
+          "MACD(21,55,89) 柱狀體於 2026-07-03 由綠翻紅",
+          "目前為翻紅第3天，柱狀體 0.1437"
+        ]
+      },
+      {
         "code": "1460.TW",
         "name": "宏遠",
         "region": "TW",
@@ -2699,6 +2746,55 @@
           "MACD(21,55,89) 柱狀體於 2026-07-03 由綠翻紅",
           "目前為翻紅第3天，柱狀體 0.023"
         ]
+      },
+      {
+        "code": "3050.TW",
+        "name": "鈺德",
+        "region": "TW",
+        "price": 12.3,
+        "date": "2026-07-07",
+        "fundamentals": {
+          "pe": 999,
+          "growth": null,
+          "rev_yoy": null,
+          "rev_qoq": null,
+          "quarters": []
+        },
+        "pattern": "MACD翻紅第3天",
+        "macd_day": 3,
+        "macd_label": "第3天",
+        "cross_date": "2026-07-03",
+        "dif": -0.0706,
+        "macd_signal": -0.0722,
+        "histogram": 0.0016,
+        "histogram_prev": 0.0236,
+        "histogram_cross": 0.0083,
+        "hist_sequence": [
+          {
+            "date": "2026-07-01",
+            "value": -0.0037
+          },
+          {
+            "date": "2026-07-02",
+            "value": -0.0061
+          },
+          {
+            "date": "2026-07-03",
+            "value": 0.0083
+          },
+          {
+            "date": "2026-07-06",
+            "value": 0.0236
+          },
+          {
+            "date": "2026-07-07",
+            "value": 0.0016
+          }
+        ],
+        "reasons": [
+          "MACD(21,55,89) 柱狀體於 2026-07-03 由綠翻紅",
+          "目前為翻紅第3天，柱狀體 0.0016"
+        ]
       }
     ],
     "active_etf": [
@@ -3135,7 +3231,7 @@
       "title": "Druckenmiller 風格雷達",
       "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
       "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-07-07 22:55:12",
+      "generatedAt": "2026-07-07 23:50:06",
       "targetDate": "2026-07-07",
       "status": "ok",
       "market": {
@@ -3144,7 +3240,7 @@
         "suggested_exposure": "0%～20%",
         "score": 0,
         "description": "市場廣度偏弱，保留現金比追高更重要。",
-        "breadth": 3.0
+        "breadth": 2.94
       },
       "industries": [
         {
@@ -3172,15 +3268,6 @@
           "signals": 1,
           "sources": [
             "主動 ETF"
-          ]
-        },
-        {
-          "name": "光電業",
-          "score": -12.0,
-          "netAmount": 0.0,
-          "signals": 1,
-          "sources": [
-            "聖杯出場警示"
           ]
         }
       ],
@@ -3962,7 +4049,7 @@
       "title": "台股聖杯雷達",
       "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
       "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-07-07 22:55:12",
+      "generatedAt": "2026-07-07 23:50:06",
       "targetDate": "2026-07-07",
       "dataSource": "twstock universe + yfinance history",
       "market": {
@@ -3981,73 +4068,344 @@
       },
       "industries": [
         {
-          "industry": "光電業",
+          "industry": "金融-金控銀行",
           "baseIndustries": [
-            "光電業"
+            "金融保險業"
           ],
-          "return5": 0.008213505234399043,
-          "return20": 0.014462746408549335,
-          "return60": 0.01237110255919781,
-          "volumeRatio": 0.913365798559638,
-          "relativeStrength20": 0.014462746408549335,
+          "return5": 0.02500002007735403,
+          "return20": 0.16268658993849114,
+          "return60": 0.14222881248804412,
+          "volumeRatio": 0.5275465213346524,
+          "relativeStrength20": 0.16268658993849114,
           "stockCount": 1,
-          "industryScore": 100.0,
+          "industryScore": 90.0,
           "status": "主流強勢",
           "rank": 1
+        },
+        {
+          "industry": "電子零組件-連接器線束",
+          "baseIndustries": [
+            "電子零組件業"
+          ],
+          "return5": -0.015789433529502468,
+          "return20": -0.04591834699050072,
+          "return60": 0.09677428737312775,
+          "volumeRatio": 1.1840148767019552,
+          "relativeStrength20": -0.04591834699050072,
+          "stockCount": 1,
+          "industryScore": 10.0,
+          "status": "弱勢避開",
+          "rank": 2
         }
       ],
-      "usIndustries": [],
-      "usTaiwanMatches": [],
+      "usIndustries": [
+        {
+          "symbol": "XLV",
+          "name": "美股醫療",
+          "mappedIndustries": [
+            "生技醫療-製藥",
+            "生技醫療-醫材通路"
+          ],
+          "return5": 0.02301851948362376,
+          "return20": 0.07470105447301131,
+          "return60": 0.10118529716115818,
+          "volumeRatio": 1.1243684166612449,
+          "relativeStrength20": 0.06092567063755061,
+          "industryScore": 88.0,
+          "status": "主流強勢",
+          "rank": 1
+        },
+        {
+          "symbol": "XLF",
+          "name": "美股金融",
+          "mappedIndustries": [
+            "金融-金控銀行",
+            "金融-證券期貨",
+            "金融-保險"
+          ],
+          "return5": 0.04337300750952822,
+          "return20": 0.07170172188726716,
+          "return60": 0.09195396917266926,
+          "volumeRatio": 0.9918417528203846,
+          "relativeStrength20": 0.057926338051806456,
+          "industryScore": 81.0,
+          "status": "主流強勢",
+          "rank": 2
+        },
+        {
+          "symbol": "XLI",
+          "name": "美股工業",
+          "mappedIndustries": [
+            "電機機械-工具機",
+            "電機機械-自動化設備",
+            "航運-散裝航空"
+          ],
+          "return5": -0.002079172879430265,
+          "return20": 0.04707780773819849,
+          "return60": 0.05917882744019218,
+          "volumeRatio": 0.8619834145864241,
+          "relativeStrength20": 0.033302423902737785,
+          "industryScore": 58.5,
+          "status": "中性",
+          "rank": 3
+        },
+        {
+          "symbol": "SMH",
+          "name": "美股半導體",
+          "mappedIndustries": [
+            "半導體-晶圓代工",
+            "半導體-IC設計",
+            "半導體-封測",
+            "半導體-設備材料",
+            "半導體-矽晶圓"
+          ],
+          "return5": -0.07995501411965587,
+          "return20": 0.02064282278998663,
+          "return60": 0.351235192084649,
+          "volumeRatio": 1.0661218939922061,
+          "relativeStrength20": 0.006867438954525927,
+          "industryScore": 55.0,
+          "status": "中性",
+          "rank": 4
+        },
+        {
+          "symbol": "XLY",
+          "name": "美股非必需消費",
+          "mappedIndustries": [
+            "汽車工業",
+            "貿易百貨業",
+            "觀光餐旅"
+          ],
+          "return5": 0.002305299152448028,
+          "return20": 0.022026804508556333,
+          "return60": 0.04124535758371914,
+          "volumeRatio": 1.0706310146823452,
+          "relativeStrength20": 0.00825142067309563,
+          "industryScore": 55.0,
+          "status": "中性",
+          "rank": 5
+        },
+        {
+          "symbol": "XLB",
+          "name": "美股原物料",
+          "mappedIndustries": [
+            "鋼鐵-上游原料",
+            "鋼鐵-不鏽鋼扣件",
+            "水泥工業",
+            "玻璃陶瓷"
+          ],
+          "return5": 0.016778493420475497,
+          "return20": 0.017380944792674637,
+          "return60": -0.0030965715711651107,
+          "volumeRatio": 1.1017083109735828,
+          "relativeStrength20": 0.003605560957213934,
+          "industryScore": 46.0,
+          "status": "弱勢避開",
+          "rank": 6
+        },
+        {
+          "symbol": "IGV",
+          "name": "美股軟體",
+          "mappedIndustries": [
+            "資訊服務-資安雲端"
+          ],
+          "return5": 0.04716873837533701,
+          "return20": -0.017944718289875764,
+          "return60": 0.22820978605242342,
+          "volumeRatio": 1.0782420061525388,
+          "relativeStrength20": -0.03172010212533646,
+          "industryScore": 44.5,
+          "status": "弱勢避開",
+          "rank": 7
+        },
+        {
+          "symbol": "XLP",
+          "name": "美股民生消費",
+          "mappedIndustries": [
+            "食品工業",
+            "貿易百貨業"
+          ],
+          "return5": 0.00580772606161118,
+          "return20": 0.017018194240136467,
+          "return60": 0.016896389618610713,
+          "volumeRatio": 1.079989909229568,
+          "relativeStrength20": 0.003242810404675764,
+          "industryScore": 39.5,
+          "status": "弱勢避開",
+          "rank": 8
+        },
+        {
+          "symbol": "XLC",
+          "name": "美股通訊服務",
+          "mappedIndustries": [
+            "通信網路-網通設備",
+            "通信網路-射頻天線"
+          ],
+          "return5": 0.02910640961801612,
+          "return20": -0.005820735529121441,
+          "return60": -0.02844141152949969,
+          "volumeRatio": 1.0986598996109538,
+          "relativeStrength20": -0.019596119364582144,
+          "industryScore": 38.5,
+          "status": "弱勢避開",
+          "rank": 9
+        },
+        {
+          "symbol": "XLK",
+          "name": "美股科技",
+          "mappedIndustries": [
+            "半導體-IC設計",
+            "半導體-晶圓代工",
+            "電腦週邊-伺服器AI",
+            "資訊服務-資安雲端",
+            "電子零組件-PCB"
+          ],
+          "return5": -0.033601266723890896,
+          "return20": -0.006211926550300982,
+          "return60": 0.2612091464658941,
+          "volumeRatio": 0.7946828318380079,
+          "relativeStrength20": -0.019987310385761684,
+          "industryScore": 31.0,
+          "status": "弱勢避開",
+          "rank": 10
+        }
+      ],
+      "usTaiwanMatches": [
+        {
+          "symbol": "XLV",
+          "name": "美股醫療",
+          "rank": 1,
+          "industryScore": 88.0,
+          "status": "主流強勢",
+          "return5": 2.3,
+          "return20": 7.47,
+          "return60": 10.12,
+          "relativeStrength20": 6.09,
+          "volumeRatio": 1.12,
+          "mappedIndustries": [
+            "生技醫療-製藥",
+            "生技醫療-醫材通路"
+          ],
+          "stocks": []
+        },
+        {
+          "symbol": "XLF",
+          "name": "美股金融",
+          "rank": 2,
+          "industryScore": 81.0,
+          "status": "主流強勢",
+          "return5": 4.34,
+          "return20": 7.17,
+          "return60": 9.2,
+          "relativeStrength20": 5.79,
+          "volumeRatio": 0.99,
+          "mappedIndustries": [
+            "金融-保險",
+            "金融-證券期貨",
+            "金融-金控銀行"
+          ],
+          "stocks": [
+            {
+              "code": "2880.TW",
+              "name": "華南金",
+              "industry": "金融-金控銀行",
+              "baseIndustry": "金融保險業",
+              "close": 38.95,
+              "date": "2026-07-07",
+              "return5": 2.5,
+              "return20": 16.27,
+              "return60": 14.22,
+              "relativeStrength20": 16.27,
+              "volumeRatio": 0.53,
+              "score": 85.6,
+              "signal": "趨勢觀察",
+              "action": "觀察",
+              "ma20": 37.18,
+              "ma60": 34.64
+            }
+          ]
+        },
+        {
+          "symbol": "XLI",
+          "name": "美股工業",
+          "rank": 3,
+          "industryScore": 58.5,
+          "status": "中性",
+          "return5": -0.21,
+          "return20": 4.71,
+          "return60": 5.92,
+          "relativeStrength20": 3.33,
+          "volumeRatio": 0.86,
+          "mappedIndustries": [
+            "航運-散裝航空",
+            "電機機械-工具機",
+            "電機機械-自動化設備"
+          ],
+          "stocks": []
+        },
+        {
+          "symbol": "SMH",
+          "name": "美股半導體",
+          "rank": 4,
+          "industryScore": 55.0,
+          "status": "中性",
+          "return5": -8.0,
+          "return20": 2.06,
+          "return60": 35.12,
+          "relativeStrength20": 0.69,
+          "volumeRatio": 1.07,
+          "mappedIndustries": [
+            "半導體-IC設計",
+            "半導體-封測",
+            "半導體-晶圓代工",
+            "半導體-矽晶圓",
+            "半導體-設備材料"
+          ],
+          "stocks": []
+        },
+        {
+          "symbol": "XLY",
+          "name": "美股非必需消費",
+          "rank": 5,
+          "industryScore": 55.0,
+          "status": "中性",
+          "return5": 0.23,
+          "return20": 2.2,
+          "return60": 4.12,
+          "relativeStrength20": 0.83,
+          "volumeRatio": 1.07,
+          "mappedIndustries": [
+            "汽車工業",
+            "觀光餐旅",
+            "貿易百貨業"
+          ],
+          "stocks": []
+        },
+        {
+          "symbol": "XLB",
+          "name": "美股原物料",
+          "rank": 6,
+          "industryScore": 46.0,
+          "status": "弱勢避開",
+          "return5": 1.68,
+          "return20": 1.74,
+          "return60": -0.31,
+          "relativeStrength20": 0.36,
+          "volumeRatio": 1.1,
+          "mappedIndustries": [
+            "水泥工業",
+            "玻璃陶瓷",
+            "鋼鐵-上游原料",
+            "鋼鐵-不鏽鋼扣件"
+          ],
+          "stocks": []
+        }
+      ],
       "candidates": {
         "breakout": [],
         "pullback": [],
         "overheated": [],
-        "exit": [
-          {
-            "code": "3128.TWO",
-            "name": "昇銳",
-            "industry": "光電業",
-            "baseIndustry": "光電業",
-            "close": 24.55,
-            "price": 24.55,
-            "date": "2026-07-07",
-            "return5": 0.82,
-            "return20": 1.45,
-            "return60": 1.24,
-            "relativeStrength20": 1.45,
-            "volumeRatio": 0.91,
-            "signal": "減碼警示",
-            "bucket": "exit",
-            "score": 51.9,
-            "action": "減碼",
-            "ma5": 24.65,
-            "ma10": 24.63,
-            "ma20": 24.36,
-            "ma60": 24.08,
-            "ma120": 25.34,
-            "stopPrices": {
-              "MA20": 24.36,
-              "最近回檔低點": 23.05,
-              "固定 7%": 22.83
-            },
-            "positionSizing": {
-              "valid": true,
-              "riskAmount": 10000.0,
-              "positionValue": 200000.0,
-              "rawPositionValue": 1327031.0,
-              "shares": 8146,
-              "lots": 8,
-              "oddLot": 146,
-              "stopPrice": 24.36,
-              "maxLoss": 1507.0,
-              "riskRewardTo8Pct": 10.62,
-              "firstTakeProfit": 26.51,
-              "secondTakeProfit": 28.23,
-              "exceedsSingleLimit": true,
-              "exceedsIndustryLimit": false
-            }
-          }
-        ]
+        "exit": []
       },
       "rerun": {
         "githubActions": "Actions > Daily Stock Scan > Run workflow，可選只重跑台股聖杯與美股產業資料。",
@@ -4071,14 +4429,24 @@
       "status": "needs_sponsor",
       "source": "FinMind TaiwanStockTradingDailyReport",
       "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-      "generatedAt": "2026-07-07 22:55:14",
+      "generatedAt": "2026-07-07 23:50:08",
       "date": "2026-07-07",
-      "targets": 34,
+      "targets": 35,
       "items": [],
       "errors": [
         {
+          "code": "1466",
+          "name": "聚隆",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
           "code": "2383",
           "name": "台光電",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "2454",
+          "name": "聯發科",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
@@ -4087,8 +4455,13 @@
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "1466",
-          "name": "聚隆",
+          "code": "5274",
+          "name": "信驊",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "6488",
+          "name": "環球晶",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
@@ -4102,33 +4475,39 @@
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "2454",
-          "name": "聯發科",
-          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "6488",
-          "name": "環球晶",
-          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "5274",
-          "name": "信驊",
-          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "1256",
-          "name": "鮮活果汁-KY",
-          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
           "code": "6515",
           "name": "穎崴",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "6957",
+          "name": "裕慶-KY",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         }
       ]
     },
     "cbas": [
+      {
+        "code": "6957.TW",
+        "name": "裕慶-KY",
+        "price": 207.0,
+        "pct_change": -2.36,
+        "cb_code": "69571",
+        "cb_name": "裕慶一KY",
+        "cb_price": 108.5,
+        "conversion_price": 190.0,
+        "conversion_value": 108.95,
+        "premium_pct": -0.41,
+        "double_low": 108.09,
+        "cb_trade_date": "2026-07-07",
+        "cb_units": 36.0,
+        "cb_trade_value": 3945350.0,
+        "maturity_date": "2028-10-02",
+        "put_option_date": "2027-10-02",
+        "put_option_price": 100.0,
+        "guaranteed": false,
+        "desc": "CB:裕慶一KY | 雙低:108.09"
+      },
       {
         "code": "1466.TW",
         "name": "聚隆",
@@ -4149,6 +4528,27 @@
         "put_option_price": 0.0,
         "guaranteed": true,
         "desc": "CB:聚隆四 | 雙低:134.32"
+      },
+      {
+        "code": "6414.TW",
+        "name": "樺漢",
+        "price": 400.0,
+        "pct_change": 4.17,
+        "cb_code": "64145",
+        "cb_name": "樺漢五",
+        "cb_price": 151.0,
+        "conversion_price": 295.0,
+        "conversion_value": 135.59,
+        "premium_pct": 11.36,
+        "double_low": 162.36,
+        "cb_trade_date": "2026-07-07",
+        "cb_units": 1447.0,
+        "cb_trade_value": 220354750.0,
+        "maturity_date": "2026-08-16",
+        "put_option_date": null,
+        "put_option_price": 0.0,
+        "guaranteed": false,
+        "desc": "CB:樺漢五 | 雙低:162.36"
       }
     ]
   }
