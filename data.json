@@ -303136,55 +303136,6 @@
           ]
         },
         {
-          "code": "6796.TW",
-          "name": "晉弘",
-          "region": "TW",
-          "price": 59.2,
-          "date": "2026-07-10",
-          "fundamentals": {
-            "pe": 999,
-            "growth": null,
-            "rev_yoy": null,
-            "rev_qoq": null,
-            "quarters": []
-          },
-          "pattern": "MACD翻紅第2天",
-          "macd_day": 2,
-          "macd_label": "第2天",
-          "cross_date": "2026-07-09",
-          "dif": -3.8019,
-          "macd_signal": -3.9556,
-          "histogram": 0.1537,
-          "histogram_prev": 0.0037,
-          "histogram_cross": 0.0037,
-          "hist_sequence": [
-            {
-              "date": "2026-07-06",
-              "value": -0.3404
-            },
-            {
-              "date": "2026-07-07",
-              "value": -0.2461
-            },
-            {
-              "date": "2026-07-08",
-              "value": -0.1566
-            },
-            {
-              "date": "2026-07-09",
-              "value": 0.0037
-            },
-            {
-              "date": "2026-07-10",
-              "value": 0.1537
-            }
-          ],
-          "reasons": [
-            "MACD(21,55,89) 柱狀體於 2026-07-09 由綠翻紅",
-            "目前為翻紅第2天，柱狀體 0.1537"
-          ]
-        },
-        {
           "code": "1723.TW",
           "name": "中碳",
           "region": "TW",
@@ -303680,7 +303631,7 @@
         "title": "Druckenmiller 風格雷達",
         "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
         "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-07-10 21:55:29",
+        "generatedAt": "2026-07-10 22:54:13",
         "targetDate": "2026-07-10",
         "status": "no_data",
         "market": {
@@ -303691,17 +303642,7 @@
           "description": "市場廣度偏弱，保留現金比追高更重要。",
           "breadth": 0.0
         },
-        "industries": [
-          {
-            "name": "金融-金控銀行",
-            "score": -12.0,
-            "netAmount": 0.0,
-            "signals": 1,
-            "sources": [
-              "聖杯出場警示"
-            ]
-          }
-        ],
+        "industries": [],
         "candidates": [],
         "principles": [
           "大盤流動性與廣度決定倉位，不在弱盤硬做大部位。",
@@ -303718,7 +303659,7 @@
         "title": "台股聖杯雷達",
         "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
         "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-07-10 21:55:29",
+        "generatedAt": "2026-07-10 22:54:13",
         "targetDate": "2026-07-10",
         "dataSource": "twstock universe + yfinance history",
         "market": {
@@ -303735,384 +303676,14 @@
           "maxIndustryExposure": 0.4,
           "stopMode": "MA20"
         },
-        "industries": [
-          {
-            "industry": "金融-金控銀行",
-            "baseIndustries": [
-              "金融保險業"
-            ],
-            "return5": 0.03051752273924876,
-            "return20": 0.01713578645421646,
-            "return60": 0.2224097143080557,
-            "volumeRatio": 0.5663798064804473,
-            "relativeStrength20": 0.01713578645421646,
-            "stockCount": 2,
-            "industryScore": 100.0,
-            "status": "主流強勢",
-            "rank": 1
-          }
-        ],
-        "usIndustries": [
-          {
-            "symbol": "SMH",
-            "name": "美股半導體",
-            "mappedIndustries": [
-              "半導體-晶圓代工",
-              "半導體-IC設計",
-              "半導體-封測",
-              "半導體-設備材料",
-              "半導體-矽晶圓"
-            ],
-            "return5": 0.03163999386237478,
-            "return20": 0.07027387511093099,
-            "return60": 0.35183634800193586,
-            "volumeRatio": 0.8458673754679522,
-            "relativeStrength20": 0.029580741618663767,
-            "industryScore": 89.0,
-            "status": "主流強勢",
-            "rank": 1
-          },
-          {
-            "symbol": "XLI",
-            "name": "美股工業",
-            "mappedIndustries": [
-              "電機機械-工具機",
-              "電機機械-自動化設備",
-              "航運-散裝航空"
-            ],
-            "return5": -0.010820539685379058,
-            "return20": 0.07226213746436454,
-            "return60": 0.04943750656871701,
-            "volumeRatio": 0.8400351986517093,
-            "relativeStrength20": 0.03156900397209732,
-            "industryScore": 72.0,
-            "status": "轉強觀察",
-            "rank": 2
-          },
-          {
-            "symbol": "XLF",
-            "name": "美股金融",
-            "mappedIndustries": [
-              "金融-金控銀行",
-              "金融-證券期貨",
-              "金融-保險"
-            ],
-            "return5": 0.0016181257518201257,
-            "return20": 0.06662836631698973,
-            "return60": 0.07589803781044328,
-            "volumeRatio": 0.8523776070449194,
-            "relativeStrength20": 0.025935232824722515,
-            "industryScore": 70.0,
-            "status": "轉強觀察",
-            "rank": 3
-          },
-          {
-            "symbol": "XLK",
-            "name": "美股科技",
-            "mappedIndustries": [
-              "半導體-IC設計",
-              "半導體-晶圓代工",
-              "電腦週邊-伺服器AI",
-              "資訊服務-資安雲端",
-              "電子零組件-PCB"
-            ],
-            "return5": 0.028739146944194858,
-            "return20": 0.05180316845122129,
-            "return60": 0.255779341039809,
-            "volumeRatio": 0.7596230129217685,
-            "relativeStrength20": 0.011110034958954074,
-            "industryScore": 67.5,
-            "status": "轉強觀察",
-            "rank": 4
-          },
-          {
-            "symbol": "XLV",
-            "name": "美股醫療",
-            "mappedIndustries": [
-              "生技醫療-製藥",
-              "生技醫療-醫材通路"
-            ],
-            "return5": -0.01771106057153827,
-            "return20": 0.052273404745328475,
-            "return60": 0.08069605831537352,
-            "volumeRatio": 1.0047775864181072,
-            "relativeStrength20": 0.011580271253061256,
-            "industryScore": 58.5,
-            "status": "中性",
-            "rank": 5
-          },
-          {
-            "symbol": "XLY",
-            "name": "美股非必需消費",
-            "mappedIndustries": [
-              "汽車工業",
-              "貿易百貨業",
-              "觀光餐旅"
-            ],
-            "return5": 0.0010245484492272339,
-            "return20": 0.033042559437717174,
-            "return60": 0.006870451782804168,
-            "volumeRatio": 1.1031102927515715,
-            "relativeStrength20": -0.007650574054550045,
-            "industryScore": 48.5,
-            "status": "弱勢避開",
-            "rank": 6
-          },
-          {
-            "symbol": "IGV",
-            "name": "美股軟體",
-            "mappedIndustries": [
-              "資訊服務-資安雲端"
-            ],
-            "return5": -0.012397093475452991,
-            "return20": 0.009063134029914757,
-            "return60": 0.16268243280148034,
-            "volumeRatio": 0.7248245636641749,
-            "relativeStrength20": -0.03162999946235246,
-            "industryScore": 36.5,
-            "status": "弱勢避開",
-            "rank": 7
-          },
-          {
-            "symbol": "XLB",
-            "name": "美股原物料",
-            "mappedIndustries": [
-              "鋼鐵-上游原料",
-              "鋼鐵-不鏽鋼扣件",
-              "水泥工業",
-              "玻璃陶瓷"
-            ],
-            "return5": -0.02153430048124157,
-            "return20": 0.02600808377444617,
-            "return60": -0.02153430048124157,
-            "volumeRatio": 1.0565596572042366,
-            "relativeStrength20": -0.014685049717821048,
-            "industryScore": 28.5,
-            "status": "弱勢避開",
-            "rank": 8
-          },
-          {
-            "symbol": "XLC",
-            "name": "美股通訊服務",
-            "mappedIndustries": [
-              "通信網路-網通設備",
-              "通信網路-射頻天線"
-            ],
-            "return5": 0.018613147298620004,
-            "return20": 0.005675139548640328,
-            "return60": -0.04221000576524609,
-            "volumeRatio": 0.8939440987824396,
-            "relativeStrength20": -0.03501799394362689,
-            "industryScore": 27.5,
-            "status": "弱勢避開",
-            "rank": 9
-          },
-          {
-            "symbol": "XLE",
-            "name": "美股能源",
-            "mappedIndustries": [
-              "油電燃氣業",
-              "化學工業",
-              "塑膠工業"
-            ],
-            "return5": 0.034949277859617996,
-            "return20": -0.05442056942395386,
-            "return60": -0.015549578552660924,
-            "volumeRatio": 0.9050845298785891,
-            "relativeStrength20": -0.09511370291622108,
-            "industryScore": 27.0,
-            "status": "弱勢避開",
-            "rank": 10
-          }
-        ],
-        "usTaiwanMatches": [
-          {
-            "symbol": "SMH",
-            "name": "美股半導體",
-            "rank": 1,
-            "industryScore": 89.0,
-            "status": "主流強勢",
-            "return5": 3.16,
-            "return20": 7.03,
-            "return60": 35.18,
-            "relativeStrength20": 2.96,
-            "volumeRatio": 0.85,
-            "mappedIndustries": [
-              "半導體-IC設計",
-              "半導體-封測",
-              "半導體-晶圓代工",
-              "半導體-矽晶圓",
-              "半導體-設備材料"
-            ],
-            "stocks": []
-          },
-          {
-            "symbol": "XLI",
-            "name": "美股工業",
-            "rank": 2,
-            "industryScore": 72.0,
-            "status": "轉強觀察",
-            "return5": -1.08,
-            "return20": 7.23,
-            "return60": 4.94,
-            "relativeStrength20": 3.16,
-            "volumeRatio": 0.84,
-            "mappedIndustries": [
-              "航運-散裝航空",
-              "電機機械-工具機",
-              "電機機械-自動化設備"
-            ],
-            "stocks": []
-          },
-          {
-            "symbol": "XLF",
-            "name": "美股金融",
-            "rank": 3,
-            "industryScore": 70.0,
-            "status": "轉強觀察",
-            "return5": 0.16,
-            "return20": 6.66,
-            "return60": 7.59,
-            "relativeStrength20": 2.59,
-            "volumeRatio": 0.85,
-            "mappedIndustries": [
-              "金融-保險",
-              "金融-證券期貨",
-              "金融-金控銀行"
-            ],
-            "stocks": [
-              {
-                "code": "2801.TW",
-                "name": "彰銀",
-                "industry": "金融-金控銀行",
-                "baseIndustry": "金融保險業",
-                "close": 24.05,
-                "date": "2026-07-10",
-                "return5": 3.22,
-                "return20": 7.61,
-                "return60": 12.38,
-                "relativeStrength20": 7.61,
-                "volumeRatio": 0.46,
-                "score": 79.8,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 23.34,
-                "ma60": 21.72
-              },
-              {
-                "code": "2882.TW",
-                "name": "國泰金",
-                "industry": "金融-金控銀行",
-                "baseIndustry": "金融保險業",
-                "close": 96.3,
-                "date": "2026-07-10",
-                "return5": 2.88,
-                "return20": -4.18,
-                "return60": 32.1,
-                "relativeStrength20": -4.18,
-                "volumeRatio": 0.68,
-                "score": 33.7,
-                "signal": "出場警示",
-                "action": "出場",
-                "ma20": 103.0,
-                "ma60": 89.03
-              }
-            ]
-          },
-          {
-            "symbol": "XLK",
-            "name": "美股科技",
-            "rank": 4,
-            "industryScore": 67.5,
-            "status": "轉強觀察",
-            "return5": 2.87,
-            "return20": 5.18,
-            "return60": 25.58,
-            "relativeStrength20": 1.11,
-            "volumeRatio": 0.76,
-            "mappedIndustries": [
-              "半導體-IC設計",
-              "半導體-晶圓代工",
-              "資訊服務-資安雲端",
-              "電子零組件-PCB",
-              "電腦週邊-伺服器AI"
-            ],
-            "stocks": []
-          },
-          {
-            "symbol": "XLV",
-            "name": "美股醫療",
-            "rank": 5,
-            "industryScore": 58.5,
-            "status": "中性",
-            "return5": -1.77,
-            "return20": 5.23,
-            "return60": 8.07,
-            "relativeStrength20": 1.16,
-            "volumeRatio": 1.0,
-            "mappedIndustries": [
-              "生技醫療-製藥",
-              "生技醫療-醫材通路"
-            ],
-            "stocks": []
-          },
-          {
-            "symbol": "XLY",
-            "name": "美股非必需消費",
-            "rank": 6,
-            "industryScore": 48.5,
-            "status": "弱勢避開",
-            "return5": 0.1,
-            "return20": 3.3,
-            "return60": 0.69,
-            "relativeStrength20": -0.77,
-            "volumeRatio": 1.1,
-            "mappedIndustries": [
-              "汽車工業",
-              "觀光餐旅",
-              "貿易百貨業"
-            ],
-            "stocks": []
-          }
-        ],
+        "industries": [],
+        "usIndustries": [],
+        "usTaiwanMatches": [],
         "candidates": {
           "breakout": [],
           "pullback": [],
           "overheated": [],
-          "exit": [
-            {
-              "code": "2882.TW",
-              "name": "國泰金",
-              "industry": "金融-金控銀行",
-              "baseIndustry": "金融保險業",
-              "close": 96.3,
-              "price": 96.3,
-              "date": "2026-07-10",
-              "return5": 2.88,
-              "return20": -4.18,
-              "return60": 32.1,
-              "relativeStrength20": -4.18,
-              "volumeRatio": 0.68,
-              "signal": "出場警示",
-              "bucket": "exit",
-              "score": 39.7,
-              "action": "出場",
-              "ma5": 96.2,
-              "ma10": 96.29,
-              "ma20": 103.0,
-              "ma60": 89.03,
-              "ma120": 81.72,
-              "stopPrices": {
-                "MA20": 103.0,
-                "最近回檔低點": 92.6,
-                "固定 7%": 89.56
-              },
-              "positionSizing": {
-                "valid": false,
-                "message": "停損價高於或等於進場價，無法計算部位。"
-              }
-            }
-          ]
+          "exit": []
         },
         "rerun": {
           "githubActions": "Actions > Daily Stock Scan > Run workflow，可選只重跑台股聖杯與美股產業資料。",
@@ -304136,34 +303707,14 @@
         "status": "needs_sponsor",
         "source": "FinMind TaiwanStockTradingDailyReport",
         "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-        "generatedAt": "2026-07-10 21:55:30",
+        "generatedAt": "2026-07-10 22:54:14",
         "date": "2026-07-10",
-        "targets": 11,
+        "targets": 9,
         "items": [],
         "errors": [
           {
-            "code": "6796",
-            "name": "晉弘",
-            "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "2062",
-            "name": "橋椿",
-            "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "2034",
-            "name": "允強",
-            "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "1541",
-            "name": "錩泰",
-            "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "2231",
-            "name": "為升",
+            "code": "1463",
+            "name": "強盛新",
             "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
@@ -304172,18 +303723,33 @@
             "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "1463",
-            "name": "強盛新",
+            "code": "2022",
+            "name": "聚亨",
+            "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "2062",
+            "name": "橋椿",
+            "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "2231",
+            "name": "為升",
+            "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "1541",
+            "name": "錩泰",
+            "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "2034",
+            "name": "允強",
             "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
             "code": "1723",
             "name": "中碳",
-            "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "2022",
-            "name": "聚亨",
             "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
