@@ -1,6 +1,6 @@
 {
   "date": "2026-07-09",
-  "market_breadth": 1.22,
+  "market_breadth": 1.21,
   "strategies": {
     "momentum": [
       {
@@ -1114,7 +1114,7 @@
       "title": "Druckenmiller 風格雷達",
       "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
       "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-07-10 14:00:22",
+      "generatedAt": "2026-07-10 16:18:53",
       "targetDate": "2026-07-09",
       "status": "ok",
       "market": {
@@ -1123,7 +1123,7 @@
         "suggested_exposure": "0%～20%",
         "score": 0,
         "description": "市場廣度偏弱，保留現金比追高更重要。",
-        "breadth": 1.22
+        "breadth": 1.21
       },
       "industries": [],
       "candidates": [
@@ -1208,7 +1208,7 @@
       "title": "台股聖杯雷達",
       "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
       "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-07-10 14:00:22",
+      "generatedAt": "2026-07-10 16:18:53",
       "targetDate": "2026-07-09",
       "dataSource": "twstock universe + yfinance history",
       "market": {
@@ -1256,39 +1256,14 @@
       "status": "needs_sponsor",
       "source": "FinMind TaiwanStockTradingDailyReport",
       "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-      "generatedAt": "2026-07-10 14:00:23",
+      "generatedAt": "2026-07-10 16:18:55",
       "date": "2026-07-09",
-      "targets": 16,
+      "targets": 17,
       "items": [],
       "errors": [
         {
-          "code": "1723",
-          "name": "中碳",
-          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "4439",
-          "name": "冠星-KY",
-          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "2231",
-          "name": "為升",
-          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "2248",
-          "name": "華勝-KY",
-          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
           "code": "2034",
           "name": "允強",
-          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "2022",
-          "name": "聚亨",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
@@ -1297,18 +1272,43 @@
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
+          "code": "2231",
+          "name": "為升",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "4439",
+          "name": "冠星-KY",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "3617",
+          "name": "碩天",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
           "code": "2062",
           "name": "橋椿",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "1108",
-          "name": "幸福",
+          "code": "2248",
+          "name": "華勝-KY",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "1256",
-          "name": "鮮活果汁-KY",
+          "code": "1723",
+          "name": "中碳",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "2023",
+          "name": "燁輝",
+          "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "1108",
+          "name": "幸福",
           "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         }
       ]
@@ -1355,6 +1355,27 @@
         "put_option_price": 100.0,
         "guaranteed": false,
         "desc": "CB:和大四 | 雙低:130.11"
+      },
+      {
+        "code": "3617.TW",
+        "name": "碩天",
+        "price": 242.0,
+        "pct_change": 1.68,
+        "cb_code": "36173",
+        "cb_name": "碩天三",
+        "cb_price": 115.3,
+        "conversion_price": 305.0,
+        "conversion_value": 79.34,
+        "premium_pct": 45.32,
+        "double_low": 160.62,
+        "cb_trade_date": "2026-07-09",
+        "cb_units": 113.0,
+        "cb_trade_value": 13045800.0,
+        "maturity_date": "2028-06-16",
+        "put_option_date": null,
+        "put_option_price": 0.0,
+        "guaranteed": false,
+        "desc": "CB:碩天三 | 雙低:160.62"
       }
     ]
   }
