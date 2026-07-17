@@ -329850,7 +329850,7 @@
   },
   {
     "date": "2026-07-17",
-    "market_breadth": 3.51,
+    "market_breadth": 3.72,
     "strategies": {
       "momentum": [
         {
@@ -329860,7 +329860,7 @@
           "price": 168.5,
           "date": "2026-07-17",
           "fundamentals": {
-            "pe": 20.424242,
+            "pe": 20.30303,
             "growth": 0.203,
             "rev_yoy": 0.092,
             "rev_qoq": null,
@@ -330201,32 +330201,11 @@
           "price": 141.5,
           "date": "2026-07-17",
           "fundamentals": {
-            "pe": 20.931952,
-            "growth": 2.157,
-            "rev_yoy": 0.051,
+            "pe": 999,
+            "growth": null,
+            "rev_yoy": null,
             "rev_qoq": null,
-            "quarters": [
-              {
-                "date": "2025-12",
-                "revenue": 57608253000.0,
-                "qoq": -0.002129593813895804
-              },
-              {
-                "date": "2025-09",
-                "revenue": 57731197000.0,
-                "qoq": -0.05847408674491591
-              },
-              {
-                "date": "2025-06",
-                "revenue": 61316631000.0,
-                "qoq": 0.14524150477163486
-              },
-              {
-                "date": "2025-03",
-                "revenue": 53540350000.0,
-                "qoq": 0.039884616679943204
-              }
-            ]
+            "quarters": []
           },
           "score": 75,
           "pattern": "標準十字星",
@@ -332462,7 +332441,7 @@
         "title": "Druckenmiller 風格雷達",
         "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
         "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-07-17 22:42:30",
+        "generatedAt": "2026-07-17 23:46:17",
         "targetDate": "2026-07-17",
         "status": "ok",
         "market": {
@@ -332471,7 +332450,7 @@
           "suggested_exposure": "0%～20%",
           "score": 0,
           "description": "市場廣度偏弱，保留現金比追高更重要。",
-          "breadth": 3.51
+          "breadth": 3.72
         },
         "industries": [
           {
@@ -332660,7 +332639,7 @@
               "估值未過熱"
             ],
             "fundamentals": {
-              "pe": 20.424242,
+              "pe": 20.30303,
               "growth": 0.203,
               "rev_yoy": 0.092,
               "rev_qoq": null,
@@ -333169,7 +333148,7 @@
         "title": "台股聖杯雷達",
         "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
         "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-07-17 22:42:30",
+        "generatedAt": "2026-07-17 23:46:17",
         "targetDate": "2026-07-17",
         "dataSource": "twstock universe + yfinance history",
         "market": {
@@ -333188,49 +333167,19 @@
         },
         "industries": [
           {
-            "industry": "塑膠工業",
+            "industry": "航運-貨櫃",
             "baseIndustries": [
-              "塑膠工業"
+              "航運業"
             ],
-            "return5": 0.09641873278236915,
-            "return20": 0.4316546762589928,
-            "return60": 1.225950745005243,
-            "volumeRatio": 1.684982571804346,
-            "relativeStrength20": 0.4316546762589928,
+            "return5": -0.09791666666666667,
+            "return20": 0.2735294117647059,
+            "return60": 0.3081570996978852,
+            "volumeRatio": 1.284801293500768,
+            "relativeStrength20": 0.2735294117647059,
             "stockCount": 1,
-            "industryScore": 95.0,
+            "industryScore": 100.0,
             "status": "主流強勢",
             "rank": 1
-          },
-          {
-            "industry": "金融-金控銀行",
-            "baseIndustries": [
-              "金融保險業"
-            ],
-            "return5": 0.0,
-            "return20": -0.09782608695652174,
-            "return60": 0.4099659761848847,
-            "volumeRatio": 0.8983619206850912,
-            "relativeStrength20": -0.09782608695652174,
-            "stockCount": 1,
-            "industryScore": 45.0,
-            "status": "弱勢避開",
-            "rank": 2
-          },
-          {
-            "industry": "其他業",
-            "baseIndustries": [
-              "其他業"
-            ],
-            "return5": -0.10126588390798177,
-            "return20": -0.13765187938699824,
-            "return60": -0.37168146671614893,
-            "volumeRatio": 2.389698407319553,
-            "relativeStrength20": -0.13765187938699824,
-            "stockCount": 1,
-            "industryScore": 10.0,
-            "status": "弱勢避開",
-            "rank": 3
           }
         ],
         "usIndustries": [
@@ -333437,26 +333386,7 @@
               "塑膠工業",
               "油電燃氣業"
             ],
-            "stocks": [
-              {
-                "code": "1303.TW",
-                "name": "南亞",
-                "industry": "塑膠工業",
-                "baseIndustry": "塑膠工業",
-                "close": 199.0,
-                "date": "2026-07-17",
-                "return5": 9.64,
-                "return20": 43.17,
-                "return60": 122.6,
-                "relativeStrength20": 43.17,
-                "volumeRatio": 1.68,
-                "score": 95.0,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 180.72,
-                "ma60": 124.34
-              }
-            ]
+            "stocks": []
           },
           {
             "symbol": "XLF",
@@ -333474,26 +333404,7 @@
               "金融-證券期貨",
               "金融-金控銀行"
             ],
-            "stocks": [
-              {
-                "code": "2881.TW",
-                "name": "富邦金",
-                "industry": "金融-金控銀行",
-                "baseIndustry": "金融保險業",
-                "close": 124.5,
-                "date": "2026-07-17",
-                "return5": 0,
-                "return20": -9.78,
-                "return60": 41.0,
-                "relativeStrength20": -9.78,
-                "volumeRatio": 0.9,
-                "score": 32.4,
-                "signal": "出場警示",
-                "action": "出場",
-                "ma20": 127.55,
-                "ma60": 112.5
-              }
-            ]
+            "stocks": []
           },
           {
             "symbol": "IGV",
@@ -333550,7 +333461,52 @@
           "breakout": [],
           "pullback": [],
           "overheated": [],
-          "exit": []
+          "exit": [
+            {
+              "code": "2645.TW",
+              "name": "長榮航太",
+              "industry": "航運-貨櫃",
+              "baseIndustry": "航運業",
+              "close": 216.5,
+              "price": 216.5,
+              "date": "2026-07-17",
+              "return5": -9.79,
+              "return20": 27.35,
+              "return60": 30.82,
+              "relativeStrength20": 27.35,
+              "volumeRatio": 1.28,
+              "signal": "減碼警示",
+              "bucket": "exit",
+              "score": 95.7,
+              "action": "減碼",
+              "ma5": 236.5,
+              "ma10": 235.05,
+              "ma20": 209.45,
+              "ma60": 177.72,
+              "ma120": 168.99,
+              "stopPrices": {
+                "MA20": 209.45,
+                "最近回檔低點": 168.5,
+                "固定 7%": 201.34
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 307092.0,
+                "shares": 923,
+                "lots": 0,
+                "oddLot": 923,
+                "stopPrice": 209.45,
+                "maxLoss": 6507.0,
+                "riskRewardTo8Pct": 2.46,
+                "firstTakeProfit": 233.82,
+                "secondTakeProfit": 248.97,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            }
+          ]
         },
         "rerun": {
           "githubActions": "Actions > Daily Stock Scan > Run workflow，可選只重跑台股聖杯與美股產業資料。",
@@ -333574,19 +333530,24 @@
         "status": "needs_sponsor",
         "source": "FinMind TaiwanStockTradingDailyReport",
         "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-        "generatedAt": "2026-07-17 22:42:32",
+        "generatedAt": "2026-07-17 23:46:20",
         "date": "2026-07-17",
-        "targets": 32,
+        "targets": 34,
         "items": [],
         "errors": [
           {
-            "code": "2308",
-            "name": "台達電",
+            "code": "6274",
+            "name": "台燿",
             "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "1526",
-            "name": "日馳",
+            "code": "1216",
+            "name": "統一",
+            "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "2308",
+            "name": "台達電",
             "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
@@ -333600,16 +333561,6 @@
             "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "6274",
-            "name": "台燿",
-            "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "1216",
-            "name": "統一",
-            "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
             "code": "2368",
             "name": "金像電",
             "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
@@ -333620,18 +333571,44 @@
             "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "2890",
-            "name": "永豐金",
+            "code": "1526",
+            "name": "日馳",
             "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "4958",
-            "name": "臻鼎-KY",
+            "code": "2887",
+            "name": "台新新光金",
+            "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "2383",
+            "name": "台光電",
             "message": "Your level is register. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           }
         ]
       },
       "cbas": [
+        {
+          "code": "6243.TW",
+          "name": "迅杰",
+          "price": 51.6,
+          "pct_change": 7.61,
+          "cb_code": "62433",
+          "cb_name": "迅杰三",
+          "cb_price": 97.5,
+          "conversion_price": 65.8,
+          "conversion_value": 78.42,
+          "premium_pct": 24.33,
+          "double_low": 121.83,
+          "cb_trade_date": "2026-07-17",
+          "cb_units": 18.0,
+          "cb_trade_value": 1737250.0,
+          "maturity_date": "2027-06-25",
+          "put_option_date": null,
+          "put_option_price": 0.0,
+          "guaranteed": false,
+          "desc": "CB:迅杰三 | 雙低:121.83"
+        },
         {
           "code": "5450.TWO",
           "name": "南良",
