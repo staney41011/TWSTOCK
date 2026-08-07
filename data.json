@@ -390125,7 +390125,7 @@
   },
   {
     "date": "2026-08-07",
-    "market_breadth": 4.51,
+    "market_breadth": 4.48,
     "strategies": {
       "momentum": [
         {
@@ -390642,28 +390642,7 @@
             "growth": 0.064,
             "rev_yoy": -0.364,
             "rev_qoq": null,
-            "quarters": [
-              {
-                "date": "2026-03",
-                "revenue": 10284000.0,
-                "qoq": -0.992726259377743
-              },
-              {
-                "date": "2025-12",
-                "revenue": 1413853000.0,
-                "qoq": null
-              },
-              {
-                "date": "2025-09",
-                "revenue": null,
-                "qoq": null
-              },
-              {
-                "date": "2025-06",
-                "revenue": 2606442000.0,
-                "qoq": -0.025763913028852083
-              }
-            ]
+            "quarters": []
           },
           "score": 4,
           "reasons": [
@@ -391972,19 +391951,59 @@
       ],
       "active_etf": [
         {
-          "code": "6669",
-          "name": "緯穎",
-          "industry": "電腦及週邊設備業",
+          "code": "3450",
+          "name": "聯鈞",
+          "industry": "半導體業",
           "side": "buy",
           "buy_count": 2,
           "sell_count": 0,
           "same_side_count": 2,
           "etf_count": 2,
           "net_signal": 2,
-          "net_shares": 4000,
-          "net_amount": 24400000,
-          "buy_amount": 24400000,
+          "net_shares": 220000,
+          "net_amount": 104940000,
+          "buy_amount": 104940000,
           "sell_amount": 0,
+          "date": "2026-08-07",
+          "updated_at": "2026-08-07",
+          "details": [
+            {
+              "etf_code": "00403A",
+              "etf_name": "主動統一升級50",
+              "issuer": "統一",
+              "side": "buy",
+              "action": "increased",
+              "shares_delta": 200000,
+              "amount": 95400000
+            },
+            {
+              "etf_code": "00984A",
+              "etf_name": "主動安聯台灣高息",
+              "issuer": "安聯",
+              "side": "buy",
+              "action": "increased",
+              "shares_delta": 20000,
+              "amount": 9540000
+            }
+          ],
+          "source": "ETF資訊網主動 ETF 追蹤",
+          "source_url": "https://www.etfinfo.tw/active",
+          "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
+        },
+        {
+          "code": "2368",
+          "name": "金像電",
+          "industry": "電子零組件業",
+          "side": "sell",
+          "buy_count": 0,
+          "sell_count": 2,
+          "same_side_count": 2,
+          "etf_count": 2,
+          "net_signal": -2,
+          "net_shares": -16000,
+          "net_amount": -15712000,
+          "buy_amount": 0,
+          "sell_amount": -15712000,
           "date": "2026-08-07",
           "updated_at": "2026-08-07",
           "details": [
@@ -391992,19 +392011,59 @@
               "etf_code": "00984A",
               "etf_name": "主動安聯台灣高息",
               "issuer": "安聯",
-              "side": "buy",
-              "action": "increased",
-              "shares_delta": 1000,
-              "amount": 6100000
+              "side": "sell",
+              "action": "removed",
+              "shares_delta": -5000,
+              "amount": -4910000
             },
             {
-              "etf_code": "00985A",
-              "etf_name": "主動野村台灣50",
-              "issuer": "野村",
-              "side": "buy",
-              "action": "increased",
-              "shares_delta": 3000,
-              "amount": 18300000
+              "etf_code": "00995A",
+              "etf_name": "主動中信台灣卓越",
+              "issuer": "中國信託",
+              "side": "sell",
+              "action": "decreased",
+              "shares_delta": -11000,
+              "amount": -10802000
+            }
+          ],
+          "source": "ETF資訊網主動 ETF 追蹤",
+          "source_url": "https://www.etfinfo.tw/active",
+          "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
+        },
+        {
+          "code": "2472",
+          "name": "立隆電",
+          "industry": "電子零組件業",
+          "side": "sell",
+          "buy_count": 0,
+          "sell_count": 2,
+          "same_side_count": 2,
+          "etf_count": 2,
+          "net_signal": -2,
+          "net_shares": -122000,
+          "net_amount": -27999000,
+          "buy_amount": 0,
+          "sell_amount": -27999000,
+          "date": "2026-08-07",
+          "updated_at": "2026-08-07",
+          "details": [
+            {
+              "etf_code": "00984A",
+              "etf_name": "主動安聯台灣高息",
+              "issuer": "安聯",
+              "side": "sell",
+              "action": "decreased",
+              "shares_delta": -120000,
+              "amount": -27540000
+            },
+            {
+              "etf_code": "00982A",
+              "etf_name": "主動群益台灣強棒",
+              "issuer": "群益",
+              "side": "sell",
+              "action": "decreased",
+              "shares_delta": -2000,
+              "amount": -459000
             }
           ],
           "source": "ETF資訊網主動 ETF 追蹤",
@@ -392029,15 +392088,6 @@
           "updated_at": "2026-08-07",
           "details": [
             {
-              "etf_code": "00984A",
-              "etf_name": "主動安聯台灣高息",
-              "issuer": "安聯",
-              "side": "sell",
-              "action": "decreased",
-              "shares_delta": -40000,
-              "amount": -57600000
-            },
-            {
               "etf_code": "00993A",
               "etf_name": "主動安聯台灣",
               "issuer": "安聯",
@@ -392045,6 +392095,95 @@
               "action": "increased",
               "shares_delta": 18000,
               "amount": 25920000
+            },
+            {
+              "etf_code": "00984A",
+              "etf_name": "主動安聯台灣高息",
+              "issuer": "安聯",
+              "side": "sell",
+              "action": "decreased",
+              "shares_delta": -40000,
+              "amount": -57600000
+            }
+          ],
+          "source": "ETF資訊網主動 ETF 追蹤",
+          "source_url": "https://www.etfinfo.tw/active",
+          "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
+        },
+        {
+          "code": "6223",
+          "name": "旺矽",
+          "industry": "半導體業",
+          "side": "sell",
+          "buy_count": 0,
+          "sell_count": 2,
+          "same_side_count": 2,
+          "etf_count": 2,
+          "net_signal": -2,
+          "net_shares": -11000,
+          "net_amount": -67100000,
+          "buy_amount": 0,
+          "sell_amount": -67100000,
+          "date": "2026-08-07",
+          "updated_at": "2026-08-07",
+          "details": [
+            {
+              "etf_code": "00999A",
+              "etf_name": "主動野村臺灣高息",
+              "issuer": "野村",
+              "side": "sell",
+              "action": "decreased",
+              "shares_delta": -8000,
+              "amount": -48800000
+            },
+            {
+              "etf_code": "00992A",
+              "etf_name": "主動群益科技創新",
+              "issuer": "群益",
+              "side": "sell",
+              "action": "decreased",
+              "shares_delta": -3000,
+              "amount": -18300000
+            }
+          ],
+          "source": "ETF資訊網主動 ETF 追蹤",
+          "source_url": "https://www.etfinfo.tw/active",
+          "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
+        },
+        {
+          "code": "2330",
+          "name": "台積電",
+          "industry": "半導體業",
+          "side": "mixed",
+          "buy_count": 1,
+          "sell_count": 1,
+          "same_side_count": 1,
+          "etf_count": 2,
+          "net_signal": 0,
+          "net_shares": -29000,
+          "net_amount": -68730000,
+          "buy_amount": 7110000,
+          "sell_amount": -75840000,
+          "date": "2026-08-07",
+          "updated_at": "2026-08-07",
+          "details": [
+            {
+              "etf_code": "00999A",
+              "etf_name": "主動野村臺灣高息",
+              "issuer": "野村",
+              "side": "sell",
+              "action": "decreased",
+              "shares_delta": -32000,
+              "amount": -75840000
+            },
+            {
+              "etf_code": "00995A",
+              "etf_name": "主動中信台灣卓越",
+              "issuer": "中國信託",
+              "side": "buy",
+              "action": "increased",
+              "shares_delta": 3000,
+              "amount": 7110000
             }
           ],
           "source": "ETF資訊網主動 ETF 追蹤",
@@ -392069,13 +392208,13 @@
           "updated_at": "2026-08-07",
           "details": [
             {
-              "etf_code": "00984A",
-              "etf_name": "主動安聯台灣高息",
-              "issuer": "安聯",
-              "side": "buy",
-              "action": "increased",
-              "shares_delta": 7000,
-              "amount": 30695000
+              "etf_code": "00985A",
+              "etf_name": "主動野村台灣50",
+              "issuer": "野村",
+              "side": "sell",
+              "action": "decreased",
+              "shares_delta": -26000,
+              "amount": -114010000
             },
             {
               "etf_code": "00993A",
@@ -392087,13 +392226,62 @@
               "amount": 4385000
             },
             {
+              "etf_code": "00984A",
+              "etf_name": "主動安聯台灣高息",
+              "issuer": "安聯",
+              "side": "buy",
+              "action": "increased",
+              "shares_delta": 7000,
+              "amount": 30695000
+            }
+          ],
+          "source": "ETF資訊網主動 ETF 追蹤",
+          "source_url": "https://www.etfinfo.tw/active",
+          "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
+        },
+        {
+          "code": "6669",
+          "name": "緯穎",
+          "industry": "電腦及週邊設備業",
+          "side": "buy",
+          "buy_count": 2,
+          "sell_count": 1,
+          "same_side_count": 2,
+          "etf_count": 3,
+          "net_signal": 1,
+          "net_shares": -13000,
+          "net_amount": -79300000,
+          "buy_amount": 24400000,
+          "sell_amount": -103700000,
+          "date": "2026-08-07",
+          "updated_at": "2026-08-07",
+          "details": [
+            {
               "etf_code": "00985A",
               "etf_name": "主動野村台灣50",
               "issuer": "野村",
+              "side": "buy",
+              "action": "increased",
+              "shares_delta": 3000,
+              "amount": 18300000
+            },
+            {
+              "etf_code": "00984A",
+              "etf_name": "主動安聯台灣高息",
+              "issuer": "安聯",
+              "side": "buy",
+              "action": "increased",
+              "shares_delta": 1000,
+              "amount": 6100000
+            },
+            {
+              "etf_code": "00400A",
+              "etf_name": "主動國泰動能高息",
+              "issuer": "國泰",
               "side": "sell",
               "action": "decreased",
-              "shares_delta": -26000,
-              "amount": -114010000
+              "shares_delta": -17000,
+              "amount": -103700000
             }
           ],
           "source": "ETF資訊網主動 ETF 追蹤",
@@ -392118,13 +392306,13 @@
           "updated_at": "2026-08-07",
           "details": [
             {
-              "etf_code": "00999A",
-              "etf_name": "主動野村臺灣高息",
+              "etf_code": "00985A",
+              "etf_name": "主動野村台灣50",
               "issuer": "野村",
               "side": "sell",
               "action": "decreased",
-              "shares_delta": -100000,
-              "amount": -45700000
+              "shares_delta": -224000,
+              "amount": -102368000
             },
             {
               "etf_code": "00984A",
@@ -392136,13 +392324,13 @@
               "amount": 27877000
             },
             {
-              "etf_code": "00985A",
-              "etf_name": "主動野村台灣50",
+              "etf_code": "00999A",
+              "etf_name": "主動野村臺灣高息",
               "issuer": "野村",
               "side": "sell",
               "action": "decreased",
-              "shares_delta": -224000,
-              "amount": -102368000
+              "shares_delta": -100000,
+              "amount": -45700000
             }
           ],
           "source": "ETF資訊網主動 ETF 追蹤",
@@ -392155,17 +392343,26 @@
           "industry": "電子零組件業",
           "side": "sell",
           "buy_count": 0,
-          "sell_count": 2,
-          "same_side_count": 2,
-          "etf_count": 2,
-          "net_signal": -2,
-          "net_shares": -336000,
-          "net_amount": -181440000,
+          "sell_count": 4,
+          "same_side_count": 4,
+          "etf_count": 4,
+          "net_signal": -4,
+          "net_shares": -358000,
+          "net_amount": -193320000,
           "buy_amount": 0,
-          "sell_amount": -181440000,
+          "sell_amount": -193320000,
           "date": "2026-08-07",
           "updated_at": "2026-08-07",
           "details": [
+            {
+              "etf_code": "00985A",
+              "etf_name": "主動野村台灣50",
+              "issuer": "野村",
+              "side": "sell",
+              "action": "decreased",
+              "shares_delta": -266000,
+              "amount": -143640000
+            },
             {
               "etf_code": "00984A",
               "etf_name": "主動安聯台灣高息",
@@ -392176,13 +392373,22 @@
               "amount": -37800000
             },
             {
-              "etf_code": "00985A",
-              "etf_name": "主動野村台灣50",
-              "issuer": "野村",
+              "etf_code": "00982A",
+              "etf_name": "主動群益台灣強棒",
+              "issuer": "群益",
               "side": "sell",
               "action": "decreased",
-              "shares_delta": -266000,
-              "amount": -143640000
+              "shares_delta": -12000,
+              "amount": -6480000
+            },
+            {
+              "etf_code": "00995A",
+              "etf_name": "主動中信台灣卓越",
+              "issuer": "中國信託",
+              "side": "sell",
+              "action": "decreased",
+              "shares_delta": -10000,
+              "amount": -5400000
             }
           ],
           "source": "ETF資訊網主動 ETF 追蹤",
@@ -392207,13 +392413,13 @@
           "updated_at": "2026-08-07",
           "details": [
             {
-              "etf_code": "00999A",
-              "etf_name": "主動野村臺灣高息",
+              "etf_code": "00985A",
+              "etf_name": "主動野村台灣50",
               "issuer": "野村",
               "side": "sell",
               "action": "decreased",
-              "shares_delta": -12000,
-              "amount": -133320000
+              "shares_delta": -19000,
+              "amount": -211090000
             },
             {
               "etf_code": "00984A",
@@ -392225,13 +392431,53 @@
               "amount": 133320000
             },
             {
-              "etf_code": "00985A",
-              "etf_name": "主動野村台灣50",
+              "etf_code": "00999A",
+              "etf_name": "主動野村臺灣高息",
               "issuer": "野村",
               "side": "sell",
               "action": "decreased",
-              "shares_delta": -19000,
-              "amount": -211090000
+              "shares_delta": -12000,
+              "amount": -133320000
+            }
+          ],
+          "source": "ETF資訊網主動 ETF 追蹤",
+          "source_url": "https://www.etfinfo.tw/active",
+          "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
+        },
+        {
+          "code": "7769",
+          "name": "鴻勁",
+          "industry": "半導體業",
+          "side": "sell",
+          "buy_count": 0,
+          "sell_count": 2,
+          "same_side_count": 2,
+          "etf_count": 2,
+          "net_signal": -2,
+          "net_shares": -71000,
+          "net_amount": -448720000,
+          "buy_amount": 0,
+          "sell_amount": -448720000,
+          "date": "2026-08-07",
+          "updated_at": "2026-08-07",
+          "details": [
+            {
+              "etf_code": "00403A",
+              "etf_name": "主動統一升級50",
+              "issuer": "統一",
+              "side": "sell",
+              "action": "decreased",
+              "shares_delta": -60000,
+              "amount": -379200000
+            },
+            {
+              "etf_code": "00999A",
+              "etf_name": "主動野村臺灣高息",
+              "issuer": "野村",
+              "side": "sell",
+              "action": "decreased",
+              "shares_delta": -11000,
+              "amount": -69520000
             }
           ],
           "source": "ETF資訊網主動 ETF 追蹤",
@@ -392243,7 +392489,7 @@
         "title": "Druckenmiller 風格雷達",
         "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
         "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-08-07 08:09:53",
+        "generatedAt": "2026-08-07 09:54:15",
         "targetDate": "2026-08-07",
         "status": "ok",
         "market": {
@@ -392252,18 +392498,9 @@
           "suggested_exposure": "15%～35%",
           "score": 5,
           "description": "強勢股仍有機會，但需要小部位、快確認、嚴守 thesis break。",
-          "breadth": 4.51
+          "breadth": 4.48
         },
         "industries": [
-          {
-            "name": "電腦及週邊設備業",
-            "score": 17.2,
-            "netAmount": 24400000.0,
-            "signals": 1,
-            "sources": [
-              "主動 ETF"
-            ]
-          },
           {
             "name": "光電業",
             "score": 16.2,
@@ -392274,56 +392511,28 @@
             ]
           },
           {
-            "name": "電腦週邊-品牌通路",
-            "score": 7.5,
-            "netAmount": 0.0,
-            "signals": 1,
-            "sources": [
-              "聖杯回檔轉強"
-            ]
-          },
-          {
-            "name": "鋼鐵-上游原料",
-            "score": -4.0,
-            "netAmount": 0.0,
-            "signals": 1,
-            "sources": [
-              "聖杯過熱"
-            ]
-          },
-          {
-            "name": "半導體業",
-            "score": -10.2,
-            "netAmount": -120191000.0,
+            "name": "電腦及週邊設備業",
+            "score": 16.2,
+            "netAmount": -79300000.0,
             "signals": 1,
             "sources": [
               "主動 ETF"
             ]
           },
           {
-            "name": "半導體-IC設計",
-            "score": -12.0,
-            "netAmount": 0.0,
-            "signals": 1,
+            "name": "半導體業",
+            "score": -11.0,
+            "netAmount": -599801000.0,
+            "signals": 5,
             "sources": [
-              "聖杯出場警示"
-            ]
-          },
-          {
-            "name": "電腦週邊-伺服器AI",
-            "score": -16.0,
-            "netAmount": 0.0,
-            "signals": 2,
-            "sources": [
-              "聖杯過熱",
-              "聖杯出場警示"
+              "主動 ETF"
             ]
           },
           {
             "name": "電子零組件業",
-            "score": -17.7,
-            "netAmount": -424210000.0,
-            "signals": 3,
+            "score": -36.3,
+            "netAmount": -479801000.0,
+            "signals": 5,
             "sources": [
               "主動 ETF"
             ]
@@ -392537,6 +392746,73 @@
             ]
           },
           {
+            "code": "2006",
+            "name": "東和鋼鐵",
+            "industry": null,
+            "price": 88.5,
+            "date": "2026-08-07",
+            "score": 62.0,
+            "scoreParts": [
+              {
+                "source": "動能突破",
+                "points": 42.0
+              },
+              {
+                "source": "基本面改善",
+                "points": 15
+              },
+              {
+                "source": "大盤環境",
+                "points": 5
+              }
+            ],
+            "signals": [
+              "動能突破"
+            ],
+            "warnings": [],
+            "thesis": [
+              "創高後仍有基本面支撐",
+              "營收正成長",
+              "EPS 高成長",
+              "估值未過熱"
+            ],
+            "fundamentals": {
+              "pe": 13.388804,
+              "growth": 0.596,
+              "rev_yoy": 0.038,
+              "rev_qoq": null,
+              "quarters": [
+                {
+                  "date": "2026-03",
+                  "revenue": 13602390000.0,
+                  "qoq": -0.016591452746014805
+                },
+                {
+                  "date": "2025-12",
+                  "revenue": 13831881000.0,
+                  "qoq": -0.11756668578877151
+                },
+                {
+                  "date": "2025-06",
+                  "revenue": 15674704000.0,
+                  "qoq": 0.08101160873220081
+                },
+                {
+                  "date": "2025-03",
+                  "revenue": 14500033000.0,
+                  "qoq": -0.03412900716481472
+                }
+              ]
+            },
+            "conviction": "觀察核心",
+            "signalCount": 1,
+            "thesisBreak": [
+              "主動 ETF 流向轉為連續賣超",
+              "MACD 柱狀體翻回綠色或突破失敗",
+              "營收 / EPS 成長 thesis 消失"
+            ]
+          },
+          {
             "code": "2101",
             "name": "南港",
             "industry": null,
@@ -392596,79 +392872,6 @@
             },
             "conviction": "小部位試單",
             "signalCount": 1,
-            "thesisBreak": [
-              "主動 ETF 流向轉為連續賣超",
-              "MACD 柱狀體翻回綠色或突破失敗",
-              "營收 / EPS 成長 thesis 消失"
-            ]
-          },
-          {
-            "code": "2006",
-            "name": "東和鋼鐵",
-            "industry": "鋼鐵-上游原料",
-            "price": 88.5,
-            "date": "2026-08-07",
-            "score": 54.0,
-            "scoreParts": [
-              {
-                "source": "動能突破",
-                "points": 42.0
-              },
-              {
-                "source": "基本面改善",
-                "points": 15
-              },
-              {
-                "source": "聖杯過熱",
-                "points": -8
-              },
-              {
-                "source": "大盤環境",
-                "points": 5
-              }
-            ],
-            "signals": [
-              "動能突破",
-              "聖杯過熱"
-            ],
-            "warnings": [],
-            "thesis": [
-              "創高後仍有基本面支撐",
-              "營收正成長",
-              "EPS 高成長",
-              "估值未過熱",
-              "過熱觀察"
-            ],
-            "fundamentals": {
-              "pe": 13.388804,
-              "growth": 0.596,
-              "rev_yoy": 0.038,
-              "rev_qoq": null,
-              "quarters": [
-                {
-                  "date": "2026-03",
-                  "revenue": 13602390000.0,
-                  "qoq": -0.016591452746014805
-                },
-                {
-                  "date": "2025-12",
-                  "revenue": 13831881000.0,
-                  "qoq": -0.11756668578877151
-                },
-                {
-                  "date": "2025-06",
-                  "revenue": 15674704000.0,
-                  "qoq": 0.08101160873220081
-                },
-                {
-                  "date": "2025-03",
-                  "revenue": 14500033000.0,
-                  "qoq": -0.03412900716481472
-                }
-              ]
-            },
-            "conviction": "小部位試單",
-            "signalCount": 2,
             "thesisBreak": [
               "主動 ETF 流向轉為連續賣超",
               "MACD 柱狀體翻回綠色或突破失敗",
@@ -392875,80 +393078,6 @@
             ]
           },
           {
-            "code": "1590",
-            "name": "亞德客-KY",
-            "industry": "電機機械-工具機",
-            "price": 1545.0,
-            "date": "2026-08-07",
-            "score": 45,
-            "scoreParts": [
-              {
-                "source": "MACD 翻紅",
-                "points": 11
-              },
-              {
-                "source": "十字星整理",
-                "points": 6
-              },
-              {
-                "source": "聖杯回檔轉強",
-                "points": 15
-              },
-              {
-                "source": "大盤環境",
-                "points": 5
-              }
-            ],
-            "signals": [
-              "MACD 翻紅",
-              "十字星整理",
-              "聖杯回檔轉強"
-            ],
-            "warnings": [],
-            "thesis": [
-              "MACD翻紅第2天",
-              "營收 YoY > 15%",
-              "EPS 高成長",
-              "標準十字星",
-              "回檔轉強"
-            ],
-            "fundamentals": {
-              "pe": 33.800045,
-              "growth": 0.381,
-              "rev_yoy": 0.237,
-              "rev_qoq": null,
-              "quarters": [
-                {
-                  "date": "2026-03",
-                  "revenue": 10013502000.0,
-                  "qoq": 0.10828422230139459
-                },
-                {
-                  "date": "2025-12",
-                  "revenue": 9035139000.0,
-                  "qoq": 0.09571103943116555
-                },
-                {
-                  "date": "2025-09",
-                  "revenue": 8245914000.0,
-                  "qoq": -0.07895790025231188
-                },
-                {
-                  "date": "2025-06",
-                  "revenue": 8952809000.0,
-                  "qoq": 0.10581981434725904
-                }
-              ]
-            },
-            "conviction": "只觀察",
-            "signalCount": 3,
-            "thesisBreak": [
-              "主動 ETF 流向轉為連續賣超",
-              "MACD 柱狀體翻回綠色或突破失敗",
-              "營收 / EPS 成長 thesis 消失"
-            ]
-          },
-          {
             "code": "2425",
             "name": "承啟",
             "industry": null,
@@ -393015,16 +393144,16 @@
             ]
           },
           {
-            "code": "6669",
-            "name": "緯穎",
-            "industry": "電腦及週邊設備業",
+            "code": "3450",
+            "name": "聯鈞",
+            "industry": "半導體業",
             "price": null,
             "date": "2026-08-07",
-            "score": 39.5,
+            "score": 41.1,
             "scoreParts": [
               {
                 "source": "主動 ETF",
-                "points": 34.5
+                "points": 36.1
               },
               {
                 "source": "大盤環境",
@@ -393044,7 +393173,7 @@
               "etfCount": 2,
               "buyCount": 2,
               "sellCount": 0,
-              "netAmount": 24400000
+              "netAmount": 104940000
             },
             "conviction": "只觀察",
             "signalCount": 1,
@@ -393127,20 +393256,20 @@
             ]
           },
           {
-            "code": "2357",
-            "name": "華碩",
-            "industry": "電腦週邊-品牌通路",
-            "price": 817.0,
+            "code": "1590",
+            "name": "亞德客-KY",
+            "industry": null,
+            "price": 1545.0,
             "date": "2026-08-07",
-            "score": 26,
+            "score": 30,
             "scoreParts": [
+              {
+                "source": "MACD 翻紅",
+                "points": 11
+              },
               {
                 "source": "十字星整理",
                 "points": 6
-              },
-              {
-                "source": "聖杯回檔轉強",
-                "points": 15
               },
               {
                 "source": "大盤環境",
@@ -393148,39 +393277,41 @@
               }
             ],
             "signals": [
-              "十字星整理",
-              "聖杯回檔轉強"
+              "MACD 翻紅",
+              "十字星整理"
             ],
             "warnings": [],
             "thesis": [
-              "標準十字星",
-              "回檔轉強"
+              "MACD翻紅第2天",
+              "營收 YoY > 15%",
+              "EPS 高成長",
+              "標準十字星"
             ],
             "fundamentals": {
-              "pe": 14.7313385,
-              "growth": -0.235,
-              "rev_yoy": 0.411,
+              "pe": 33.800045,
+              "growth": 0.381,
+              "rev_yoy": 0.237,
               "rev_qoq": null,
               "quarters": [
                 {
                   "date": "2026-03",
-                  "revenue": 208369726000.0,
-                  "qoq": 0.026836577026480197
+                  "revenue": 10013502000.0,
+                  "qoq": 0.10828422230139459
                 },
                 {
                   "date": "2025-12",
-                  "revenue": 202923942000.0,
-                  "qoq": 0.013194287484709261
+                  "revenue": 9035139000.0,
+                  "qoq": 0.09571103943116555
                 },
                 {
                   "date": "2025-09",
-                  "revenue": 200281372000.0,
-                  "qoq": 0.06529096355311825
+                  "revenue": 8245914000.0,
+                  "qoq": -0.07895790025231188
                 },
                 {
                   "date": "2025-06",
-                  "revenue": 188006262000.0,
-                  "qoq": 0.2729512800693324
+                  "revenue": 8952809000.0,
+                  "qoq": 0.10581981434725904
                 }
               ]
             },
@@ -393283,7 +393414,7 @@
         "title": "台股聖杯雷達",
         "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
         "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-08-07 08:09:53",
+        "generatedAt": "2026-08-07 09:54:15",
         "targetDate": "2026-08-07",
         "dataSource": "twstock universe + yfinance history",
         "market": {
@@ -393302,1638 +393433,88 @@
         },
         "industries": [
           {
-            "industry": "電腦週邊-品牌通路",
+            "industry": "汽車工業",
             "baseIndustries": [
-              "電腦及週邊設備業"
+              "汽車工業"
             ],
-            "return5": 0.0651859343989289,
-            "return20": 0.08861504077021318,
-            "return60": 0.23868259241866657,
-            "volumeRatio": 0.9749160072597113,
-            "relativeStrength20": 0.08861504077021318,
-            "stockCount": 4,
-            "industryScore": 84.4,
+            "return5": 0.0772471943221872,
+            "return20": 0.011873269924142886,
+            "return60": -0.031565657781953825,
+            "volumeRatio": 0.9555201201910548,
+            "relativeStrength20": 0.011873269924142886,
+            "stockCount": 1,
+            "industryScore": 87.5,
             "status": "主流強勢",
             "rank": 1
-          },
-          {
-            "industry": "電腦週邊-伺服器AI",
-            "baseIndustries": [
-              "電腦及週邊設備業"
-            ],
-            "return5": 0.0758259207248023,
-            "return20": 0.06706196694732718,
-            "return60": 0.11466033377119432,
-            "volumeRatio": 1.106411483534137,
-            "relativeStrength20": 0.06706196694732718,
-            "stockCount": 6,
-            "industryScore": 83.4,
-            "status": "主流強勢",
-            "rank": 2
-          },
-          {
-            "industry": "航運-散裝航空",
-            "baseIndustries": [
-              "航運業"
-            ],
-            "return5": 0.06945800868463302,
-            "return20": 0.06228353212616589,
-            "return60": 0.11992591255606855,
-            "volumeRatio": 0.8991745093242062,
-            "relativeStrength20": 0.06228353212616589,
-            "stockCount": 4,
-            "industryScore": 78.2,
-            "status": "轉強觀察",
-            "rank": 3
-          },
-          {
-            "industry": "電機機械-自動化設備",
-            "baseIndustries": [
-              "電機機械"
-            ],
-            "return5": 0.15922983972173832,
-            "return20": -0.001893653182790802,
-            "return60": -0.00423575712459881,
-            "volumeRatio": 1.4462903325177796,
-            "relativeStrength20": -0.001893653182790802,
-            "stockCount": 2,
-            "industryScore": 77.2,
-            "status": "轉強觀察",
-            "rank": 4
-          },
-          {
-            "industry": "電機機械-工具機",
-            "baseIndustries": [
-              "電機機械"
-            ],
-            "return5": 0.1371912612543293,
-            "return20": 0.006509958478650264,
-            "return60": -0.07239087331324263,
-            "volumeRatio": 1.2385874721386805,
-            "relativeStrength20": 0.006509958478650264,
-            "stockCount": 6,
-            "industryScore": 74.9,
-            "status": "轉強觀察",
-            "rank": 5
           },
           {
             "industry": "鋼鐵-上游原料",
             "baseIndustries": [
               "鋼鐵工業"
             ],
-            "return5": 0.055125195751749415,
-            "return20": 0.061436559264825594,
-            "return60": 0.06538193390018987,
-            "volumeRatio": 1.070182601423142,
-            "relativeStrength20": 0.061436559264825594,
-            "stockCount": 5,
-            "industryScore": 74.9,
-            "status": "轉強觀察",
-            "rank": 6
-          },
-          {
-            "industry": "金融-保險",
-            "baseIndustries": [
-              "金融保險業"
-            ],
-            "return5": -0.009090828523378797,
-            "return20": 0.10722356656340218,
-            "return60": 0.2740260600802449,
-            "volumeRatio": 0.7596332877866074,
-            "relativeStrength20": 0.10722356656340218,
-            "stockCount": 1,
-            "industryScore": 69.2,
-            "status": "轉強觀察",
-            "rank": 7
-          },
-          {
-            "industry": "半導體-IC設計",
-            "baseIndustries": [
-              "半導體業"
-            ],
-            "return5": 0.10935123774926535,
-            "return20": -0.014352140996737813,
-            "return60": -0.03146496334947006,
-            "volumeRatio": 0.955369113300241,
-            "relativeStrength20": -0.014352140996737813,
-            "stockCount": 8,
-            "industryScore": 65.0,
-            "status": "轉強觀察",
-            "rank": 8
-          },
-          {
-            "industry": "金融-金控銀行",
-            "baseIndustries": [
-              "金融保險業"
-            ],
-            "return5": -0.01686080952141266,
-            "return20": 0.03512697943312651,
-            "return60": 0.26007218527174925,
-            "volumeRatio": 0.9310481651266921,
-            "relativeStrength20": 0.03512697943312651,
-            "stockCount": 8,
-            "industryScore": 63.9,
-            "status": "中性",
-            "rank": 9
-          },
-          {
-            "industry": "橡膠工業",
-            "baseIndustries": [
-              "橡膠工業"
-            ],
-            "return5": 0.03771746050446308,
-            "return20": 0.0070278931251585314,
-            "return60": 0.04376480296127577,
-            "volumeRatio": 0.8217887796472375,
-            "relativeStrength20": 0.0070278931251585314,
-            "stockCount": 8,
-            "industryScore": 63.1,
-            "status": "中性",
-            "rank": 10
-          }
-        ],
-        "usIndustries": [
-          {
-            "symbol": "IGV",
-            "name": "美股軟體",
-            "mappedIndustries": [
-              "資訊服務-資安雲端"
-            ],
-            "return5": 0.06548066413263814,
-            "return20": 0.059011515526281554,
-            "return60": 0.09626194169726052,
-            "volumeRatio": 0.9244678232802835,
-            "relativeStrength20": 0.036595989467816385,
-            "industryScore": 86.5,
-            "status": "主流強勢",
-            "rank": 1
-          },
-          {
-            "symbol": "XLF",
-            "name": "美股金融",
-            "mappedIndustries": [
-              "金融-金控銀行",
-              "金融-證券期貨",
-              "金融-保險"
-            ],
-            "return5": 0.01421055040861431,
-            "return20": 0.04087145157264567,
-            "return60": 0.12954281024974415,
-            "volumeRatio": 0.9367466545082044,
-            "relativeStrength20": 0.018455925514180502,
-            "industryScore": 71.5,
+            "return5": 0.008133008668489823,
+            "return20": 0.009879987685106,
+            "return60": 0.015115473646225109,
+            "volumeRatio": 0.7911510506452031,
+            "relativeStrength20": 0.009879987685106,
+            "stockCount": 2,
+            "industryScore": 67.5,
             "status": "轉強觀察",
             "rank": 2
           },
           {
-            "symbol": "XLE",
-            "name": "美股能源",
-            "mappedIndustries": [
-              "油電燃氣業",
-              "化學工業",
-              "塑膠工業"
+            "industry": "半導體-晶圓代工",
+            "baseIndustries": [
+              "半導體業"
             ],
-            "return5": -0.013568508301948562,
-            "return20": 0.06092667222147456,
-            "return60": 0.0173168044459474,
-            "volumeRatio": 0.9695412110562389,
-            "relativeStrength20": 0.038511146163009394,
-            "industryScore": 65.5,
-            "status": "轉強觀察",
+            "return5": -0.02268041237113402,
+            "return20": -0.018633540372670808,
+            "return60": 0.04405286343612335,
+            "volumeRatio": 0.8087277443502321,
+            "relativeStrength20": -0.018633540372670808,
+            "stockCount": 1,
+            "industryScore": 51.2,
+            "status": "中性",
             "rank": 3
           },
           {
-            "symbol": "XLB",
-            "name": "美股原物料",
-            "mappedIndustries": [
-              "鋼鐵-上游原料",
-              "鋼鐵-不鏽鋼扣件",
-              "水泥工業",
-              "玻璃陶瓷"
+            "industry": "光電-LED",
+            "baseIndustries": [
+              "光電業"
             ],
-            "return5": 0.010263338217682407,
-            "return20": 0.03800238581770498,
-            "return60": -0.0017221614136716681,
-            "volumeRatio": 1.243642407520129,
-            "relativeStrength20": 0.015586859759239811,
-            "industryScore": 55.5,
-            "status": "中性",
+            "return5": -0.0255999755859375,
+            "return20": -0.14225349963550837,
+            "return60": -0.07305929444935394,
+            "volumeRatio": 1.4584974632292598,
+            "relativeStrength20": -0.14225349963550837,
+            "stockCount": 1,
+            "industryScore": 26.2,
+            "status": "弱勢避開",
             "rank": 4
           },
           {
-            "symbol": "XLI",
-            "name": "美股工業",
-            "mappedIndustries": [
-              "電機機械-工具機",
-              "電機機械-自動化設備",
-              "航運-散裝航空"
+            "industry": "半導體業",
+            "baseIndustries": [
+              "半導體業"
             ],
-            "return5": 0.03570825236270019,
-            "return20": 0.02015346410570193,
-            "return60": 0.05553017363759904,
-            "volumeRatio": 1.1183699213083371,
-            "relativeStrength20": -0.002262061952763239,
-            "industryScore": 55.0,
-            "status": "中性",
+            "return5": 0.0071174377224199285,
+            "return20": -0.1844380403458213,
+            "return60": -0.3164251207729469,
+            "volumeRatio": 0.9045985206652315,
+            "relativeStrength20": -0.1844380403458213,
+            "stockCount": 1,
+            "industryScore": 17.5,
+            "status": "弱勢避開",
             "rank": 5
-          },
-          {
-            "symbol": "XLV",
-            "name": "美股醫療",
-            "mappedIndustries": [
-              "生技醫療-製藥",
-              "生技醫療-醫材通路"
-            ],
-            "return5": 0.00568733275123742,
-            "return20": 0.014059313097615133,
-            "return60": 0.14967844426056048,
-            "volumeRatio": 1.219466598122544,
-            "relativeStrength20": -0.008356212960850035,
-            "industryScore": 50.5,
-            "status": "中性",
-            "rank": 6
-          },
-          {
-            "symbol": "XLP",
-            "name": "美股民生消費",
-            "mappedIndustries": [
-              "食品工業",
-              "貿易百貨業"
-            ],
-            "return5": -0.004212011292967674,
-            "return20": 0.02295677562701796,
-            "return60": 0.020870790529521326,
-            "volumeRatio": 0.9629353703886203,
-            "relativeStrength20": 0.0005412495685527922,
-            "industryScore": 47.0,
-            "status": "弱勢避開",
-            "rank": 7
-          },
-          {
-            "symbol": "XLK",
-            "name": "美股科技",
-            "mappedIndustries": [
-              "半導體-IC設計",
-              "半導體-晶圓代工",
-              "電腦週邊-伺服器AI",
-              "資訊服務-資安雲端",
-              "電子零組件-PCB"
-            ],
-            "return5": 0.05462929685834611,
-            "return20": -0.00010792701269060314,
-            "return60": 0.041882149447602345,
-            "volumeRatio": 1.0230149520789413,
-            "relativeStrength20": -0.02252345307115577,
-            "industryScore": 36.5,
-            "status": "弱勢避開",
-            "rank": 8
-          },
-          {
-            "symbol": "XLY",
-            "name": "美股非必需消費",
-            "mappedIndustries": [
-              "汽車工業",
-              "貿易百貨業",
-              "觀光餐旅"
-            ],
-            "return5": 0.050805223912106984,
-            "return20": 0.01069747553549895,
-            "return60": -0.010639224622932347,
-            "volumeRatio": 1.1188623319113318,
-            "relativeStrength20": -0.011718050522966218,
-            "industryScore": 36.5,
-            "status": "弱勢避開",
-            "rank": 9
-          },
-          {
-            "symbol": "XLC",
-            "name": "美股通訊服務",
-            "mappedIndustries": [
-              "通信網路-網通設備",
-              "通信網路-射頻天線"
-            ],
-            "return5": 0.04316005249664737,
-            "return20": 0.006062783060300521,
-            "return60": -0.03806888264555027,
-            "volumeRatio": 0.8966843341806257,
-            "relativeStrength20": -0.016352742998164648,
-            "industryScore": 23.5,
-            "status": "弱勢避開",
-            "rank": 10
           }
         ],
-        "usTaiwanMatches": [
-          {
-            "symbol": "IGV",
-            "name": "美股軟體",
-            "rank": 1,
-            "industryScore": 86.5,
-            "status": "主流強勢",
-            "return5": 6.55,
-            "return20": 5.9,
-            "return60": 9.63,
-            "relativeStrength20": 3.66,
-            "volumeRatio": 0.92,
-            "mappedIndustries": [
-              "資訊服務-資安雲端"
-            ],
-            "stocks": [
-              {
-                "code": "6214.TW",
-                "name": "精誠",
-                "industry": "資訊服務-資安雲端",
-                "baseIndustry": "資訊服務業",
-                "close": 146.5,
-                "date": "2026-08-07",
-                "return5": -4.87,
-                "return20": 2.09,
-                "return60": 20.08,
-                "relativeStrength20": 2.09,
-                "volumeRatio": 1.31,
-                "score": 83.4,
-                "signal": "減碼警示",
-                "action": "減碼",
-                "ma20": 143.7,
-                "ma60": 138.56
-              },
-              {
-                "code": "3029.TW",
-                "name": "零壹",
-                "industry": "資訊服務-資安雲端",
-                "baseIndustry": "資訊服務業",
-                "close": 109.5,
-                "date": "2026-08-07",
-                "return5": 0,
-                "return20": 6.31,
-                "return60": 12.65,
-                "relativeStrength20": 6.31,
-                "volumeRatio": 1.3,
-                "score": 58.5,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 104.44,
-                "ma60": 102.28
-              },
-              {
-                "code": "2480.TW",
-                "name": "敦陽科",
-                "industry": "資訊服務-資安雲端",
-                "baseIndustry": "資訊服務業",
-                "close": 156.5,
-                "date": "2026-08-07",
-                "return5": -5.72,
-                "return20": -2.49,
-                "return60": 4.33,
-                "relativeStrength20": -2.49,
-                "volumeRatio": 1.69,
-                "score": 50.3,
-                "signal": "出場警示",
-                "action": "出場",
-                "ma20": 157.72,
-                "ma60": 155.33
-              },
-              {
-                "code": "6590.TWO",
-                "name": "普鴻",
-                "industry": "資訊服務-資安雲端",
-                "baseIndustry": "資訊服務業",
-                "close": 63.1,
-                "date": "2026-08-07",
-                "return5": -3.22,
-                "return20": -7.48,
-                "return60": -6.52,
-                "relativeStrength20": -7.48,
-                "volumeRatio": 1.88,
-                "score": 43.3,
-                "signal": "出場警示",
-                "action": "出場",
-                "ma20": 65.91,
-                "ma60": 66.45
-              },
-              {
-                "code": "5203.TW",
-                "name": "訊連",
-                "industry": "資訊服務-資安雲端",
-                "baseIndustry": "資訊服務業",
-                "close": 66.6,
-                "date": "2026-08-07",
-                "return5": 3.74,
-                "return20": -2.35,
-                "return60": 4.39,
-                "relativeStrength20": -2.35,
-                "volumeRatio": 0.75,
-                "score": 43.1,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 66.04,
-                "ma60": 67.2
-              }
-            ]
-          },
-          {
-            "symbol": "XLF",
-            "name": "美股金融",
-            "rank": 2,
-            "industryScore": 71.5,
-            "status": "轉強觀察",
-            "return5": 1.42,
-            "return20": 4.09,
-            "return60": 12.95,
-            "relativeStrength20": 1.85,
-            "volumeRatio": 0.94,
-            "mappedIndustries": [
-              "金融-保險",
-              "金融-證券期貨",
-              "金融-金控銀行"
-            ],
-            "stocks": [
-              {
-                "code": "2880.TW",
-                "name": "華南金",
-                "industry": "金融-金控銀行",
-                "baseIndustry": "金融保險業",
-                "close": 44.4,
-                "date": "2026-08-07",
-                "return5": 1.6,
-                "return20": 14.29,
-                "return60": 36.2,
-                "relativeStrength20": 14.29,
-                "volumeRatio": 0.93,
-                "score": 87.0,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 41.5,
-                "ma60": 37.39
-              },
-              {
-                "code": "2867.TW",
-                "name": "三商壽",
-                "industry": "金融-保險",
-                "baseIndustry": "金融保險業",
-                "close": 9.81,
-                "date": "2026-08-07",
-                "return5": -0.91,
-                "return20": 10.72,
-                "return60": 27.4,
-                "relativeStrength20": 10.72,
-                "volumeRatio": 0.76,
-                "score": 85.6,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 9.37,
-                "ma60": 8.58
-              },
-              {
-                "code": "2884.TW",
-                "name": "玉山金",
-                "industry": "金融-金控銀行",
-                "baseIndustry": "金融保險業",
-                "close": 38.15,
-                "date": "2026-08-07",
-                "return5": -1.29,
-                "return20": 9.78,
-                "return60": 19.78,
-                "relativeStrength20": 9.78,
-                "volumeRatio": 0.69,
-                "score": 84.7,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 36.51,
-                "ma60": 34.46
-              },
-              {
-                "code": "2883.TW",
-                "name": "凱基金",
-                "industry": "金融-金控銀行",
-                "baseIndustry": "金融保險業",
-                "close": 30.85,
-                "date": "2026-08-07",
-                "return5": 0,
-                "return20": 2.66,
-                "return60": 39.59,
-                "relativeStrength20": 2.66,
-                "volumeRatio": 0.95,
-                "score": 78.0,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 30.22,
-                "ma60": 27.89
-              },
-              {
-                "code": "2882.TW",
-                "name": "國泰金",
-                "industry": "金融-金控銀行",
-                "baseIndustry": "金融保險業",
-                "close": 99.4,
-                "date": "2026-08-07",
-                "return5": -2.07,
-                "return20": 3.22,
-                "return60": 29.6,
-                "relativeStrength20": 3.22,
-                "volumeRatio": 0.85,
-                "score": 77.9,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 97.19,
-                "ma60": 95.93
-              },
-              {
-                "code": "2881.TW",
-                "name": "富邦金",
-                "industry": "金融-金控銀行",
-                "baseIndustry": "金融保險業",
-                "close": 127.0,
-                "date": "2026-08-07",
-                "return5": -2.31,
-                "return20": 2.01,
-                "return60": 34.25,
-                "relativeStrength20": 2.01,
-                "volumeRatio": 0.84,
-                "score": 76.3,
-                "signal": "減碼警示",
-                "action": "減碼",
-                "ma20": 126.65,
-                "ma60": 121.23
-              },
-              {
-                "code": "2885.TW",
-                "name": "元大金",
-                "industry": "金融-金控銀行",
-                "baseIndustry": "金融保險業",
-                "close": 67.7,
-                "date": "2026-08-07",
-                "return5": -0.59,
-                "return20": -0.88,
-                "return60": 21.98,
-                "relativeStrength20": -0.88,
-                "volumeRatio": 0.74,
-                "score": 71.9,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 65.51,
-                "ma60": 63.91
-              },
-              {
-                "code": "2801.TW",
-                "name": "彰銀",
-                "industry": "金融-金控銀行",
-                "baseIndustry": "金融保險業",
-                "close": 23.15,
-                "date": "2026-08-07",
-                "return5": -5.84,
-                "return20": -1.34,
-                "return60": 16.32,
-                "relativeStrength20": -1.34,
-                "volumeRatio": 1.31,
-                "score": 44.8,
-                "signal": "出場警示",
-                "action": "出場",
-                "ma20": 23.73,
-                "ma60": 22.26
-              }
-            ]
-          },
-          {
-            "symbol": "XLE",
-            "name": "美股能源",
-            "rank": 3,
-            "industryScore": 65.5,
-            "status": "轉強觀察",
-            "return5": -1.36,
-            "return20": 6.09,
-            "return60": 1.73,
-            "relativeStrength20": 3.85,
-            "volumeRatio": 0.97,
-            "mappedIndustries": [
-              "化學工業",
-              "塑膠工業",
-              "油電燃氣業"
-            ],
-            "stocks": [
-              {
-                "code": "1303.TW",
-                "name": "南亞",
-                "industry": "塑膠工業",
-                "baseIndustry": "塑膠工業",
-                "close": 188.0,
-                "date": "2026-08-07",
-                "return5": 17.87,
-                "return20": 3.58,
-                "return60": 120.4,
-                "relativeStrength20": 3.58,
-                "volumeRatio": 0.98,
-                "score": 78.2,
-                "signal": "回檔轉強",
-                "action": "可觀察",
-                "ma20": 183.88,
-                "ma60": 145.73
-              },
-              {
-                "code": "4305.TWO",
-                "name": "世坤",
-                "industry": "塑膠工業",
-                "baseIndustry": "塑膠工業",
-                "close": 43.8,
-                "date": "2026-08-07",
-                "return5": 5.42,
-                "return20": 4.04,
-                "return60": -1.13,
-                "relativeStrength20": 4.04,
-                "volumeRatio": 1.09,
-                "score": 49.8,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 41.66,
-                "ma60": 43.09
-              },
-              {
-                "code": "6505.TW",
-                "name": "台塑化",
-                "industry": "油電燃氣業",
-                "baseIndustry": "油電燃氣業",
-                "close": 71.0,
-                "date": "2026-08-07",
-                "return5": 0.28,
-                "return20": 20.75,
-                "return60": 35.5,
-                "relativeStrength20": 20.75,
-                "volumeRatio": 0.41,
-                "score": 48.8,
-                "signal": "出場警示",
-                "action": "出場",
-                "ma20": 75.09,
-                "ma60": 60.9
-              },
-              {
-                "code": "8908.TWO",
-                "name": "欣雄",
-                "industry": "油電燃氣業",
-                "baseIndustry": "油電燃氣業",
-                "close": 39.5,
-                "date": "2026-08-07",
-                "return5": -1.13,
-                "return20": 0.89,
-                "return60": -1.37,
-                "relativeStrength20": 0.89,
-                "volumeRatio": 0.56,
-                "score": 41.4,
-                "signal": "減碼警示",
-                "action": "減碼",
-                "ma20": 39.45,
-                "ma60": 40.54
-              },
-              {
-                "code": "4303.TWO",
-                "name": "信立",
-                "industry": "塑膠工業",
-                "baseIndustry": "塑膠工業",
-                "close": 45.05,
-                "date": "2026-08-07",
-                "return5": 8.95,
-                "return20": -1.21,
-                "return60": -7.68,
-                "relativeStrength20": -1.21,
-                "volumeRatio": 0.85,
-                "score": 41.2,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 43.28,
-                "ma60": 45.79
-              },
-              {
-                "code": "9950.TWO",
-                "name": "萬國通",
-                "industry": "塑膠工業",
-                "baseIndustry": "塑膠工業",
-                "close": 10.45,
-                "date": "2026-08-07",
-                "return5": 1.95,
-                "return20": -1.88,
-                "return60": -0.95,
-                "relativeStrength20": -1.88,
-                "volumeRatio": 0.58,
-                "score": 38.1,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 10.41,
-                "ma60": 10.67
-              },
-              {
-                "code": "8917.TWO",
-                "name": "欣泰",
-                "industry": "油電燃氣業",
-                "baseIndustry": "油電燃氣業",
-                "close": 53.0,
-                "date": "2026-08-06",
-                "return5": 2.91,
-                "return20": -1.85,
-                "return60": 0,
-                "relativeStrength20": -1.85,
-                "volumeRatio": 0.56,
-                "score": 38.0,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 52.67,
-                "ma60": 52.63
-              },
-              {
-                "code": "9908.TW",
-                "name": "大台北",
-                "industry": "油電燃氣業",
-                "baseIndustry": "油電燃氣業",
-                "close": 29.15,
-                "date": "2026-08-07",
-                "return5": 0,
-                "return20": -2.02,
-                "return60": -0.34,
-                "relativeStrength20": -2.02,
-                "volumeRatio": 0.61,
-                "score": 38.0,
-                "signal": "出場警示",
-                "action": "出場",
-                "ma20": 29.26,
-                "ma60": 29.4
-              }
-            ]
-          },
-          {
-            "symbol": "XLB",
-            "name": "美股原物料",
-            "rank": 4,
-            "industryScore": 55.5,
-            "status": "中性",
-            "return5": 1.03,
-            "return20": 3.8,
-            "return60": -0.17,
-            "relativeStrength20": 1.56,
-            "volumeRatio": 1.24,
-            "mappedIndustries": [
-              "水泥工業",
-              "玻璃陶瓷",
-              "鋼鐵-上游原料",
-              "鋼鐵-不鏽鋼扣件"
-            ],
-            "stocks": [
-              {
-                "code": "2006.TW",
-                "name": "東和鋼鐵",
-                "industry": "鋼鐵-上游原料",
-                "baseIndustry": "鋼鐵工業",
-                "close": 88.5,
-                "date": "2026-08-07",
-                "return5": 18.63,
-                "return20": 26.07,
-                "return60": 33.89,
-                "relativeStrength20": 26.07,
-                "volumeRatio": 1.75,
-                "score": 51.4,
-                "signal": "過熱觀察",
-                "action": "過熱勿追",
-                "ma20": 74.61,
-                "ma60": 70.03
-              },
-              {
-                "code": "1101.TW",
-                "name": "台泥",
-                "industry": "水泥工業",
-                "baseIndustry": "水泥工業",
-                "close": 24.35,
-                "date": "2026-08-07",
-                "return5": 0.21,
-                "return20": 7.27,
-                "return60": -0.81,
-                "relativeStrength20": 7.27,
-                "volumeRatio": 0.93,
-                "score": 50.5,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 23.9,
-                "ma60": 24.0
-              },
-              {
-                "code": "2014.TW",
-                "name": "中鴻",
-                "industry": "鋼鐵-上游原料",
-                "baseIndustry": "鋼鐵工業",
-                "close": 17.65,
-                "date": "2026-08-07",
-                "return5": 6.33,
-                "return20": 2.92,
-                "return60": -1.4,
-                "relativeStrength20": 2.92,
-                "volumeRatio": 1.01,
-                "score": 45.6,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 17.05,
-                "ma60": 17.49
-              },
-              {
-                "code": "2002.TW",
-                "name": "中鋼",
-                "industry": "鋼鐵-上游原料",
-                "baseIndustry": "鋼鐵工業",
-                "close": 19.05,
-                "date": "2026-08-07",
-                "return5": 0.53,
-                "return20": 2.7,
-                "return60": 4.1,
-                "relativeStrength20": 2.7,
-                "volumeRatio": 0.7,
-                "score": 42.8,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 18.86,
-                "ma60": 18.86
-              },
-              {
-                "code": "1110.TW",
-                "name": "東泥",
-                "industry": "水泥工業",
-                "baseIndustry": "水泥工業",
-                "close": 15.9,
-                "date": "2026-08-07",
-                "return5": -1.55,
-                "return20": 1.92,
-                "return60": 10.42,
-                "relativeStrength20": 1.92,
-                "volumeRatio": 0.81,
-                "score": 42.6,
-                "signal": "出場警示",
-                "action": "出場",
-                "ma20": 15.95,
-                "ma60": 15.42
-              },
-              {
-                "code": "2013.TW",
-                "name": "中鋼構",
-                "industry": "鋼鐵-上游原料",
-                "baseIndustry": "鋼鐵工業",
-                "close": 41.3,
-                "date": "2026-08-07",
-                "return5": 0.98,
-                "return20": -0.24,
-                "return60": -2.82,
-                "relativeStrength20": -0.24,
-                "volumeRatio": 1.01,
-                "score": 41.8,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 40.84,
-                "ma60": 42.05
-              },
-              {
-                "code": "2023.TW",
-                "name": "燁輝",
-                "industry": "鋼鐵-上游原料",
-                "baseIndustry": "鋼鐵工業",
-                "close": 13.8,
-                "date": "2026-08-07",
-                "return5": 1.1,
-                "return20": -0.72,
-                "return60": -1.08,
-                "relativeStrength20": -0.72,
-                "volumeRatio": 0.88,
-                "score": 40.1,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 13.79,
-                "ma60": 13.77
-              },
-              {
-                "code": "1104.TW",
-                "name": "環泥",
-                "industry": "水泥工業",
-                "baseIndustry": "水泥工業",
-                "close": 26.6,
-                "date": "2026-08-07",
-                "return5": -0.75,
-                "return20": -1.85,
-                "return60": -4.66,
-                "relativeStrength20": -1.85,
-                "volumeRatio": 0.83,
-                "score": 38.0,
-                "signal": "出場警示",
-                "action": "出場",
-                "ma20": 26.73,
-                "ma60": 27.51
-              }
-            ]
-          },
-          {
-            "symbol": "XLI",
-            "name": "美股工業",
-            "rank": 5,
-            "industryScore": 55.0,
-            "status": "中性",
-            "return5": 3.57,
-            "return20": 2.02,
-            "return60": 5.55,
-            "relativeStrength20": -0.23,
-            "volumeRatio": 1.12,
-            "mappedIndustries": [
-              "航運-散裝航空",
-              "電機機械-工具機",
-              "電機機械-自動化設備"
-            ],
-            "stocks": [
-              {
-                "code": "1590.TW",
-                "name": "亞德客-KY",
-                "industry": "電機機械-工具機",
-                "baseIndustry": "電機機械",
-                "close": 1545.0,
-                "date": "2026-08-07",
-                "return5": 16.6,
-                "return20": 20.7,
-                "return60": 5.46,
-                "relativeStrength20": 20.7,
-                "volumeRatio": 0.98,
-                "score": 84.2,
-                "signal": "回檔轉強",
-                "action": "可觀察",
-                "ma20": 1389.75,
-                "ma60": 1372.42
-              },
-              {
-                "code": "2637.TW",
-                "name": "慧洋-KY",
-                "industry": "航運-散裝航空",
-                "baseIndustry": "航運業",
-                "close": 87.9,
-                "date": "2026-08-07",
-                "return5": 12.26,
-                "return20": 5.9,
-                "return60": 17.36,
-                "relativeStrength20": 5.9,
-                "volumeRatio": 1.14,
-                "score": 80.4,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 82.5,
-                "ma60": 78.31
-              },
-              {
-                "code": "2610.TW",
-                "name": "華航",
-                "industry": "航運-散裝航空",
-                "baseIndustry": "航運業",
-                "close": 22.5,
-                "date": "2026-08-07",
-                "return5": 0.45,
-                "return20": 5.14,
-                "return60": 21.29,
-                "relativeStrength20": 5.14,
-                "volumeRatio": 0.74,
-                "score": 76.1,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 21.51,
-                "ma60": 20.94
-              },
-              {
-                "code": "2049.TW",
-                "name": "上銀",
-                "industry": "電機機械-工具機",
-                "baseIndustry": "電機機械",
-                "close": 387.0,
-                "date": "2026-08-07",
-                "return5": 27.09,
-                "return20": 16.74,
-                "return60": 3.34,
-                "relativeStrength20": 16.74,
-                "volumeRatio": 2.32,
-                "score": 51.0,
-                "signal": "過熱觀察",
-                "action": "過熱勿追",
-                "ma20": 322.27,
-                "ma60": 342.22
-              },
-              {
-                "code": "4571.TW",
-                "name": "鈞興-KY",
-                "industry": "電機機械-自動化設備",
-                "baseIndustry": "電機機械",
-                "close": 171.5,
-                "date": "2026-08-07",
-                "return5": 16.27,
-                "return20": 3.63,
-                "return60": -16.14,
-                "relativeStrength20": 3.63,
-                "volumeRatio": 1.54,
-                "score": 50.9,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 154.78,
-                "ma60": 178.74
-              },
-              {
-                "code": "2606.TW",
-                "name": "裕民",
-                "industry": "航運-散裝航空",
-                "baseIndustry": "航運業",
-                "close": 67.5,
-                "date": "2026-08-07",
-                "return5": 7.83,
-                "return20": 6.97,
-                "return60": 4.49,
-                "relativeStrength20": 6.97,
-                "volumeRatio": 1.03,
-                "score": 50.8,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 63.16,
-                "ma60": 64.49
-              },
-              {
-                "code": "1597.TW",
-                "name": "直得",
-                "industry": "電機機械-工具機",
-                "baseIndustry": "電機機械",
-                "close": 141.0,
-                "date": "2026-08-07",
-                "return5": 23.68,
-                "return20": 1.81,
-                "return60": -21.67,
-                "relativeStrength20": 1.81,
-                "volumeRatio": 1.78,
-                "score": 50.6,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 128.28,
-                "ma60": 150.62
-              },
-              {
-                "code": "2605.TW",
-                "name": "新興",
-                "industry": "航運-散裝航空",
-                "baseIndustry": "航運業",
-                "close": 32.55,
-                "date": "2026-08-07",
-                "return5": 7.25,
-                "return20": 6.9,
-                "return60": 4.83,
-                "relativeStrength20": 6.9,
-                "volumeRatio": 0.68,
-                "score": 47.8,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 31.29,
-                "ma60": 31.06
-              }
-            ]
-          },
-          {
-            "symbol": "XLV",
-            "name": "美股醫療",
-            "rank": 6,
-            "industryScore": 50.5,
-            "status": "中性",
-            "return5": 0.57,
-            "return20": 1.41,
-            "return60": 14.97,
-            "relativeStrength20": -0.84,
-            "volumeRatio": 1.22,
-            "mappedIndustries": [
-              "生技醫療-製藥",
-              "生技醫療-醫材通路"
-            ],
-            "stocks": [
-              {
-                "code": "4167.TWO",
-                "name": "松瑞藥",
-                "industry": "生技醫療-製藥",
-                "baseIndustry": "生技醫療業",
-                "close": 19.75,
-                "date": "2026-08-07",
-                "return5": 16.86,
-                "return20": 0.68,
-                "return60": 10.43,
-                "relativeStrength20": 0.68,
-                "volumeRatio": 1.05,
-                "score": 72.2,
-                "signal": "回檔轉強",
-                "action": "可觀察",
-                "ma20": 18.72,
-                "ma60": 18.64
-              },
-              {
-                "code": "6446.TW",
-                "name": "藥華藥",
-                "industry": "生技醫療-製藥",
-                "baseIndustry": "生技醫療業",
-                "close": 1240.0,
-                "date": "2026-08-07",
-                "return5": 16.98,
-                "return20": -3.5,
-                "return60": 75.9,
-                "relativeStrength20": -3.5,
-                "volumeRatio": 1.24,
-                "score": 68.5,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 1188.0,
-                "ma60": 1033.48
-              },
-              {
-                "code": "4183.TWO",
-                "name": "福永生技",
-                "industry": "生技醫療-製藥",
-                "baseIndustry": "生技醫療業",
-                "close": 14.75,
-                "date": "2026-08-06",
-                "return5": 0.34,
-                "return20": 5.36,
-                "return60": 7.66,
-                "relativeStrength20": 5.36,
-                "volumeRatio": 1.23,
-                "score": 49.5,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 14.63,
-                "ma60": 13.9
-              },
-              {
-                "code": "4148.TW",
-                "name": "全宇生技-KY",
-                "industry": "生技醫療-製藥",
-                "baseIndustry": "生技醫療業",
-                "close": 30.3,
-                "date": "2026-08-07",
-                "return5": -0.98,
-                "return20": 1.0,
-                "return60": -14.65,
-                "relativeStrength20": 1.0,
-                "volumeRatio": 1.22,
-                "score": 43.6,
-                "signal": "出場警示",
-                "action": "出場",
-                "ma20": 30.59,
-                "ma60": 31.11
-              },
-              {
-                "code": "6612.TWO",
-                "name": "奈米醫材",
-                "industry": "生技醫療-醫材通路",
-                "baseIndustry": "生技醫療業",
-                "close": 73.8,
-                "date": "2026-08-07",
-                "return5": 5.28,
-                "return20": -0.67,
-                "return60": 10.15,
-                "relativeStrength20": -0.67,
-                "volumeRatio": 0.81,
-                "score": 38.5,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 70.98,
-                "ma60": 72.07
-              },
-              {
-                "code": "6472.TW",
-                "name": "保瑞",
-                "industry": "生技醫療-醫材通路",
-                "baseIndustry": "生技醫療業",
-                "close": 417.5,
-                "date": "2026-08-07",
-                "return5": 9.15,
-                "return20": -2.0,
-                "return60": 15.01,
-                "relativeStrength20": -2.0,
-                "volumeRatio": 0.94,
-                "score": 37.9,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 402.68,
-                "ma60": 398.02
-              },
-              {
-                "code": "6661.TWO",
-                "name": "威健生技",
-                "industry": "生技醫療-製藥",
-                "baseIndustry": "生技醫療業",
-                "close": 17.6,
-                "date": "2026-08-07",
-                "return5": 4.14,
-                "return20": -3.56,
-                "return60": 0,
-                "relativeStrength20": -3.56,
-                "volumeRatio": 0.9,
-                "score": 35.4,
-                "signal": "出場警示",
-                "action": "出場",
-                "ma20": 17.69,
-                "ma60": 17.36
-              },
-              {
-                "code": "6535.TWO",
-                "name": "順藥",
-                "industry": "生技醫療-製藥",
-                "baseIndustry": "生技醫療業",
-                "close": 91.1,
-                "date": "2026-08-07",
-                "return5": 4.71,
-                "return20": -9.35,
-                "return60": -28.83,
-                "relativeStrength20": -9.35,
-                "volumeRatio": 0.78,
-                "score": 27.4,
-                "signal": "趨勢觀察",
-                "action": "觀察",
-                "ma20": 90.76,
-                "ma60": 104.61
-              }
-            ]
-          }
-        ],
+        "usIndustries": [],
+        "usTaiwanMatches": [],
         "candidates": {
           "breakout": [],
-          "pullback": [
-            {
-              "code": "2357.TW",
-              "name": "華碩",
-              "industry": "電腦週邊-品牌通路",
-              "baseIndustry": "電腦及週邊設備業",
-              "close": 817.0,
-              "price": 817.0,
-              "date": "2026-08-07",
-              "return5": 0.86,
-              "return20": 19.44,
-              "return60": 20.32,
-              "relativeStrength20": 19.44,
-              "volumeRatio": 0.92,
-              "signal": "回檔轉強",
-              "bucket": "pullback",
-              "score": 89.5,
-              "action": "可觀察",
-              "ma5": 815.6,
-              "ma10": 788.1,
-              "ma20": 756.8,
-              "ma60": 748.35,
-              "ma120": 660.7,
-              "stopPrices": {
-                "MA20": 756.8,
-                "最近回檔低點": 688.0,
-                "固定 7%": 759.81
-              },
-              "positionSizing": {
-                "valid": true,
-                "riskAmount": 10000.0,
-                "positionValue": 135714.0,
-                "rawPositionValue": 135714.0,
-                "shares": 166,
-                "lots": 0,
-                "oddLot": 166,
-                "stopPrice": 756.8,
-                "maxLoss": 9993.0,
-                "riskRewardTo8Pct": 1.09,
-                "firstTakeProfit": 882.36,
-                "secondTakeProfit": 939.55,
-                "exceedsSingleLimit": false,
-                "exceedsIndustryLimit": false
-              }
-            },
-            {
-              "code": "1590.TW",
-              "name": "亞德客-KY",
-              "industry": "電機機械-工具機",
-              "baseIndustry": "電機機械",
-              "close": 1545.0,
-              "price": 1545.0,
-              "date": "2026-08-07",
-              "return5": 16.6,
-              "return20": 20.7,
-              "return60": 5.46,
-              "relativeStrength20": 20.7,
-              "volumeRatio": 0.98,
-              "signal": "回檔轉強",
-              "bucket": "pullback",
-              "score": 88.2,
-              "action": "可觀察",
-              "ma5": 1491.0,
-              "ma10": 1425.0,
-              "ma20": 1389.75,
-              "ma60": 1372.42,
-              "ma120": 1281.04,
-              "stopPrices": {
-                "MA20": 1389.75,
-                "最近回檔低點": 1245.0,
-                "固定 7%": 1436.85
-              },
-              "positionSizing": {
-                "valid": true,
-                "riskAmount": 10000.0,
-                "positionValue": 99517.0,
-                "rawPositionValue": 99517.0,
-                "shares": 64,
-                "lots": 0,
-                "oddLot": 64,
-                "stopPrice": 1389.75,
-                "maxLoss": 9936.0,
-                "riskRewardTo8Pct": 0.8,
-                "firstTakeProfit": 1668.6,
-                "secondTakeProfit": 1776.75,
-                "exceedsSingleLimit": false,
-                "exceedsIndustryLimit": false
-              }
-            }
-          ],
-          "overheated": [
-            {
-              "code": "2006.TW",
-              "name": "東和鋼鐵",
-              "industry": "鋼鐵-上游原料",
-              "baseIndustry": "鋼鐵工業",
-              "close": 88.5,
-              "price": 88.5,
-              "date": "2026-08-07",
-              "return5": 18.63,
-              "return20": 26.07,
-              "return60": 33.89,
-              "relativeStrength20": 26.07,
-              "volumeRatio": 1.75,
-              "signal": "過熱觀察",
-              "bucket": "overheated",
-              "score": 55.2,
-              "action": "過熱勿追",
-              "ma5": 83.2,
-              "ma10": 78.19,
-              "ma20": 74.61,
-              "ma60": 70.03,
-              "ma120": 70.92,
-              "stopPrices": {
-                "MA20": 74.61,
-                "最近回檔低點": 69.0,
-                "固定 7%": 82.31
-              },
-              "positionSizing": {
-                "valid": true,
-                "riskAmount": 10000.0,
-                "positionValue": 63738.0,
-                "rawPositionValue": 63738.0,
-                "shares": 720,
-                "lots": 0,
-                "oddLot": 720,
-                "stopPrice": 74.61,
-                "maxLoss": 9997.0,
-                "riskRewardTo8Pct": 0.51,
-                "firstTakeProfit": 95.58,
-                "secondTakeProfit": 101.77,
-                "exceedsSingleLimit": false,
-                "exceedsIndustryLimit": false
-              }
-            },
-            {
-              "code": "2049.TW",
-              "name": "上銀",
-              "industry": "電機機械-工具機",
-              "baseIndustry": "電機機械",
-              "close": 387.0,
-              "price": 387.0,
-              "date": "2026-08-07",
-              "return5": 27.09,
-              "return20": 16.74,
-              "return60": 3.34,
-              "relativeStrength20": 16.74,
-              "volumeRatio": 2.32,
-              "signal": "過熱觀察",
-              "bucket": "overheated",
-              "score": 55.0,
-              "action": "過熱勿追",
-              "ma5": 355.6,
-              "ma10": 327.9,
-              "ma20": 322.27,
-              "ma60": 342.22,
-              "ma120": 302.81,
-              "stopPrices": {
-                "MA20": 322.27,
-                "最近回檔低點": 279.0,
-                "固定 7%": 359.91
-              },
-              "positionSizing": {
-                "valid": true,
-                "riskAmount": 10000.0,
-                "positionValue": 59791.0,
-                "rawPositionValue": 59791.0,
-                "shares": 154,
-                "lots": 0,
-                "oddLot": 154,
-                "stopPrice": 322.27,
-                "maxLoss": 9968.0,
-                "riskRewardTo8Pct": 0.48,
-                "firstTakeProfit": 417.96,
-                "secondTakeProfit": 445.05,
-                "exceedsSingleLimit": false,
-                "exceedsIndustryLimit": false
-              }
-            },
-            {
-              "code": "3017.TW",
-              "name": "奇鋐",
-              "industry": "電腦週邊-伺服器AI",
-              "baseIndustry": "電腦及週邊設備業",
-              "close": 2785.0,
-              "price": 2785.0,
-              "date": "2026-08-07",
-              "return5": 20.04,
-              "return20": 18.51,
-              "return60": 9.0,
-              "relativeStrength20": 18.51,
-              "volumeRatio": 1.26,
-              "signal": "過熱觀察",
-              "bucket": "overheated",
-              "score": 53.2,
-              "action": "過熱勿追",
-              "ma5": 2721.0,
-              "ma10": 2477.0,
-              "ma20": 2362.25,
-              "ma60": 2462.67,
-              "ma120": 2307.62,
-              "stopPrices": {
-                "MA20": 2362.25,
-                "最近回檔低點": 2015.0,
-                "固定 7%": 2590.05
-              },
-              "positionSizing": {
-                "valid": true,
-                "riskAmount": 10000.0,
-                "positionValue": 65878.0,
-                "rawPositionValue": 65878.0,
-                "shares": 23,
-                "lots": 0,
-                "oddLot": 23,
-                "stopPrice": 2362.25,
-                "maxLoss": 9723.0,
-                "riskRewardTo8Pct": 0.53,
-                "firstTakeProfit": 3007.8,
-                "secondTakeProfit": 3202.75,
-                "exceedsSingleLimit": false,
-                "exceedsIndustryLimit": false
-              }
-            }
-          ],
-          "exit": [
-            {
-              "code": "1583.TW",
-              "name": "程泰",
-              "industry": "電機機械-工具機",
-              "baseIndustry": "電機機械",
-              "close": 49.0,
-              "price": 49.0,
-              "date": "2026-08-07",
-              "return5": -1.31,
-              "return20": 0.93,
-              "return60": 4.93,
-              "relativeStrength20": 0.93,
-              "volumeRatio": 0.81,
-              "signal": "出場警示",
-              "bucket": "exit",
-              "score": 44.8,
-              "action": "出場",
-              "ma5": 49.41,
-              "ma10": 49.58,
-              "ma20": 49.6,
-              "ma60": 50.5,
-              "ma120": 48.36,
-              "stopPrices": {
-                "MA20": 49.6,
-                "最近回檔低點": 48.05,
-                "固定 7%": 45.57
-              },
-              "positionSizing": {
-                "valid": false,
-                "message": "停損價高於或等於進場價，無法計算部位。"
-              }
-            },
-            {
-              "code": "4526.TW",
-              "name": "東台",
-              "industry": "電機機械-工具機",
-              "baseIndustry": "電機機械",
-              "close": 29.95,
-              "price": 29.95,
-              "date": "2026-08-07",
-              "return5": 11.34,
-              "return20": -20.66,
-              "return60": -15.75,
-              "relativeStrength20": -20.66,
-              "volumeRatio": 0.97,
-              "signal": "出場警示",
-              "bucket": "exit",
-              "score": 31.3,
-              "action": "出場",
-              "ma5": 29.73,
-              "ma10": 28.76,
-              "ma20": 31.03,
-              "ma60": 36.96,
-              "ma120": 35.55,
-              "stopPrices": {
-                "MA20": 31.03,
-                "最近回檔低點": 25.15,
-                "固定 7%": 27.85
-              },
-              "positionSizing": {
-                "valid": false,
-                "message": "停損價高於或等於進場價，無法計算部位。"
-              }
-            },
-            {
-              "code": "2382.TW",
-              "name": "廣達",
-              "industry": "電腦週邊-伺服器AI",
-              "baseIndustry": "電腦及週邊設備業",
-              "close": 298.0,
-              "price": 298.0,
-              "date": "2026-08-07",
-              "return5": 2.23,
-              "return20": -20.21,
-              "return60": -10.91,
-              "relativeStrength20": -20.21,
-              "volumeRatio": 0.8,
-              "signal": "出場警示",
-              "bucket": "exit",
-              "score": 29.5,
-              "action": "出場",
-              "ma5": 300.2,
-              "ma10": 301.65,
-              "ma20": 323.3,
-              "ma60": 346.51,
-              "ma120": 325.17,
-              "stopPrices": {
-                "MA20": 323.3,
-                "最近回檔低點": 279.0,
-                "固定 7%": 277.14
-              },
-              "positionSizing": {
-                "valid": false,
-                "message": "停損價高於或等於進場價，無法計算部位。"
-              }
-            },
-            {
-              "code": "4533.TWO",
-              "name": "協易機",
-              "industry": "電機機械-工具機",
-              "baseIndustry": "電機機械",
-              "close": 24.6,
-              "price": 24.6,
-              "date": "2026-08-07",
-              "return5": 4.9,
-              "return20": -15.61,
-              "return60": -19.74,
-              "relativeStrength20": -15.61,
-              "volumeRatio": 0.57,
-              "signal": "出場警示",
-              "bucket": "exit",
-              "score": 27.6,
-              "action": "出場",
-              "ma5": 24.53,
-              "ma10": 24.2,
-              "ma20": 25.65,
-              "ma60": 29.02,
-              "ma120": 30.52,
-              "stopPrices": {
-                "MA20": 25.65,
-                "最近回檔低點": 22.0,
-                "固定 7%": 22.88
-              },
-              "positionSizing": {
-                "valid": false,
-                "message": "停損價高於或等於進場價，無法計算部位。"
-              }
-            },
-            {
-              "code": "3035.TW",
-              "name": "智原",
-              "industry": "半導體-IC設計",
-              "baseIndustry": "半導體業",
-              "close": 172.0,
-              "price": 172.0,
-              "date": "2026-08-07",
-              "return5": 15.05,
-              "return20": -20.37,
-              "return60": -13.35,
-              "relativeStrength20": -20.37,
-              "volumeRatio": 0.9,
-              "signal": "出場警示",
-              "bucket": "exit",
-              "score": 27.3,
-              "action": "出場",
-              "ma5": 168.1,
-              "ma10": 169.35,
-              "ma20": 183.72,
-              "ma60": 198.08,
-              "ma120": 180.56,
-              "stopPrices": {
-                "MA20": 183.72,
-                "最近回檔低點": 146.5,
-                "固定 7%": 159.96
-              },
-              "positionSizing": {
-                "valid": false,
-                "message": "停損價高於或等於進場價，無法計算部位。"
-              }
-            }
-          ]
+          "pullback": [],
+          "overheated": [],
+          "exit": []
         },
         "rerun": {
           "githubActions": "Actions > Daily Stock Scan > Run workflow，可選只重跑台股聖杯與美股產業資料。",
@@ -394957,39 +393538,29 @@
         "status": "needs_sponsor",
         "source": "FinMind TaiwanStockTradingDailyReport",
         "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-        "generatedAt": "2026-08-07 08:09:56",
+        "generatedAt": "2026-08-07 09:54:17",
         "date": "2026-08-07",
         "targets": 36,
         "items": [],
         "errors": [
           {
-            "code": "3008",
-            "name": "大立光",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "2301",
-            "name": "光寶科",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "2357",
-            "name": "華碩",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "1608",
-            "name": "華榮",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "1590",
-            "name": "亞德客-KY",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
             "code": "2033",
             "name": "佳大",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "2536",
+            "name": "宏普",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "2397",
+            "name": "友通",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "3008",
+            "name": "大立光",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
@@ -394998,13 +393569,23 @@
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "1537",
-            "name": "廣隆",
+            "code": "2301",
+            "name": "光寶科",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "1213",
-            "name": "大飲",
+            "code": "1608",
+            "name": "華榮",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "3450",
+            "name": "聯鈞",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "1537",
+            "name": "廣隆",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
