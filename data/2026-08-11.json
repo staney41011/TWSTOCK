@@ -1,6 +1,6 @@
 {
   "date": "2026-08-11",
-  "market_breadth": 4.35,
+  "market_breadth": 4.11,
   "strategies": {
     "momentum": [
       {
@@ -644,6 +644,29 @@
         "pattern": "標準十字星",
         "vol_ratio": 61.5,
         "vol_avg_val": 23.0,
+        "trend": "多頭整理",
+        "reasons": [
+          "結構+十字星成立 (60分)",
+          "均線多頭排列 (+5)"
+        ]
+      },
+      {
+        "code": "2395.TW",
+        "name": "研華",
+        "region": "TW",
+        "price": 661.0,
+        "date": "2026-08-11",
+        "fundamentals": {
+          "pe": 999,
+          "growth": null,
+          "rev_yoy": null,
+          "rev_qoq": null,
+          "quarters": []
+        },
+        "score": 65,
+        "pattern": "標準十字星",
+        "vol_ratio": 64.6,
+        "vol_avg_val": 41.4,
         "trend": "多頭整理",
         "reasons": [
           "結構+十字星成立 (60分)",
@@ -1658,6 +1681,55 @@
         ]
       },
       {
+        "code": "2397.TW",
+        "name": "友通",
+        "region": "TW",
+        "price": 67.7,
+        "date": "2026-08-11",
+        "fundamentals": {
+          "pe": 999,
+          "growth": null,
+          "rev_yoy": null,
+          "rev_qoq": null,
+          "quarters": []
+        },
+        "pattern": "MACD翻紅第3天",
+        "macd_day": 3,
+        "macd_label": "第3天",
+        "cross_date": "2026-08-07",
+        "dif": 1.3084,
+        "macd_signal": 0.0573,
+        "histogram": 1.2511,
+        "histogram_prev": 0.8485,
+        "histogram_cross": 0.354,
+        "hist_sequence": [
+          {
+            "date": "2026-08-05",
+            "value": -0.378
+          },
+          {
+            "date": "2026-08-06",
+            "value": -0.1121
+          },
+          {
+            "date": "2026-08-07",
+            "value": 0.354
+          },
+          {
+            "date": "2026-08-10",
+            "value": 0.8485
+          },
+          {
+            "date": "2026-08-11",
+            "value": 1.2511
+          }
+        ],
+        "reasons": [
+          "MACD(21,55,89) 柱狀體於 2026-08-07 由綠翻紅",
+          "目前為翻紅第3天，柱狀體 1.2511"
+        ]
+      },
+      {
         "code": "2359.TW",
         "name": "所羅門",
         "region": "TW",
@@ -1938,6 +2010,55 @@
         ]
       },
       {
+        "code": "3508.TWO",
+        "name": "位速",
+        "region": "TW",
+        "price": 17.05,
+        "date": "2026-08-11",
+        "fundamentals": {
+          "pe": 999,
+          "growth": null,
+          "rev_yoy": null,
+          "rev_qoq": null,
+          "quarters": []
+        },
+        "pattern": "MACD翻紅第3天",
+        "macd_day": 3,
+        "macd_label": "第3天",
+        "cross_date": "2026-08-07",
+        "dif": -1.7118,
+        "macd_signal": -1.882,
+        "histogram": 0.1702,
+        "histogram_prev": 0.0932,
+        "histogram_cross": 0.0224,
+        "hist_sequence": [
+          {
+            "date": "2026-08-05",
+            "value": -0.1778
+          },
+          {
+            "date": "2026-08-06",
+            "value": -0.0691
+          },
+          {
+            "date": "2026-08-07",
+            "value": 0.0224
+          },
+          {
+            "date": "2026-08-10",
+            "value": 0.0932
+          },
+          {
+            "date": "2026-08-11",
+            "value": 0.1702
+          }
+        ],
+        "reasons": [
+          "MACD(21,55,89) 柱狀體於 2026-08-07 由綠翻紅",
+          "目前為翻紅第3天，柱狀體 0.1702"
+        ]
+      },
+      {
         "code": "1537.TW",
         "name": "廣隆",
         "region": "TW",
@@ -2137,15 +2258,6 @@
         "updated_at": "2026-08-11",
         "details": [
           {
-            "etf_code": "00987A",
-            "etf_name": "主動台新優勢成長",
-            "issuer": "台新",
-            "side": "buy",
-            "action": "added",
-            "shares_delta": 35000,
-            "amount": 37275000
-          },
-          {
             "etf_code": "00985A",
             "etf_name": "主動野村台灣50",
             "issuer": "野村",
@@ -2153,6 +2265,15 @@
             "action": "increased",
             "shares_delta": 75000,
             "amount": 79875000
+          },
+          {
+            "etf_code": "00987A",
+            "etf_name": "主動台新優勢成長",
+            "issuer": "台新",
+            "side": "buy",
+            "action": "added",
+            "shares_delta": 35000,
+            "amount": 37275000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -2177,15 +2298,6 @@
         "updated_at": "2026-08-11",
         "details": [
           {
-            "etf_code": "00999A",
-            "etf_name": "主動野村臺灣高息",
-            "issuer": "野村",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -6000,
-            "amount": -73890000
-          },
-          {
             "etf_code": "00985A",
             "etf_name": "主動野村台灣50",
             "issuer": "野村",
@@ -2193,6 +2305,15 @@
             "action": "decreased",
             "shares_delta": -9000,
             "amount": -110835000
+          },
+          {
+            "etf_code": "00999A",
+            "etf_name": "主動野村臺灣高息",
+            "issuer": "野村",
+            "side": "sell",
+            "action": "decreased",
+            "shares_delta": -6000,
+            "amount": -73890000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -2204,7 +2325,7 @@
       "title": "Druckenmiller 風格雷達",
       "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
       "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-08-11 08:07:07",
+      "generatedAt": "2026-08-11 09:54:27",
       "targetDate": "2026-08-11",
       "status": "ok",
       "market": {
@@ -2213,7 +2334,7 @@
         "suggested_exposure": "15%～35%",
         "score": 5,
         "description": "強勢股仍有機會，但需要小部位、快確認、嚴守 thesis break。",
-        "breadth": 4.35
+        "breadth": 4.11
       },
       "industries": [
         {
@@ -2836,7 +2957,7 @@
       "title": "台股聖杯雷達",
       "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
       "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-08-11 08:07:07",
+      "generatedAt": "2026-08-11 09:54:27",
       "targetDate": "2026-08-11",
       "dataSource": "twstock universe + yfinance history",
       "market": {
@@ -2855,79 +2976,34 @@
       },
       "industries": [
         {
-          "industry": "電子通路業",
+          "industry": "電機機械",
           "baseIndustries": [
-            "電子通路業"
+            "電機機械"
           ],
-          "return5": 0.09166666666666666,
-          "return20": 0.15418502202643172,
-          "return60": 0.10084033613445378,
-          "volumeRatio": 1.1987849366487888,
-          "relativeStrength20": 0.15418502202643172,
+          "return5": 0.22406637066621313,
+          "return20": 0.0669077904879936,
+          "return60": -0.10197864930679341,
+          "volumeRatio": 1.9940492587737206,
+          "relativeStrength20": 0.0669077904879936,
           "stockCount": 1,
-          "industryScore": 76.2,
-          "status": "轉強觀察",
+          "industryScore": 80.0,
+          "status": "主流強勢",
           "rank": 1
         },
         {
-          "industry": "半導體-IC設計",
+          "industry": "金融-金控銀行",
           "baseIndustries": [
-            "半導體業"
+            "金融保險業"
           ],
-          "return5": 0.0677731673582296,
-          "return20": 0.023872679045092837,
-          "return60": 0.37857142857142856,
-          "volumeRatio": 0.6170940811909728,
-          "relativeStrength20": 0.023872679045092837,
+          "return5": -0.0038910505836575876,
+          "return20": 0.024,
+          "return60": 0.34453785822693184,
+          "volumeRatio": 0.6228724729647905,
+          "relativeStrength20": 0.024,
           "stockCount": 1,
-          "industryScore": 55.0,
-          "status": "中性",
+          "industryScore": 20.0,
+          "status": "弱勢避開",
           "rank": 2
-        },
-        {
-          "industry": "航運-散裝航空",
-          "baseIndustries": [
-            "航運業"
-          ],
-          "return5": 0.040524451299684155,
-          "return20": 0.041766108264199915,
-          "return60": 0.19917581582642374,
-          "volumeRatio": 1.094709914756582,
-          "relativeStrength20": 0.041766108264199915,
-          "stockCount": 1,
-          "industryScore": 55.0,
-          "status": "中性",
-          "rank": 3
-        },
-        {
-          "industry": "半導體-封測",
-          "baseIndustries": [
-            "半導體業"
-          ],
-          "return5": 0.2,
-          "return20": -0.04807692307692308,
-          "return60": 0.20291611578361296,
-          "volumeRatio": 0.863315049713283,
-          "relativeStrength20": -0.04807692307692308,
-          "stockCount": 1,
-          "industryScore": 42.5,
-          "status": "弱勢避開",
-          "rank": 4
-        },
-        {
-          "industry": "綠能環保",
-          "baseIndustries": [
-            "綠能環保"
-          ],
-          "return5": 0.038219640326628425,
-          "return20": 0.007335834781625007,
-          "return60": -0.05012779227222586,
-          "volumeRatio": 1.5399987950742542,
-          "relativeStrength20": 0.007335834781625007,
-          "stockCount": 2,
-          "industryScore": 21.2,
-          "status": "弱勢避開",
-          "rank": 5
         }
       ],
       "usIndustries": [
@@ -3192,26 +3268,7 @@
             "電子零組件-PCB",
             "電腦週邊-伺服器AI"
           ],
-          "stocks": [
-            {
-              "code": "2379.TW",
-              "name": "瑞昱",
-              "industry": "半導體-IC設計",
-              "baseIndustry": "半導體業",
-              "close": 772.0,
-              "date": "2026-08-11",
-              "return5": 6.78,
-              "return20": 2.39,
-              "return60": 37.86,
-              "relativeStrength20": 2.39,
-              "volumeRatio": 0.62,
-              "score": 71.6,
-              "signal": "趨勢觀察",
-              "action": "觀察",
-              "ma20": 734.5,
-              "ma60": 713.62
-            }
-          ]
+          "stocks": []
         },
         {
           "symbol": "XLF",
@@ -3229,7 +3286,26 @@
             "金融-證券期貨",
             "金融-金控銀行"
           ],
-          "stocks": []
+          "stocks": [
+            {
+              "code": "2881.TW",
+              "name": "富邦金",
+              "industry": "金融-金控銀行",
+              "baseIndustry": "金融保險業",
+              "close": 128.0,
+              "date": "2026-08-11",
+              "return5": -0.39,
+              "return20": 2.4,
+              "return60": 34.45,
+              "relativeStrength20": 2.4,
+              "volumeRatio": 0.62,
+              "score": 70.7,
+              "signal": "趨勢觀察",
+              "action": "觀察",
+              "ma20": 126.88,
+              "ma60": 122.31
+            }
+          ]
         }
       ],
       "candidates": {
@@ -3260,29 +3336,14 @@
       "status": "needs_sponsor",
       "source": "FinMind TaiwanStockTradingDailyReport",
       "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-      "generatedAt": "2026-08-11 08:07:09",
+      "generatedAt": "2026-08-11 09:54:29",
       "date": "2026-08-11",
       "targets": 26,
       "items": [],
       "errors": [
         {
-          "code": "2034",
-          "name": "允強",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
           "code": "2069",
           "name": "運錩",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "8112",
-          "name": "至上",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "8996",
-          "name": "高力",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
@@ -3291,13 +3352,28 @@
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
+          "code": "2103",
+          "name": "台橡",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "2034",
+          "name": "允強",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "8112",
+          "name": "至上",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
           "code": "1904",
           "name": "正隆",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "2103",
-          "name": "台橡",
+          "code": "8996",
+          "name": "高力",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
@@ -3338,27 +3414,6 @@
         "put_option_price": 100.0,
         "guaranteed": false,
         "desc": "CB:至上11 | 雙低:134.36"
-      },
-      {
-        "code": "8112.TW",
-        "name": "至上",
-        "price": 100.0,
-        "pct_change": 8.23,
-        "cb_code": "811210",
-        "cb_name": "至上十",
-        "cb_price": 145.0,
-        "conversion_price": 82.7,
-        "conversion_value": 120.92,
-        "premium_pct": 19.91,
-        "double_low": 164.91,
-        "cb_trade_date": "2026-08-11",
-        "cb_units": 435.0,
-        "cb_trade_value": 62565350.0,
-        "maturity_date": "2029-05-24",
-        "put_option_date": "2027-05-24",
-        "put_option_price": 100.0,
-        "guaranteed": false,
-        "desc": "CB:至上十 | 雙低:164.91"
       },
       {
         "code": "4931.TWO",
