@@ -428214,7 +428214,7 @@
   },
   {
     "date": "2026-08-18",
-    "market_breadth": 2.05,
+    "market_breadth": 1.85,
     "strategies": {
       "momentum": [
         {
@@ -428343,25 +428343,6 @@
             "(基礎) 量增1.2倍",
             "(加分) 兩年新高 +2分",
             "★營收年增>15% (+3分)"
-          ]
-        },
-        {
-          "code": "2915.TW",
-          "name": "潤泰全",
-          "region": "TW",
-          "price": 60.8,
-          "date": "2026-08-18",
-          "fundamentals": {
-            "pe": 999,
-            "growth": null,
-            "rev_yoy": null,
-            "rev_qoq": null,
-            "quarters": []
-          },
-          "score": 3,
-          "reasons": [
-            "(基礎) 創季新高 +3分",
-            "(基礎) 量增1.2倍"
           ]
         }
       ],
@@ -428752,55 +428733,6 @@
           "reasons": [
             "MACD(21,55,89) 柱狀體於 2026-08-17 由綠翻紅",
             "目前為翻紅第2天，柱狀體 0.0291"
-          ]
-        },
-        {
-          "code": "2430.TW",
-          "name": "燦坤",
-          "region": "TW",
-          "price": 17.15,
-          "date": "2026-08-18",
-          "fundamentals": {
-            "pe": 999,
-            "growth": null,
-            "rev_yoy": null,
-            "rev_qoq": null,
-            "quarters": []
-          },
-          "pattern": "MACD翻紅第2天",
-          "macd_day": 2,
-          "macd_label": "第2天",
-          "cross_date": "2026-08-17",
-          "dif": -0.6464,
-          "macd_signal": -0.673,
-          "histogram": 0.0266,
-          "histogram_prev": 0.0104,
-          "histogram_cross": 0.0104,
-          "hist_sequence": [
-            {
-              "date": "2026-08-12",
-              "value": -0.0496
-            },
-            {
-              "date": "2026-08-13",
-              "value": -0.026
-            },
-            {
-              "date": "2026-08-14",
-              "value": -0.0061
-            },
-            {
-              "date": "2026-08-17",
-              "value": 0.0104
-            },
-            {
-              "date": "2026-08-18",
-              "value": 0.0266
-            }
-          ],
-          "reasons": [
-            "MACD(21,55,89) 柱狀體於 2026-08-17 由綠翻紅",
-            "目前為翻紅第2天，柱狀體 0.0266"
           ]
         },
         {
@@ -429453,15 +429385,6 @@
           "updated_at": "2026-08-18",
           "details": [
             {
-              "etf_code": "00985A",
-              "etf_name": "主動野村台灣50",
-              "issuer": "野村",
-              "side": "buy",
-              "action": "increased",
-              "shares_delta": 87000,
-              "amount": 52113000
-            },
-            {
               "etf_code": "00980A",
               "etf_name": "主動野村臺灣優選",
               "issuer": "野村",
@@ -429469,6 +429392,15 @@
               "action": "increased",
               "shares_delta": 126000,
               "amount": 75474000
+            },
+            {
+              "etf_code": "00985A",
+              "etf_name": "主動野村台灣50",
+              "issuer": "野村",
+              "side": "buy",
+              "action": "increased",
+              "shares_delta": 87000,
+              "amount": 52113000
             }
           ],
           "source": "ETF資訊網主動 ETF 追蹤",
@@ -429493,15 +429425,6 @@
           "updated_at": "2026-08-18",
           "details": [
             {
-              "etf_code": "00985A",
-              "etf_name": "主動野村台灣50",
-              "issuer": "野村",
-              "side": "sell",
-              "action": "decreased",
-              "shares_delta": -31000,
-              "amount": -163990000
-            },
-            {
               "etf_code": "00980A",
               "etf_name": "主動野村臺灣優選",
               "issuer": "野村",
@@ -429509,6 +429432,15 @@
               "action": "decreased",
               "shares_delta": -10000,
               "amount": -52900000
+            },
+            {
+              "etf_code": "00985A",
+              "etf_name": "主動野村台灣50",
+              "issuer": "野村",
+              "side": "sell",
+              "action": "decreased",
+              "shares_delta": -31000,
+              "amount": -163990000
             }
           ],
           "source": "ETF資訊網主動 ETF 追蹤",
@@ -429533,15 +429465,6 @@
           "updated_at": "2026-08-18",
           "details": [
             {
-              "etf_code": "00985A",
-              "etf_name": "主動野村台灣50",
-              "issuer": "野村",
-              "side": "sell",
-              "action": "decreased",
-              "shares_delta": -20000,
-              "amount": -124100000
-            },
-            {
               "etf_code": "00980A",
               "etf_name": "主動野村臺灣優選",
               "issuer": "野村",
@@ -429549,6 +429472,15 @@
               "action": "decreased",
               "shares_delta": -16000,
               "amount": -99280000
+            },
+            {
+              "etf_code": "00985A",
+              "etf_name": "主動野村台灣50",
+              "issuer": "野村",
+              "side": "sell",
+              "action": "decreased",
+              "shares_delta": -20000,
+              "amount": -124100000
             }
           ],
           "source": "ETF資訊網主動 ETF 追蹤",
@@ -429560,7 +429492,7 @@
         "title": "Druckenmiller 風格雷達",
         "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
         "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-08-18 07:33:58",
+        "generatedAt": "2026-08-18 08:27:11",
         "targetDate": "2026-08-18",
         "status": "ok",
         "market": {
@@ -429569,7 +429501,7 @@
           "suggested_exposure": "0%～20%",
           "score": 0,
           "description": "市場廣度偏弱，保留現金比追高更重要。",
-          "breadth": 2.05
+          "breadth": 1.85
         },
         "industries": [
           {
@@ -429816,7 +429748,7 @@
         "title": "台股聖杯雷達",
         "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
         "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-08-18 07:33:58",
+        "generatedAt": "2026-08-18 08:27:11",
         "targetDate": "2026-08-18",
         "dataSource": "twstock universe + yfinance history",
         "market": {
@@ -429864,24 +429796,19 @@
         "status": "needs_sponsor",
         "source": "FinMind TaiwanStockTradingDailyReport",
         "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-        "generatedAt": "2026-08-18 07:34:00",
+        "generatedAt": "2026-08-18 08:27:12",
         "date": "2026-08-18",
-        "targets": 26,
+        "targets": 24,
         "items": [],
         "errors": [
           {
-            "code": "3711",
-            "name": "日月光投控",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "2641",
-            "name": "正德",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
             "code": "3388",
             "name": "崇越電",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "6869",
+            "name": "雲豹能源",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
@@ -429895,6 +429822,11 @@
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
+            "code": "3711",
+            "name": "日月光投控",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
             "code": "4416",
             "name": "三圓",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
@@ -429905,8 +429837,8 @@
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "6869",
-            "name": "雲豹能源",
+            "code": "2641",
+            "name": "正德",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
@@ -429915,8 +429847,8 @@
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "2104",
-            "name": "國際中橡",
+            "code": "2020",
+            "name": "美亞",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           }
         ]
@@ -429929,19 +429861,19 @@
           "pct_change": 1.99,
           "cb_code": "26418",
           "cb_name": "正德八",
-          "cb_price": 101.2,
+          "cb_price": 102.0,
           "conversion_price": 19.3,
           "conversion_value": 92.75,
-          "premium_pct": 9.12,
-          "double_low": 110.32,
-          "cb_trade_date": "2026-08-17",
-          "cb_units": 11.0,
-          "cb_trade_value": 1109600.0,
+          "premium_pct": 9.98,
+          "double_low": 111.98,
+          "cb_trade_date": "2026-08-18",
+          "cb_units": 46.0,
+          "cb_trade_value": 4674600.0,
           "maturity_date": "2030-08-06",
           "put_option_date": "2028-08-06",
           "put_option_price": 100.7519,
           "guaranteed": false,
-          "desc": "CB:正德八 | 雙低:110.32"
+          "desc": "CB:正德八 | 雙低:111.98"
         },
         {
           "code": "4439.TW",
@@ -429950,19 +429882,19 @@
           "pct_change": 1.91,
           "cb_code": "44391",
           "cb_name": "冠星一KY",
-          "cb_price": 107.95,
+          "cb_price": 109.9,
           "conversion_price": 103.0,
           "conversion_value": 103.4,
-          "premium_pct": 4.4,
-          "double_low": 112.35,
-          "cb_trade_date": "2026-08-17",
-          "cb_units": 8.0,
-          "cb_trade_value": 863550.0,
+          "premium_pct": 6.29,
+          "double_low": 116.19,
+          "cb_trade_date": "2026-08-18",
+          "cb_units": 2.0,
+          "cb_trade_value": 219800.0,
           "maturity_date": "2028-03-03",
           "put_option_date": null,
           "put_option_price": 0.0,
           "guaranteed": false,
-          "desc": "CB:冠星一KY | 雙低:112.35"
+          "desc": "CB:冠星一KY | 雙低:116.19"
         },
         {
           "code": "6869.TW",
@@ -429971,19 +429903,19 @@
           "pct_change": 9.92,
           "cb_code": "68692",
           "cb_name": "雲豹能源二",
-          "cb_price": 108.6,
+          "cb_price": 113.0,
           "conversion_price": 72.3,
           "conversion_value": 96.54,
-          "premium_pct": 12.49,
-          "double_low": 121.09,
-          "cb_trade_date": "2026-08-17",
-          "cb_units": 18.0,
-          "cb_trade_value": 1954150.0,
+          "premium_pct": 17.05,
+          "double_low": 130.05,
+          "cb_trade_date": "2026-08-18",
+          "cb_units": 86.0,
+          "cb_trade_value": 9691300.0,
           "maturity_date": "2029-07-24",
           "put_option_date": null,
           "put_option_price": 0.0,
           "guaranteed": true,
-          "desc": "CB:雲豹能源二 | 雙低:121.09"
+          "desc": "CB:雲豹能源二 | 雙低:130.05"
         },
         {
           "code": "5608.TW",
@@ -429992,19 +429924,19 @@
           "pct_change": 10.0,
           "cb_code": "56087",
           "cb_name": "四維航七",
-          "cb_price": 108.0,
+          "cb_price": 111.25,
           "conversion_price": 19.3,
           "conversion_value": 82.64,
-          "premium_pct": 30.68,
-          "double_low": 138.68,
-          "cb_trade_date": "2026-08-14",
-          "cb_units": 13.0,
-          "cb_trade_value": 1403500.0,
+          "premium_pct": 34.62,
+          "double_low": 145.87,
+          "cb_trade_date": "2026-08-18",
+          "cb_units": 15.0,
+          "cb_trade_value": 1653300.0,
           "maturity_date": "2027-12-17",
           "put_option_date": null,
           "put_option_price": 0.0,
           "guaranteed": true,
-          "desc": "CB:四維航七 | 雙低:138.68"
+          "desc": "CB:四維航七 | 雙低:145.87"
         },
         {
           "code": "3388.TWO",
@@ -430013,19 +429945,19 @@
           "pct_change": 9.54,
           "cb_code": "33881",
           "cb_name": "崇越電一",
-          "cb_price": 151.0,
+          "cb_price": 166.0,
           "conversion_price": 73.6,
           "conversion_value": 137.23,
-          "premium_pct": 10.04,
-          "double_low": 161.04,
-          "cb_trade_date": "2026-08-17",
-          "cb_units": 273.0,
-          "cb_trade_value": 40810350.0,
+          "premium_pct": 20.97,
+          "double_low": 186.97,
+          "cb_trade_date": "2026-08-18",
+          "cb_units": 186.0,
+          "cb_trade_value": 30213000.0,
           "maturity_date": "2027-11-09",
           "put_option_date": "2025-11-09",
           "put_option_price": 100.0,
           "guaranteed": false,
-          "desc": "CB:崇越電一 | 雙低:161.04"
+          "desc": "CB:崇越電一 | 雙低:186.97"
         },
         {
           "code": "4416.TWO",
