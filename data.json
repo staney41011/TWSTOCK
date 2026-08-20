@@ -435662,7 +435662,7 @@
   },
   {
     "date": "2026-08-20",
-    "market_breadth": 6.5,
+    "market_breadth": 6.79,
     "strategies": {
       "momentum": [
         {
@@ -435833,6 +435833,48 @@
             "(基礎) 量增1.2倍",
             "(加分) 兩年新高 +2分",
             "(加分) 營收正成長 (+1分)",
+            "(加分) 本益比合理 (+1分)"
+          ]
+        },
+        {
+          "code": "2348.TW",
+          "name": "海悅",
+          "region": "TW",
+          "price": 71.8,
+          "date": "2026-08-20",
+          "fundamentals": {
+            "pe": 16.207676,
+            "growth": 0.062,
+            "rev_yoy": 0.183,
+            "rev_qoq": null,
+            "quarters": [
+              {
+                "date": "2026-03",
+                "revenue": 1308225000.0,
+                "qoq": -0.5547044127057607
+              },
+              {
+                "date": "2025-12",
+                "revenue": 2937880000.0,
+                "qoq": 1.5127803793273034
+              },
+              {
+                "date": "2025-09",
+                "revenue": 1169175000.0,
+                "qoq": -0.2348871938370848
+              },
+              {
+                "date": "2025-06",
+                "revenue": 1528108000.0,
+                "qoq": -0.11050496230972962
+              }
+            ]
+          },
+          "score": 7,
+          "reasons": [
+            "(基礎) 創季新高 +3分",
+            "(基礎) 量增1.2倍",
+            "★營收年增>15% (+3分)",
             "(加分) 本益比合理 (+1分)"
           ]
         },
@@ -436993,15 +437035,6 @@
           "updated_at": "2026-08-20",
           "details": [
             {
-              "etf_code": "00999A",
-              "etf_name": "主動野村臺灣高息",
-              "issuer": "野村",
-              "side": "sell",
-              "action": "decreased",
-              "shares_delta": -8000,
-              "amount": -47880000
-            },
-            {
               "etf_code": "00987A",
               "etf_name": "主動台新優勢成長",
               "issuer": "台新",
@@ -437009,6 +437042,15 @@
               "action": "decreased",
               "shares_delta": -5000,
               "amount": -29925000
+            },
+            {
+              "etf_code": "00999A",
+              "etf_name": "主動野村臺灣高息",
+              "issuer": "野村",
+              "side": "sell",
+              "action": "decreased",
+              "shares_delta": -8000,
+              "amount": -47880000
             },
             {
               "etf_code": "00993A",
@@ -437109,7 +437151,7 @@
         "title": "Druckenmiller 風格雷達",
         "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
         "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-08-20 07:37:05",
+        "generatedAt": "2026-08-20 08:28:43",
         "targetDate": "2026-08-20",
         "status": "ok",
         "market": {
@@ -437118,7 +437160,7 @@
           "suggested_exposure": "15%～35%",
           "score": 5,
           "description": "強勢股仍有機會，但需要小部位、快確認、嚴守 thesis break。",
-          "breadth": 6.5
+          "breadth": 6.79
         },
         "industries": [
           {
@@ -437561,6 +437603,72 @@
             ]
           },
           {
+            "code": "2348",
+            "name": "海悅",
+            "industry": null,
+            "price": 71.8,
+            "date": "2026-08-20",
+            "score": 57.0,
+            "scoreParts": [
+              {
+                "source": "動能突破",
+                "points": 40.0
+              },
+              {
+                "source": "基本面改善",
+                "points": 12
+              },
+              {
+                "source": "大盤環境",
+                "points": 5
+              }
+            ],
+            "signals": [
+              "動能突破"
+            ],
+            "warnings": [],
+            "thesis": [
+              "創高後仍有基本面支撐",
+              "營收 YoY > 15%",
+              "估值未過熱"
+            ],
+            "fundamentals": {
+              "pe": 16.207676,
+              "growth": 0.062,
+              "rev_yoy": 0.183,
+              "rev_qoq": null,
+              "quarters": [
+                {
+                  "date": "2026-03",
+                  "revenue": 1308225000.0,
+                  "qoq": -0.5547044127057607
+                },
+                {
+                  "date": "2025-12",
+                  "revenue": 2937880000.0,
+                  "qoq": 1.5127803793273034
+                },
+                {
+                  "date": "2025-09",
+                  "revenue": 1169175000.0,
+                  "qoq": -0.2348871938370848
+                },
+                {
+                  "date": "2025-06",
+                  "revenue": 1528108000.0,
+                  "qoq": -0.11050496230972962
+                }
+              ]
+            },
+            "conviction": "小部位試單",
+            "signalCount": 1,
+            "thesisBreak": [
+              "主動 ETF 流向轉為連續賣超",
+              "MACD 柱狀體翻回綠色或突破失敗",
+              "營收 / EPS 成長 thesis 消失"
+            ]
+          },
+          {
             "code": "1904",
             "name": "正隆",
             "industry": null,
@@ -437749,7 +437857,7 @@
         "title": "台股聖杯雷達",
         "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
         "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-08-20 07:37:05",
+        "generatedAt": "2026-08-20 08:28:43",
         "targetDate": "2026-08-20",
         "dataSource": "twstock universe + yfinance history",
         "market": {
@@ -437766,23 +437874,7 @@
           "maxIndustryExposure": 0.4,
           "stopMode": "MA20"
         },
-        "industries": [
-          {
-            "industry": "資訊服務-資安雲端",
-            "baseIndustries": [
-              "資訊服務業"
-            ],
-            "return5": -0.006211180124223602,
-            "return20": 0.006289308176100629,
-            "return60": 0.09215017064846416,
-            "volumeRatio": 0.3452800537359966,
-            "relativeStrength20": 0.006289308176100629,
-            "stockCount": 1,
-            "industryScore": 100.0,
-            "status": "主流強勢",
-            "rank": 1
-          }
-        ],
+        "industries": [],
         "usIndustries": [],
         "usTaiwanMatches": [],
         "candidates": {
@@ -437813,11 +437905,16 @@
         "status": "needs_sponsor",
         "source": "FinMind TaiwanStockTradingDailyReport",
         "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-        "generatedAt": "2026-08-20 07:37:07",
+        "generatedAt": "2026-08-20 08:28:45",
         "date": "2026-08-20",
-        "targets": 28,
+        "targets": 29,
         "items": [],
         "errors": [
+          {
+            "code": "1402",
+            "name": "遠東新",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
           {
             "code": "2250",
             "name": "IKKA-KY",
@@ -437829,28 +437926,8 @@
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "1402",
-            "name": "遠東新",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "5608",
-            "name": "四維航",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
             "code": "1215",
             "name": "卜蜂",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "2028",
-            "name": "威致",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "1104",
-            "name": "環泥",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
@@ -437859,13 +437936,28 @@
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "1612",
-            "name": "宏泰",
+            "code": "1104",
+            "name": "環泥",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "1455",
-            "name": "集盛",
+            "code": "5608",
+            "name": "四維航",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "2028",
+            "name": "威致",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "1904",
+            "name": "正隆",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "2348",
+            "name": "海悅",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           }
         ]
