@@ -1,6 +1,6 @@
 {
   "date": "2026-08-21",
-  "market_breadth": 6.99,
+  "market_breadth": 6.67,
   "strategies": {
     "momentum": [
       {
@@ -220,48 +220,6 @@
         ]
       },
       {
-        "code": "1808.TW",
-        "name": "潤隆",
-        "region": "TW",
-        "price": 37.0,
-        "date": "2026-08-21",
-        "fundamentals": {
-          "pe": 8.9588375,
-          "growth": null,
-          "rev_yoy": 185.21,
-          "rev_qoq": null,
-          "quarters": [
-            {
-              "date": "2026-03",
-              "revenue": 5392216000.0,
-              "qoq": -0.15644488928860897
-            },
-            {
-              "date": "2025-12",
-              "revenue": 6392251000.0,
-              "qoq": 183.01321319592378
-            },
-            {
-              "date": "2025-09",
-              "revenue": 34738000.0,
-              "qoq": -0.08483060224458612
-            },
-            {
-              "date": "2025-06",
-              "revenue": 37958000.0,
-              "qoq": 0.22801682303461662
-            }
-          ]
-        },
-        "score": 7,
-        "reasons": [
-          "(基礎) 創季新高 +3分",
-          "(基礎) 量增1.2倍",
-          "★營收年增>15% (+3分)",
-          "(加分) 本益比合理 (+1分)"
-        ]
-      },
-      {
         "code": "1904.TW",
         "name": "正隆",
         "region": "TW",
@@ -305,42 +263,43 @@
         ]
       },
       {
-        "code": "2348.TW",
-        "name": "海悅",
+        "code": "1808.TW",
+        "name": "潤隆",
         "region": "TW",
-        "price": 72.4,
+        "price": 37.0,
         "date": "2026-08-21",
         "fundamentals": {
-          "pe": 16.343117,
-          "growth": 0.062,
-          "rev_yoy": 0.183,
+          "pe": 8.9588375,
+          "growth": null,
+          "rev_yoy": 185.21,
           "rev_qoq": null,
           "quarters": [
             {
               "date": "2026-03",
-              "revenue": 1308225000.0,
-              "qoq": -0.5547044127057607
+              "revenue": 5392216000.0,
+              "qoq": -0.15644488928860897
             },
             {
               "date": "2025-12",
-              "revenue": 2937880000.0,
-              "qoq": 1.5127803793273034
+              "revenue": 6392251000.0,
+              "qoq": 183.01321319592378
             },
             {
               "date": "2025-09",
-              "revenue": 1169175000.0,
-              "qoq": -0.2348871938370848
+              "revenue": 34738000.0,
+              "qoq": -0.08483060224458612
             },
             {
               "date": "2025-06",
-              "revenue": 1528108000.0,
-              "qoq": -0.11050496230972962
+              "revenue": 37958000.0,
+              "qoq": 0.22801682303461662
             }
           ]
         },
         "score": 7,
         "reasons": [
           "(基礎) 創季新高 +3分",
+          "(基礎) 量增1.2倍",
           "★營收年增>15% (+3分)",
           "(加分) 本益比合理 (+1分)"
         ]
@@ -1869,15 +1828,6 @@
         "updated_at": "2026-08-21",
         "details": [
           {
-            "etf_code": "00982A",
-            "etf_name": "主動群益台灣強棒",
-            "issuer": "群益",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -795000,
-            "amount": -161385000
-          },
-          {
             "etf_code": "00993A",
             "etf_name": "主動安聯台灣",
             "issuer": "安聯",
@@ -1885,6 +1835,15 @@
             "action": "decreased",
             "shares_delta": -85000,
             "amount": -17255000
+          },
+          {
+            "etf_code": "00982A",
+            "etf_name": "主動群益台灣強棒",
+            "issuer": "群益",
+            "side": "sell",
+            "action": "decreased",
+            "shares_delta": -795000,
+            "amount": -161385000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -1936,7 +1895,7 @@
       "title": "Druckenmiller 風格雷達",
       "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
       "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-08-21 12:28:23",
+      "generatedAt": "2026-08-21 13:41:26",
       "targetDate": "2026-08-21",
       "status": "ok",
       "market": {
@@ -1945,7 +1904,7 @@
         "suggested_exposure": "15%～35%",
         "score": 5,
         "description": "強勢股仍有機會，但需要小部位、快確認、嚴守 thesis break。",
-        "breadth": 6.99
+        "breadth": 6.67
       },
       "industries": [
         {
@@ -1973,6 +1932,15 @@
           "signals": 1,
           "sources": [
             "主動 ETF"
+          ]
+        },
+        {
+          "name": "橡膠工業",
+          "score": -12.0,
+          "netAmount": 0.0,
+          "signals": 1,
+          "sources": [
+            "聖杯出場警示"
           ]
         },
         {
@@ -2532,72 +2500,6 @@
           ]
         },
         {
-          "code": "2348",
-          "name": "海悅",
-          "industry": null,
-          "price": 72.4,
-          "date": "2026-08-21",
-          "score": 57.0,
-          "scoreParts": [
-            {
-              "source": "動能突破",
-              "points": 40.0
-            },
-            {
-              "source": "基本面改善",
-              "points": 12
-            },
-            {
-              "source": "大盤環境",
-              "points": 5
-            }
-          ],
-          "signals": [
-            "動能突破"
-          ],
-          "warnings": [],
-          "thesis": [
-            "創高後仍有基本面支撐",
-            "營收 YoY > 15%",
-            "估值未過熱"
-          ],
-          "fundamentals": {
-            "pe": 16.343117,
-            "growth": 0.062,
-            "rev_yoy": 0.183,
-            "rev_qoq": null,
-            "quarters": [
-              {
-                "date": "2026-03",
-                "revenue": 1308225000.0,
-                "qoq": -0.5547044127057607
-              },
-              {
-                "date": "2025-12",
-                "revenue": 2937880000.0,
-                "qoq": 1.5127803793273034
-              },
-              {
-                "date": "2025-09",
-                "revenue": 1169175000.0,
-                "qoq": -0.2348871938370848
-              },
-              {
-                "date": "2025-06",
-                "revenue": 1528108000.0,
-                "qoq": -0.11050496230972962
-              }
-            ]
-          },
-          "conviction": "小部位試單",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
           "code": "1904",
           "name": "正隆",
           "industry": null,
@@ -2933,7 +2835,7 @@
       "title": "台股聖杯雷達",
       "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
       "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-08-21 12:28:23",
+      "generatedAt": "2026-08-21 13:41:26",
       "targetDate": "2026-08-21",
       "dataSource": "twstock universe + yfinance history",
       "market": {
@@ -2950,14 +2852,93 @@
         "maxIndustryExposure": 0.4,
         "stopMode": "MA20"
       },
-      "industries": [],
+      "industries": [
+        {
+          "industry": "橡膠工業",
+          "baseIndustries": [
+            "橡膠工業"
+          ],
+          "return5": 0.025835829772607646,
+          "return20": 0.01098386124729614,
+          "return60": 0.04270519733252037,
+          "volumeRatio": 0.7540519478613605,
+          "relativeStrength20": 0.01098386124729614,
+          "stockCount": 3,
+          "industryScore": 95.0,
+          "status": "主流強勢",
+          "rank": 1
+        },
+        {
+          "industry": "綠能環保",
+          "baseIndustries": [
+            "綠能環保"
+          ],
+          "return5": 0.0074211502782931356,
+          "return20": -0.009124087591240875,
+          "return60": -0.04903677758318739,
+          "volumeRatio": 0.7854100224799891,
+          "relativeStrength20": -0.009124087591240875,
+          "stockCount": 1,
+          "industryScore": 45.0,
+          "status": "弱勢避開",
+          "rank": 2
+        },
+        {
+          "industry": "汽車工業",
+          "baseIndustries": [
+            "汽車工業"
+          ],
+          "return5": -0.017910431190332192,
+          "return20": -0.044992735672963614,
+          "return60": -0.044992735672963614,
+          "volumeRatio": 0.7029831366770178,
+          "relativeStrength20": -0.044992735672963614,
+          "stockCount": 1,
+          "industryScore": 10.0,
+          "status": "弱勢避開",
+          "rank": 3
+        }
+      ],
       "usIndustries": [],
       "usTaiwanMatches": [],
       "candidates": {
         "breakout": [],
         "pullback": [],
         "overheated": [],
-        "exit": []
+        "exit": [
+          {
+            "code": "2106.TW",
+            "name": "建大",
+            "industry": "橡膠工業",
+            "baseIndustry": "橡膠工業",
+            "close": 17.65,
+            "price": 17.65,
+            "date": "2026-08-21",
+            "return5": 0.57,
+            "return20": -0.56,
+            "return60": 6.01,
+            "relativeStrength20": -0.56,
+            "volumeRatio": 0.93,
+            "signal": "出場警示",
+            "bucket": "exit",
+            "score": 47.6,
+            "action": "出場",
+            "ma5": 17.51,
+            "ma10": 17.81,
+            "ma20": 17.99,
+            "ma60": 17.75,
+            "ma120": 17.81,
+            "stopPrices": {
+              "MA20": 17.99,
+              "最近回檔低點": 17.15,
+              "固定 7%": 16.41
+            },
+            "positionSizing": {
+              "valid": false,
+              "message": "停損價高於或等於進場價，無法計算部位。"
+            }
+          }
+        ]
       },
       "rerun": {
         "githubActions": "Actions > Daily Stock Scan > Run workflow，可選只重跑台股聖杯與美股產業資料。",
@@ -2981,41 +2962,11 @@
       "status": "needs_sponsor",
       "source": "FinMind TaiwanStockTradingDailyReport",
       "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-      "generatedAt": "2026-08-21 12:28:25",
+      "generatedAt": "2026-08-21 13:41:29",
       "date": "2026-08-21",
       "targets": 36,
       "items": [],
       "errors": [
-        {
-          "code": "7713",
-          "name": "威力德生醫",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "3443",
-          "name": "創意",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "6274",
-          "name": "台燿",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "2641",
-          "name": "正德",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "3653",
-          "name": "健策",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "2107",
-          "name": "厚生",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
         {
           "code": "8442",
           "name": "威宏-KY",
@@ -3027,13 +2978,43 @@
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "1316",
-          "name": "上曜",
+          "code": "3653",
+          "name": "健策",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "1720",
-          "name": "生達",
+          "code": "7713",
+          "name": "威力德生醫",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "6274",
+          "name": "台燿",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "3443",
+          "name": "創意",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "2641",
+          "name": "正德",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "2107",
+          "name": "厚生",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "1441",
+          "name": "大東",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "2239",
+          "name": "英利-KY",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         }
       ]
