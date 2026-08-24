@@ -446756,7 +446756,7 @@
   },
   {
     "date": "2026-08-24",
-    "market_breadth": 4.94,
+    "market_breadth": 4.98,
     "strategies": {
       "momentum": [
         {
@@ -447294,55 +447294,6 @@
         }
       ],
       "macd_turn_red": [
-        {
-          "code": "2393.TW",
-          "name": "億光",
-          "region": "TW",
-          "price": 65.4,
-          "date": "2026-08-24",
-          "fundamentals": {
-            "pe": 999,
-            "growth": null,
-            "rev_yoy": null,
-            "rev_qoq": null,
-            "quarters": []
-          },
-          "pattern": "MACD翻紅第1天",
-          "macd_day": 1,
-          "macd_label": "第1天",
-          "cross_date": "2026-08-24",
-          "dif": 0.5383,
-          "macd_signal": 0.4549,
-          "histogram": 0.0834,
-          "histogram_prev": -0.0388,
-          "histogram_cross": 0.0834,
-          "hist_sequence": [
-            {
-              "date": "2026-08-18",
-              "value": -0.5031
-            },
-            {
-              "date": "2026-08-19",
-              "value": -0.3566
-            },
-            {
-              "date": "2026-08-20",
-              "value": -0.1386
-            },
-            {
-              "date": "2026-08-21",
-              "value": -0.0388
-            },
-            {
-              "date": "2026-08-24",
-              "value": 0.0834
-            }
-          ],
-          "reasons": [
-            "MACD(21,55,89) 柱狀體於 2026-08-24 由綠翻紅",
-            "目前為翻紅第1天，柱狀體 0.0834"
-          ]
-        },
         {
           "code": "2038.TW",
           "name": "海光",
@@ -448273,15 +448224,6 @@
           "updated_at": "2026-08-24",
           "details": [
             {
-              "etf_code": "00996A",
-              "etf_name": "主動兆豐台灣豐收",
-              "issuer": "兆豐",
-              "side": "buy",
-              "action": "increased",
-              "shares_delta": 11000,
-              "amount": 12595000
-            },
-            {
               "etf_code": "00981A",
               "etf_name": "主動統一台股增長",
               "issuer": "統一",
@@ -448289,6 +448231,15 @@
               "action": "increased",
               "shares_delta": 200000,
               "amount": 229000000
+            },
+            {
+              "etf_code": "00996A",
+              "etf_name": "主動兆豐台灣豐收",
+              "issuer": "兆豐",
+              "side": "buy",
+              "action": "increased",
+              "shares_delta": 11000,
+              "amount": 12595000
             }
           ],
           "source": "ETF資訊網主動 ETF 追蹤",
@@ -448313,15 +448264,6 @@
           "updated_at": "2026-08-24",
           "details": [
             {
-              "etf_code": "00400A",
-              "etf_name": "主動國泰動能高息",
-              "issuer": "國泰",
-              "side": "sell",
-              "action": "removed",
-              "shares_delta": -446000,
-              "amount": -120197000
-            },
-            {
               "etf_code": "00982A",
               "etf_name": "主動群益台灣強棒",
               "issuer": "群益",
@@ -448329,6 +448271,15 @@
               "action": "increased",
               "shares_delta": 1200000,
               "amount": 323400000
+            },
+            {
+              "etf_code": "00400A",
+              "etf_name": "主動國泰動能高息",
+              "issuer": "國泰",
+              "side": "sell",
+              "action": "removed",
+              "shares_delta": -446000,
+              "amount": -120197000
             }
           ],
           "source": "ETF資訊網主動 ETF 追蹤",
@@ -448340,7 +448291,7 @@
         "title": "Druckenmiller 風格雷達",
         "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
         "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-08-24 10:32:04",
+        "generatedAt": "2026-08-24 11:22:07",
         "targetDate": "2026-08-24",
         "status": "ok",
         "market": {
@@ -448349,7 +448300,7 @@
           "suggested_exposure": "15%～35%",
           "score": 5,
           "description": "強勢股仍有機會，但需要小部位、快確認、嚴守 thesis break。",
-          "breadth": 4.94
+          "breadth": 4.98
         },
         "industries": [
           {
@@ -448368,15 +448319,6 @@
             "signals": 1,
             "sources": [
               "主動 ETF"
-            ]
-          },
-          {
-            "name": "電子零組件-連接器線束",
-            "score": -4.0,
-            "netAmount": 0.0,
-            "signals": 1,
-            "sources": [
-              "聖杯過熱"
             ]
           }
         ],
@@ -449024,51 +448966,6 @@
               "MACD 柱狀體翻回綠色或突破失敗",
               "營收 / EPS 成長 thesis 消失"
             ]
-          },
-          {
-            "code": "2392",
-            "name": "正崴",
-            "industry": "電子零組件-連接器線束",
-            "price": 44.25,
-            "date": "2026-08-24",
-            "score": 29.0,
-            "scoreParts": [
-              {
-                "source": "動能突破",
-                "points": 32.0
-              },
-              {
-                "source": "聖杯過熱",
-                "points": -8
-              },
-              {
-                "source": "大盤環境",
-                "points": 5
-              }
-            ],
-            "signals": [
-              "動能突破",
-              "聖杯過熱"
-            ],
-            "warnings": [],
-            "thesis": [
-              "創高後仍有基本面支撐",
-              "過熱觀察"
-            ],
-            "fundamentals": {
-              "pe": 999,
-              "growth": null,
-              "rev_yoy": null,
-              "rev_qoq": null,
-              "quarters": []
-            },
-            "conviction": "只觀察",
-            "signalCount": 2,
-            "thesisBreak": [
-              "主動 ETF 流向轉為連續賣超",
-              "MACD 柱狀體翻回綠色或突破失敗",
-              "營收 / EPS 成長 thesis 消失"
-            ]
           }
         ],
         "principles": [
@@ -449086,7 +448983,7 @@
         "title": "台股聖杯雷達",
         "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
         "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-08-24 10:32:04",
+        "generatedAt": "2026-08-24 11:22:07",
         "targetDate": "2026-08-24",
         "dataSource": "twstock universe + yfinance history",
         "market": {
@@ -449103,74 +449000,13 @@
           "maxIndustryExposure": 0.4,
           "stopMode": "MA20"
         },
-        "industries": [
-          {
-            "industry": "電子零組件-連接器線束",
-            "baseIndustries": [
-              "電子零組件業"
-            ],
-            "return5": 0.021939971817051346,
-            "return20": 0.23949577183024576,
-            "return60": 0.12738853503184713,
-            "volumeRatio": 1.0670407783766034,
-            "relativeStrength20": 0.23949577183024576,
-            "stockCount": 1,
-            "industryScore": 100.0,
-            "status": "主流強勢",
-            "rank": 1
-          }
-        ],
+        "industries": [],
         "usIndustries": [],
         "usTaiwanMatches": [],
         "candidates": {
           "breakout": [],
           "pullback": [],
-          "overheated": [
-            {
-              "code": "2392.TW",
-              "name": "正崴",
-              "industry": "電子零組件-連接器線束",
-              "baseIndustry": "電子零組件業",
-              "close": 44.25,
-              "price": 44.25,
-              "date": "2026-08-24",
-              "return5": 2.19,
-              "return20": 23.95,
-              "return60": 12.74,
-              "relativeStrength20": 23.95,
-              "volumeRatio": 1.07,
-              "signal": "過熱觀察",
-              "bucket": "overheated",
-              "score": 56.1,
-              "action": "過熱勿追",
-              "ma5": 41.56,
-              "ma10": 41.27,
-              "ma20": 38.3,
-              "ma60": 38.31,
-              "ma120": 37.48,
-              "stopPrices": {
-                "MA20": 38.3,
-                "最近回檔低點": 32.6,
-                "固定 7%": 41.15
-              },
-              "positionSizing": {
-                "valid": true,
-                "riskAmount": 10000.0,
-                "positionValue": 74432.0,
-                "rawPositionValue": 74432.0,
-                "shares": 1682,
-                "lots": 1,
-                "oddLot": 682,
-                "stopPrice": 38.3,
-                "maxLoss": 9999.0,
-                "riskRewardTo8Pct": 0.6,
-                "firstTakeProfit": 47.79,
-                "secondTakeProfit": 50.89,
-                "exceedsSingleLimit": false,
-                "exceedsIndustryLimit": false
-              }
-            }
-          ],
+          "overheated": [],
           "exit": []
         },
         "rerun": {
@@ -449195,24 +449031,19 @@
         "status": "needs_sponsor",
         "source": "FinMind TaiwanStockTradingDailyReport",
         "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-        "generatedAt": "2026-08-24 10:32:06",
+        "generatedAt": "2026-08-24 11:22:09",
         "date": "2026-08-24",
-        "targets": 28,
+        "targets": 27,
         "items": [],
         "errors": [
           {
-            "code": "8996",
-            "name": "高力",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "2038",
-            "name": "海光",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
             "code": "1419",
             "name": "新紡",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "2032",
+            "name": "新鋼",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
@@ -449226,28 +449057,33 @@
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "2108",
-            "name": "南帝",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "2032",
-            "name": "新鋼",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "2393",
-            "name": "億光",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
             "code": "1720",
             "name": "生達",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
+            "code": "8996",
+            "name": "高力",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "2038",
+            "name": "海光",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "2108",
+            "name": "南帝",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
             "code": "2107",
             "name": "厚生",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "1215",
+            "name": "卜蜂",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           }
         ]
