@@ -446756,7 +446756,7 @@
   },
   {
     "date": "2026-08-24",
-    "market_breadth": 4.98,
+    "market_breadth": 4.62,
     "strategies": {
       "momentum": [
         {
@@ -447217,25 +447217,6 @@
                 "qoq": -0.3014706750106481
               }
             ]
-          },
-          "score": 3,
-          "reasons": [
-            "(基礎) 創季新高 +3分",
-            "(基礎) 量增1.2倍"
-          ]
-        },
-        {
-          "code": "2392.TW",
-          "name": "正崴",
-          "region": "TW",
-          "price": 44.25,
-          "date": "2026-08-24",
-          "fundamentals": {
-            "pe": 999,
-            "growth": null,
-            "rev_yoy": null,
-            "rev_qoq": null,
-            "quarters": []
           },
           "score": 3,
           "reasons": [
@@ -448224,15 +448205,6 @@
           "updated_at": "2026-08-24",
           "details": [
             {
-              "etf_code": "00981A",
-              "etf_name": "主動統一台股增長",
-              "issuer": "統一",
-              "side": "buy",
-              "action": "increased",
-              "shares_delta": 200000,
-              "amount": 229000000
-            },
-            {
               "etf_code": "00996A",
               "etf_name": "主動兆豐台灣豐收",
               "issuer": "兆豐",
@@ -448240,6 +448212,15 @@
               "action": "increased",
               "shares_delta": 11000,
               "amount": 12595000
+            },
+            {
+              "etf_code": "00981A",
+              "etf_name": "主動統一台股增長",
+              "issuer": "統一",
+              "side": "buy",
+              "action": "increased",
+              "shares_delta": 200000,
+              "amount": 229000000
             }
           ],
           "source": "ETF資訊網主動 ETF 追蹤",
@@ -448264,15 +448245,6 @@
           "updated_at": "2026-08-24",
           "details": [
             {
-              "etf_code": "00982A",
-              "etf_name": "主動群益台灣強棒",
-              "issuer": "群益",
-              "side": "buy",
-              "action": "increased",
-              "shares_delta": 1200000,
-              "amount": 323400000
-            },
-            {
               "etf_code": "00400A",
               "etf_name": "主動國泰動能高息",
               "issuer": "國泰",
@@ -448280,6 +448252,15 @@
               "action": "removed",
               "shares_delta": -446000,
               "amount": -120197000
+            },
+            {
+              "etf_code": "00982A",
+              "etf_name": "主動群益台灣強棒",
+              "issuer": "群益",
+              "side": "buy",
+              "action": "increased",
+              "shares_delta": 1200000,
+              "amount": 323400000
             }
           ],
           "source": "ETF資訊網主動 ETF 追蹤",
@@ -448291,7 +448272,7 @@
         "title": "Druckenmiller 風格雷達",
         "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
         "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-08-24 11:22:07",
+        "generatedAt": "2026-08-24 12:28:58",
         "targetDate": "2026-08-24",
         "status": "ok",
         "market": {
@@ -448300,7 +448281,7 @@
           "suggested_exposure": "15%～35%",
           "score": 5,
           "description": "強勢股仍有機會，但需要小部位、快確認、嚴守 thesis break。",
-          "breadth": 4.98
+          "breadth": 4.62
         },
         "industries": [
           {
@@ -448983,7 +448964,7 @@
         "title": "台股聖杯雷達",
         "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
         "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-08-24 11:22:07",
+        "generatedAt": "2026-08-24 12:28:58",
         "targetDate": "2026-08-24",
         "dataSource": "twstock universe + yfinance history",
         "market": {
@@ -449031,11 +449012,26 @@
         "status": "needs_sponsor",
         "source": "FinMind TaiwanStockTradingDailyReport",
         "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-        "generatedAt": "2026-08-24 11:22:09",
+        "generatedAt": "2026-08-24 12:29:01",
         "date": "2026-08-24",
-        "targets": 27,
+        "targets": 26,
         "items": [],
         "errors": [
+          {
+            "code": "1535",
+            "name": "中宇",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "1720",
+            "name": "生達",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "2108",
+            "name": "南帝",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
           {
             "code": "1419",
             "name": "新紡",
@@ -449052,16 +449048,6 @@
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "1535",
-            "name": "中宇",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "1720",
-            "name": "生達",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
             "code": "8996",
             "name": "高力",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
@@ -449072,18 +449058,13 @@
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "2108",
-            "name": "南帝",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
             "code": "2107",
             "name": "厚生",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "1215",
-            "name": "卜蜂",
+            "code": "1104",
+            "name": "環泥",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           }
         ]
