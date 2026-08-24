@@ -1,6 +1,6 @@
 {
   "date": "2026-08-24",
-  "market_breadth": 4.83,
+  "market_breadth": 4.7,
   "strategies": {
     "momentum": [
       {
@@ -467,25 +467,6 @@
           "(基礎) 創季新高 +3分",
           "(基礎) 量增1.2倍"
         ]
-      },
-      {
-        "code": "2392.TW",
-        "name": "正崴",
-        "region": "TW",
-        "price": 44.25,
-        "date": "2026-08-24",
-        "fundamentals": {
-          "pe": 999,
-          "growth": null,
-          "rev_yoy": null,
-          "rev_qoq": null,
-          "quarters": []
-        },
-        "score": 3,
-        "reasons": [
-          "(基礎) 創季新高 +3分",
-          "(基礎) 量增1.2倍"
-        ]
       }
     ],
     "day_trading": [],
@@ -538,55 +519,6 @@
       }
     ],
     "macd_turn_red": [
-      {
-        "code": "2393.TW",
-        "name": "億光",
-        "region": "TW",
-        "price": 65.4,
-        "date": "2026-08-24",
-        "fundamentals": {
-          "pe": 999,
-          "growth": null,
-          "rev_yoy": null,
-          "rev_qoq": null,
-          "quarters": []
-        },
-        "pattern": "MACD翻紅第1天",
-        "macd_day": 1,
-        "macd_label": "第1天",
-        "cross_date": "2026-08-24",
-        "dif": 0.5383,
-        "macd_signal": 0.4549,
-        "histogram": 0.0834,
-        "histogram_prev": -0.0388,
-        "histogram_cross": 0.0834,
-        "hist_sequence": [
-          {
-            "date": "2026-08-18",
-            "value": -0.5031
-          },
-          {
-            "date": "2026-08-19",
-            "value": -0.3566
-          },
-          {
-            "date": "2026-08-20",
-            "value": -0.1386
-          },
-          {
-            "date": "2026-08-21",
-            "value": -0.0388
-          },
-          {
-            "date": "2026-08-24",
-            "value": 0.0834
-          }
-        ],
-        "reasons": [
-          "MACD(21,55,89) 柱狀體於 2026-08-24 由綠翻紅",
-          "目前為翻紅第1天，柱狀體 0.0834"
-        ]
-      },
       {
         "code": "2038.TW",
         "name": "海光",
@@ -1584,7 +1516,7 @@
       "title": "Druckenmiller 風格雷達",
       "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
       "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-08-24 14:35:36",
+      "generatedAt": "2026-08-24 15:32:44",
       "targetDate": "2026-08-24",
       "status": "ok",
       "market": {
@@ -1593,7 +1525,7 @@
         "suggested_exposure": "15%～35%",
         "score": 5,
         "description": "強勢股仍有機會，但需要小部位、快確認、嚴守 thesis break。",
-        "breadth": 4.83
+        "breadth": 4.7
       },
       "industries": [
         {
@@ -2276,7 +2208,7 @@
       "title": "台股聖杯雷達",
       "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
       "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-08-24 14:35:36",
+      "generatedAt": "2026-08-24 15:32:44",
       "targetDate": "2026-08-24",
       "dataSource": "twstock universe + yfinance history",
       "market": {
@@ -2293,7 +2225,23 @@
         "maxIndustryExposure": 0.4,
         "stopMode": "MA20"
       },
-      "industries": [],
+      "industries": [
+        {
+          "industry": "電器電纜",
+          "baseIndustries": [
+            "電器電纜"
+          ],
+          "return5": 0.00411524216499618,
+          "return20": 0.02092050242596395,
+          "return60": 0.03829785610767121,
+          "volumeRatio": 1.0402796748608552,
+          "relativeStrength20": 0.02092050242596395,
+          "stockCount": 1,
+          "industryScore": 100.0,
+          "status": "主流強勢",
+          "rank": 1
+        }
+      ],
       "usIndustries": [],
       "usTaiwanMatches": [],
       "candidates": {
@@ -2324,36 +2272,11 @@
       "status": "needs_sponsor",
       "source": "FinMind TaiwanStockTradingDailyReport",
       "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-      "generatedAt": "2026-08-24 14:35:39",
+      "generatedAt": "2026-08-24 15:32:46",
       "date": "2026-08-24",
-      "targets": 28,
+      "targets": 26,
       "items": [],
       "errors": [
-        {
-          "code": "2239",
-          "name": "英利-KY",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "8996",
-          "name": "高力",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "2108",
-          "name": "南帝",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "2032",
-          "name": "新鋼",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "2393",
-          "name": "億光",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
         {
           "code": "2038",
           "name": "海光",
@@ -2365,18 +2288,43 @@
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
+          "code": "8996",
+          "name": "高力",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "2239",
+          "name": "英利-KY",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "1720",
+          "name": "生達",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "2032",
+          "name": "新鋼",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "2108",
+          "name": "南帝",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
           "code": "1419",
           "name": "新紡",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "1441",
-          "name": "大東",
+          "code": "2028",
+          "name": "威致",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "2250",
-          "name": "IKKA-KY",
+          "code": "1215",
+          "name": "卜蜂",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         }
       ]
