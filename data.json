@@ -446756,7 +446756,7 @@
   },
   {
     "date": "2026-08-24",
-    "market_breadth": 1.86,
+    "market_breadth": 1.88,
     "strategies": {
       "momentum": [
         {
@@ -447114,55 +447114,6 @@
         }
       ],
       "macd_turn_red": [
-        {
-          "code": "6103.TWO",
-          "name": "合邦",
-          "region": "TW",
-          "price": 35.4,
-          "date": "2026-08-25",
-          "fundamentals": {
-            "pe": 999,
-            "growth": null,
-            "rev_yoy": null,
-            "rev_qoq": null,
-            "quarters": []
-          },
-          "pattern": "MACD翻紅第1天",
-          "macd_day": 1,
-          "macd_label": "第1天",
-          "cross_date": "2026-08-25",
-          "dif": -1.4245,
-          "macd_signal": -1.5831,
-          "histogram": 0.1585,
-          "histogram_prev": -0.2252,
-          "histogram_cross": 0.1585,
-          "hist_sequence": [
-            {
-              "date": "2026-08-19",
-              "value": -0.4756
-            },
-            {
-              "date": "2026-08-20",
-              "value": -0.5507
-            },
-            {
-              "date": "2026-08-21",
-              "value": -0.4639
-            },
-            {
-              "date": "2026-08-24",
-              "value": -0.2252
-            },
-            {
-              "date": "2026-08-25",
-              "value": 0.1585
-            }
-          ],
-          "reasons": [
-            "MACD(21,55,89) 柱狀體於 2026-08-25 由綠翻紅",
-            "目前為翻紅第1天，柱狀體 0.1585"
-          ]
-        },
         {
           "code": "2032.TW",
           "name": "新鋼",
@@ -448298,7 +448249,7 @@
         "title": "Druckenmiller 風格雷達",
         "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
         "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-08-25 11:21:00",
+        "generatedAt": "2026-08-25 12:29:29",
         "targetDate": "2026-08-24",
         "status": "ok",
         "market": {
@@ -448307,7 +448258,7 @@
           "suggested_exposure": "0%～20%",
           "score": 0,
           "description": "市場廣度偏弱，保留現金比追高更重要。",
-          "breadth": 1.86
+          "breadth": 1.88
         },
         "industries": [
           {
@@ -448674,7 +448625,7 @@
         "title": "台股聖杯雷達",
         "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
         "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-08-25 11:21:00",
+        "generatedAt": "2026-08-25 12:29:29",
         "targetDate": "2026-08-24",
         "dataSource": "twstock universe + yfinance history",
         "market": {
@@ -448722,14 +448673,14 @@
         "status": "needs_sponsor",
         "source": "FinMind TaiwanStockTradingDailyReport",
         "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-        "generatedAt": "2026-08-25 11:21:03",
+        "generatedAt": "2026-08-25 12:29:31",
         "date": "2026-08-24",
-        "targets": 25,
+        "targets": 24,
         "items": [],
         "errors": [
           {
-            "code": "6669",
-            "name": "緯穎",
+            "code": "3017",
+            "name": "奇鋐",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
@@ -448738,33 +448689,13 @@
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "3008",
-            "name": "大立光",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "8996",
-            "name": "高力",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
             "code": "2303",
             "name": "聯電",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "3017",
-            "name": "奇鋐",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "6103",
-            "name": "合邦",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "1303",
-            "name": "南亞",
+            "code": "6669",
+            "name": "緯穎",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
@@ -448773,8 +448704,28 @@
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "2107",
-            "name": "厚生",
+            "code": "1303",
+            "name": "南亞",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "8996",
+            "name": "高力",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "3008",
+            "name": "大立光",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "2038",
+            "name": "海光",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "1535",
+            "name": "中宇",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           }
         ]
