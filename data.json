@@ -475709,7 +475709,7 @@
   },
   {
     "date": "2026-09-01",
-    "market_breadth": 4.94,
+    "market_breadth": 4.91,
     "strategies": {
       "momentum": [
         {
@@ -476650,11 +476650,32 @@
           "price": 107.0,
           "date": "2026-09-01",
           "fundamentals": {
-            "pe": 999,
-            "growth": null,
-            "rev_yoy": null,
+            "pe": 12.131519,
+            "growth": 0.034,
+            "rev_yoy": -0.086,
             "rev_qoq": null,
-            "quarters": []
+            "quarters": [
+              {
+                "date": "2026-03",
+                "revenue": 22871041000.0,
+                "qoq": -0.008912878047102099
+              },
+              {
+                "date": "2025-12",
+                "revenue": 23076721000.0,
+                "qoq": -0.06979946130188777
+              },
+              {
+                "date": "2025-09",
+                "revenue": 24808329000.0,
+                "qoq": 0.012821568012181133
+              },
+              {
+                "date": "2025-06",
+                "revenue": 24494274000.0,
+                "qoq": 0.05210146261256628
+              }
+            ]
           },
           "pattern": "MACD翻紅第2天",
           "macd_day": 2,
@@ -476703,7 +476724,28 @@
             "growth": 1.256,
             "rev_yoy": 0.344,
             "rev_qoq": null,
-            "quarters": []
+            "quarters": [
+              {
+                "date": "2026-03",
+                "revenue": 2655782000.0,
+                "qoq": -0.2044545812918849
+              },
+              {
+                "date": "2025-12",
+                "revenue": 3338316000.0,
+                "qoq": 0.21673467781087216
+              },
+              {
+                "date": "2025-09",
+                "revenue": 2743668000.0,
+                "qoq": 0.17559538857186438
+              },
+              {
+                "date": "2025-06",
+                "revenue": 2333854000.0,
+                "qoq": 0.5639077893376898
+              }
+            ]
           },
           "pattern": "MACD翻紅第2天",
           "macd_day": 2,
@@ -476888,7 +476930,7 @@
           "price": 226.0,
           "date": "2026-09-01",
           "fundamentals": {
-            "pe": 57.21519,
+            "pe": 57.070705,
             "growth": null,
             "rev_yoy": 0.372,
             "rev_qoq": null,
@@ -477111,15 +477153,6 @@
           "updated_at": "2026-09-01",
           "details": [
             {
-              "etf_code": "00987A",
-              "etf_name": "主動台新優勢成長",
-              "issuer": "台新",
-              "side": "sell",
-              "action": "decreased",
-              "shares_delta": -27000,
-              "amount": -33075000
-            },
-            {
               "etf_code": "00406A",
               "etf_name": "主動中信台灣收益",
               "issuer": "中國信託",
@@ -477127,6 +477160,15 @@
               "action": "increased",
               "shares_delta": 100000,
               "amount": 122500000
+            },
+            {
+              "etf_code": "00987A",
+              "etf_name": "主動台新優勢成長",
+              "issuer": "台新",
+              "side": "sell",
+              "action": "decreased",
+              "shares_delta": -27000,
+              "amount": -33075000
             },
             {
               "etf_code": "00992A",
@@ -477534,15 +477576,6 @@
           "updated_at": "2026-09-01",
           "details": [
             {
-              "etf_code": "00408A",
-              "etf_name": "主動第一金優股息",
-              "issuer": "第一金",
-              "side": "buy",
-              "action": "increased",
-              "shares_delta": 13200,
-              "amount": 1056000
-            },
-            {
               "etf_code": "00999A",
               "etf_name": "主動野村臺灣高息",
               "issuer": "野村",
@@ -477550,6 +477583,15 @@
               "action": "increased",
               "shares_delta": 202000,
               "amount": 16160000
+            },
+            {
+              "etf_code": "00408A",
+              "etf_name": "主動第一金優股息",
+              "issuer": "第一金",
+              "side": "buy",
+              "action": "increased",
+              "shares_delta": 13200,
+              "amount": 1056000
             }
           ],
           "source": "ETF資訊網主動 ETF 追蹤",
@@ -477641,7 +477683,7 @@
         "title": "Druckenmiller 風格雷達",
         "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
         "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-09-01 22:58:28",
+        "generatedAt": "2026-09-02 00:43:42",
         "targetDate": "2026-09-01",
         "status": "ok",
         "market": {
@@ -477650,7 +477692,7 @@
           "suggested_exposure": "15%～35%",
           "score": 5,
           "description": "強勢股仍有機會，但需要小部位、快確認、嚴守 thesis break。",
-          "breadth": 4.94
+          "breadth": 4.91
         },
         "industries": [
           {
@@ -477699,12 +477741,21 @@
             ]
           },
           {
-            "name": "電子零組件-電源散熱",
-            "score": -4.0,
+            "name": "電腦週邊-品牌通路",
+            "score": 15.0,
+            "netAmount": 0.0,
+            "signals": 2,
+            "sources": [
+              "聖杯回檔轉強"
+            ]
+          },
+          {
+            "name": "造紙工業",
+            "score": -12.0,
             "netAmount": 0.0,
             "signals": 1,
             "sources": [
-              "聖杯過熱"
+              "聖杯出場警示"
             ]
           }
         ],
@@ -477712,10 +477763,10 @@
           {
             "code": "2357",
             "name": "華碩",
-            "industry": null,
+            "industry": "電腦週邊-品牌通路",
             "price": 1010.0,
             "date": "2026-09-01",
-            "score": 72,
+            "score": 87,
             "scoreParts": [
               {
                 "source": "動能突破",
@@ -477726,19 +477777,25 @@
                 "points": 23
               },
               {
+                "source": "聖杯回檔轉強",
+                "points": 15
+              },
+              {
                 "source": "大盤環境",
                 "points": 5
               }
             ],
             "signals": [
-              "動能突破"
+              "動能突破",
+              "聖杯回檔轉強"
             ],
             "warnings": [],
             "thesis": [
               "創高後仍有基本面支撐",
               "營收 YoY > 30%",
               "EPS 高成長",
-              "估值未過熱"
+              "估值未過熱",
+              "回檔轉強"
             ],
             "fundamentals": {
               "pe": 14.868247,
@@ -477768,8 +477825,8 @@
                 }
               ]
             },
-            "conviction": "觀察核心",
-            "signalCount": 1,
+            "conviction": "高信念",
+            "signalCount": 2,
             "thesisBreak": [
               "主動 ETF 流向轉為連續賣超",
               "MACD 柱狀體翻回綠色或突破失敗",
@@ -478109,6 +478166,51 @@
                   "qoq": -0.0384537552526149
                 }
               ]
+            },
+            "conviction": "小部位試單",
+            "signalCount": 2,
+            "thesisBreak": [
+              "主動 ETF 流向轉為連續賣超",
+              "MACD 柱狀體翻回綠色或突破失敗",
+              "營收 / EPS 成長 thesis 消失"
+            ]
+          },
+          {
+            "code": "2395",
+            "name": "研華",
+            "industry": "電腦週邊-品牌通路",
+            "price": 711.0,
+            "date": "2026-09-01",
+            "score": 56.0,
+            "scoreParts": [
+              {
+                "source": "動能突破",
+                "points": 36.0
+              },
+              {
+                "source": "聖杯回檔轉強",
+                "points": 15
+              },
+              {
+                "source": "大盤環境",
+                "points": 5
+              }
+            ],
+            "signals": [
+              "動能突破",
+              "聖杯回檔轉強"
+            ],
+            "warnings": [],
+            "thesis": [
+              "創高後仍有基本面支撐",
+              "回檔轉強"
+            ],
+            "fundamentals": {
+              "pe": 999,
+              "growth": null,
+              "rev_yoy": null,
+              "rev_qoq": null,
+              "quarters": []
             },
             "conviction": "小部位試單",
             "signalCount": 2,
@@ -478622,45 +478724,6 @@
             ]
           },
           {
-            "code": "2395",
-            "name": "研華",
-            "industry": null,
-            "price": 711.0,
-            "date": "2026-09-01",
-            "score": 41.0,
-            "scoreParts": [
-              {
-                "source": "動能突破",
-                "points": 36.0
-              },
-              {
-                "source": "大盤環境",
-                "points": 5
-              }
-            ],
-            "signals": [
-              "動能突破"
-            ],
-            "warnings": [],
-            "thesis": [
-              "創高後仍有基本面支撐"
-            ],
-            "fundamentals": {
-              "pe": 999,
-              "growth": null,
-              "rev_yoy": null,
-              "rev_qoq": null,
-              "quarters": []
-            },
-            "conviction": "只觀察",
-            "signalCount": 1,
-            "thesisBreak": [
-              "主動 ETF 流向轉為連續賣超",
-              "MACD 柱狀體翻回綠色或突破失敗",
-              "營收 / EPS 成長 thesis 消失"
-            ]
-          },
-          {
             "code": "2201",
             "name": "裕隆",
             "industry": null,
@@ -478822,7 +478885,7 @@
         "title": "台股聖杯雷達",
         "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
         "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-09-01 22:58:28",
+        "generatedAt": "2026-09-02 00:43:42",
         "targetDate": "2026-09-01",
         "dataSource": "twstock universe + yfinance history",
         "market": {
@@ -478841,73 +478904,282 @@
         },
         "industries": [
           {
-            "industry": "電子零組件-電源散熱",
+            "industry": "電腦週邊-品牌通路",
             "baseIndustries": [
-              "電子零組件業"
+              "電腦及週邊設備業"
             ],
-            "return5": 0.22916666666666666,
-            "return20": 0.3062730627306273,
-            "return60": 0.12738853503184713,
-            "volumeRatio": 2.2877295272740326,
-            "relativeStrength20": 0.3062730627306273,
-            "stockCount": 1,
-            "industryScore": 100.0,
+            "return5": 0.06126866868154839,
+            "return20": 0.15263007537543583,
+            "return60": 0.19308417961263508,
+            "volumeRatio": 0.6751594971620781,
+            "relativeStrength20": 0.15263007537543583,
+            "stockCount": 4,
+            "industryScore": 88.1,
             "status": "主流強勢",
             "rank": 1
+          },
+          {
+            "industry": "造紙工業",
+            "baseIndustries": [
+              "造紙工業"
+            ],
+            "return5": -0.019723865580905026,
+            "return20": 0.16393442330042063,
+            "return60": 0.14516126763967813,
+            "volumeRatio": 0.6506829640019149,
+            "relativeStrength20": 0.16393442330042063,
+            "stockCount": 1,
+            "industryScore": 65.0,
+            "status": "轉強觀察",
+            "rank": 2
+          },
+          {
+            "industry": "橡膠工業",
+            "baseIndustries": [
+              "橡膠工業"
+            ],
+            "return5": -0.0006482757634832635,
+            "return20": 0.06832354964952267,
+            "return60": 0.06134801809573159,
+            "volumeRatio": 0.882858579581041,
+            "relativeStrength20": 0.06832354964952267,
+            "stockCount": 6,
+            "industryScore": 62.5,
+            "status": "中性",
+            "rank": 3
+          },
+          {
+            "industry": "化學工業",
+            "baseIndustries": [
+              "化學工業"
+            ],
+            "return5": 0.02347417924457171,
+            "return20": 0.05314002094582006,
+            "return60": -0.16407609843991044,
+            "volumeRatio": 2.562532028485201,
+            "relativeStrength20": 0.05314002094582006,
+            "stockCount": 1,
+            "industryScore": 60.0,
+            "status": "中性",
+            "rank": 4
+          },
+          {
+            "industry": "水泥工業",
+            "baseIndustries": [
+              "水泥工業"
+            ],
+            "return5": 0.0,
+            "return20": 0.023166038235786442,
+            "return60": 0.0037878932922232266,
+            "volumeRatio": 1.0794111407020304,
+            "relativeStrength20": 0.023166038235786442,
+            "stockCount": 1,
+            "industryScore": 53.8,
+            "status": "中性",
+            "rank": 5
+          },
+          {
+            "industry": "玻璃陶瓷",
+            "baseIndustries": [
+              "玻璃陶瓷"
+            ],
+            "return5": 0.020921382351226876,
+            "return20": 0.020290110086392893,
+            "return60": -0.13780259801480885,
+            "volumeRatio": 0.7893837672490441,
+            "relativeStrength20": 0.020290110086392893,
+            "stockCount": 2,
+            "industryScore": 43.1,
+            "status": "弱勢避開",
+            "rank": 6
+          },
+          {
+            "industry": "電腦週邊-伺服器AI",
+            "baseIndustries": [
+              "電腦及週邊設備業"
+            ],
+            "return5": 0.01834857676214803,
+            "return20": 0.009090885971531723,
+            "return60": -0.03757223394194295,
+            "volumeRatio": 0.5707208987897212,
+            "relativeStrength20": 0.009090885971531723,
+            "stockCount": 1,
+            "industryScore": 35.6,
+            "status": "弱勢避開",
+            "rank": 7
+          },
+          {
+            "industry": "鋼鐵-上游原料",
+            "baseIndustries": [
+              "鋼鐵工業"
+            ],
+            "return5": -0.008220810227853429,
+            "return20": 0.008843119337841298,
+            "return60": 0.04774310221574817,
+            "volumeRatio": 0.824893256876813,
+            "relativeStrength20": 0.008843119337841298,
+            "stockCount": 4,
+            "industryScore": 27.5,
+            "status": "弱勢避開",
+            "rank": 8
+          },
+          {
+            "industry": "通信網路-網通設備",
+            "baseIndustries": [
+              "通信網路業"
+            ],
+            "return5": 0.0,
+            "return20": -0.135650211749918,
+            "return60": -0.08540930387886368,
+            "volumeRatio": 0.49135161792433235,
+            "relativeStrength20": -0.135650211749918,
+            "stockCount": 1,
+            "industryScore": 17.5,
+            "status": "弱勢避開",
+            "rank": 9
           }
         ],
         "usIndustries": [],
         "usTaiwanMatches": [],
         "candidates": {
           "breakout": [],
-          "pullback": [],
-          "overheated": [
+          "pullback": [
             {
-              "code": "2421.TW",
-              "name": "建準",
-              "industry": "電子零組件-電源散熱",
-              "baseIndustry": "電子零組件業",
-              "close": 177.0,
-              "price": 177.0,
+              "code": "2357.TW",
+              "name": "華碩",
+              "industry": "電腦週邊-品牌通路",
+              "baseIndustry": "電腦及週邊設備業",
+              "close": 1010.0,
+              "price": 1010.0,
               "date": "2026-09-01",
-              "return5": 22.92,
-              "return20": 30.63,
-              "return60": 12.74,
-              "relativeStrength20": 30.63,
-              "volumeRatio": 2.29,
-              "signal": "過熱觀察",
-              "bucket": "overheated",
-              "score": 61.7,
-              "action": "過熱勿追",
-              "ma5": 166.2,
-              "ma10": 155.0,
-              "ma20": 151.85,
-              "ma60": 143.4,
-              "ma120": 144.73,
+              "return5": 9.19,
+              "return20": 25.31,
+              "return60": 19.67,
+              "relativeStrength20": 25.31,
+              "volumeRatio": 0.87,
+              "signal": "回檔轉強",
+              "bucket": "pullback",
+              "score": 89.8,
+              "action": "可觀察",
+              "ma5": 982.6,
+              "ma10": 952.0,
+              "ma20": 914.15,
+              "ma60": 798.82,
+              "ma120": 718.52,
               "stopPrices": {
-                "MA20": 151.85,
-                "最近回檔低點": 138.0,
-                "固定 7%": 164.61
+                "MA20": 914.15,
+                "最近回檔低點": 805.0,
+                "固定 7%": 939.3
               },
               "positionSizing": {
                 "valid": true,
                 "riskAmount": 10000.0,
-                "positionValue": 70378.0,
-                "rawPositionValue": 70378.0,
-                "shares": 397,
+                "positionValue": 105373.0,
+                "rawPositionValue": 105373.0,
+                "shares": 104,
                 "lots": 0,
-                "oddLot": 397,
-                "stopPrice": 151.85,
-                "maxLoss": 9985.0,
-                "riskRewardTo8Pct": 0.56,
-                "firstTakeProfit": 191.16,
-                "secondTakeProfit": 203.55,
+                "oddLot": 104,
+                "stopPrice": 914.15,
+                "maxLoss": 9968.0,
+                "riskRewardTo8Pct": 0.84,
+                "firstTakeProfit": 1090.8,
+                "secondTakeProfit": 1161.5,
+                "exceedsSingleLimit": false,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "2395.TW",
+              "name": "研華",
+              "industry": "電腦週邊-品牌通路",
+              "baseIndustry": "電腦及週邊設備業",
+              "close": 711.0,
+              "price": 711.0,
+              "date": "2026-09-01",
+              "return5": 6.12,
+              "return20": 23.44,
+              "return60": 50.96,
+              "relativeStrength20": 23.44,
+              "volumeRatio": 0.66,
+              "signal": "回檔轉強",
+              "bucket": "pullback",
+              "score": 88.1,
+              "action": "可觀察",
+              "ma5": 684.0,
+              "ma10": 676.4,
+              "ma20": 670.05,
+              "ma60": 570.31,
+              "ma120": 485.84,
+              "stopPrices": {
+                "MA20": 670.05,
+                "最近回檔低點": 590.0,
+                "固定 7%": 661.23
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 173626.0,
+                "rawPositionValue": 173626.0,
+                "shares": 244,
+                "lots": 0,
+                "oddLot": 244,
+                "stopPrice": 670.05,
+                "maxLoss": 9992.0,
+                "riskRewardTo8Pct": 1.39,
+                "firstTakeProfit": 767.88,
+                "secondTakeProfit": 817.65,
                 "exceedsSingleLimit": false,
                 "exceedsIndustryLimit": false
               }
             }
           ],
-          "exit": []
+          "overheated": [],
+          "exit": [
+            {
+              "code": "1904.TW",
+              "name": "正隆",
+              "industry": "造紙工業",
+              "baseIndustry": "造紙工業",
+              "close": 24.85,
+              "price": 24.85,
+              "date": "2026-09-01",
+              "return5": -1.97,
+              "return20": 16.39,
+              "return60": 14.52,
+              "relativeStrength20": 16.39,
+              "volumeRatio": 0.65,
+              "signal": "減碼警示",
+              "bucket": "exit",
+              "score": 83.4,
+              "action": "減碼",
+              "ma5": 25.2,
+              "ma10": 25.31,
+              "ma20": 24.59,
+              "ma60": 22.96,
+              "ma120": 20.87,
+              "stopPrices": {
+                "MA20": 24.59,
+                "最近回檔低點": 21.1,
+                "固定 7%": 23.11
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 937735.0,
+                "shares": 8048,
+                "lots": 8,
+                "oddLot": 48,
+                "stopPrice": 24.59,
+                "maxLoss": 2133.0,
+                "riskRewardTo8Pct": 7.5,
+                "firstTakeProfit": 26.84,
+                "secondTakeProfit": 28.58,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            }
+          ]
         },
         "rerun": {
           "githubActions": "Actions > Daily Stock Scan > Run workflow，可選只重跑台股聖杯與美股產業資料。",
@@ -478931,34 +479203,14 @@
         "status": "needs_sponsor",
         "source": "FinMind TaiwanStockTradingDailyReport",
         "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-        "generatedAt": "2026-09-01 22:58:31",
+        "generatedAt": "2026-09-02 00:43:44",
         "date": "2026-09-01",
         "targets": 36,
         "items": [],
         "errors": [
           {
-            "code": "1312",
-            "name": "國喬",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "4958",
-            "name": "臻鼎-KY",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "1301",
-            "name": "台塑",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "6870",
-            "name": "騰雲",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "2449",
-            "name": "京元電子",
+            "code": "8046",
+            "name": "南電",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
@@ -478967,23 +479219,43 @@
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "8046",
-            "name": "南電",
+            "code": "1301",
+            "name": "台塑",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "6669",
-            "name": "緯穎",
+            "code": "2357",
+            "name": "華碩",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "3661",
-            "name": "世芯-KY",
+            "code": "6870",
+            "name": "騰雲",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "3189",
-            "name": "景碩",
+            "code": "2395",
+            "name": "研華",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "1312",
+            "name": "國喬",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "2449",
+            "name": "京元電子",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "9941",
+            "name": "裕融",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "3665",
+            "name": "貿聯-KY",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           }
         ]
