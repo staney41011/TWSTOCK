@@ -505504,7 +505504,7 @@
   },
   {
     "date": "2026-09-11",
-    "market_breadth": 1.54,
+    "market_breadth": 1.53,
     "strategies": {
       "momentum": [
         {
@@ -506239,15 +506239,6 @@
           "updated_at": "2026-09-11",
           "details": [
             {
-              "etf_code": "00401A",
-              "etf_name": "主動摩根台灣鑫收",
-              "issuer": "摩根",
-              "side": "buy",
-              "action": "increased",
-              "shares_delta": 25000,
-              "amount": 15450000
-            },
-            {
               "etf_code": "00403A",
               "etf_name": "主動統一升級50",
               "issuer": "統一",
@@ -506264,6 +506255,15 @@
               "action": "increased",
               "shares_delta": 2491000,
               "amount": 1539438000
+            },
+            {
+              "etf_code": "00401A",
+              "etf_name": "主動摩根台灣鑫收",
+              "issuer": "摩根",
+              "side": "buy",
+              "action": "increased",
+              "shares_delta": 25000,
+              "amount": 15450000
             }
           ],
           "source": "ETF資訊網主動 ETF 追蹤",
@@ -506328,15 +506328,6 @@
           "updated_at": "2026-09-11",
           "details": [
             {
-              "etf_code": "00401A",
-              "etf_name": "主動摩根台灣鑫收",
-              "issuer": "摩根",
-              "side": "buy",
-              "action": "increased",
-              "shares_delta": 10000,
-              "amount": 9880000
-            },
-            {
               "etf_code": "00405A",
               "etf_name": "主動富邦台灣龍耀",
               "issuer": "富邦",
@@ -506344,6 +506335,15 @@
               "action": "increased",
               "shares_delta": 80000,
               "amount": 79040000
+            },
+            {
+              "etf_code": "00401A",
+              "etf_name": "主動摩根台灣鑫收",
+              "issuer": "摩根",
+              "side": "buy",
+              "action": "increased",
+              "shares_delta": 10000,
+              "amount": 9880000
             }
           ],
           "source": "ETF資訊網主動 ETF 追蹤",
@@ -506515,7 +506515,7 @@
         "title": "Druckenmiller 風格雷達",
         "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
         "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-09-11 12:00:19",
+        "generatedAt": "2026-09-11 15:34:58",
         "targetDate": "2026-09-11",
         "status": "ok",
         "market": {
@@ -506524,7 +506524,7 @@
           "suggested_exposure": "0%～20%",
           "score": 0,
           "description": "市場廣度偏弱，保留現金比追高更重要。",
-          "breadth": 1.54
+          "breadth": 1.53
         },
         "industries": [
           {
@@ -506564,7 +506564,7 @@
             ]
           },
           {
-            "name": "生技醫療業",
+            "name": "居家生活",
             "score": -12.0,
             "netAmount": 0.0,
             "signals": 1,
@@ -506770,7 +506770,7 @@
         "title": "台股聖杯雷達",
         "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
         "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-09-11 12:00:19",
+        "generatedAt": "2026-09-11 15:34:58",
         "targetDate": "2026-09-11",
         "dataSource": "twstock universe + yfinance history",
         "market": {
@@ -506789,34 +506789,19 @@
         },
         "industries": [
           {
-            "industry": "生技醫療業",
+            "industry": "居家生活",
             "baseIndustries": [
-              "生技醫療業"
+              "居家生活"
             ],
-            "return5": -0.015212981979849577,
-            "return20": 0.026427061737045413,
-            "return60": 0.03407877418788184,
-            "volumeRatio": 1.0407929910294822,
-            "relativeStrength20": 0.026427061737045413,
+            "return5": -0.02755268625475562,
+            "return20": -0.04,
+            "return60": -0.24146648347117203,
+            "volumeRatio": 1.1243187231694682,
+            "relativeStrength20": -0.04,
             "stockCount": 1,
             "industryScore": 100.0,
             "status": "主流強勢",
             "rank": 1
-          },
-          {
-            "industry": "電腦週邊-伺服器AI",
-            "baseIndustries": [
-              "電腦及週邊設備業"
-            ],
-            "return5": -0.0332409972299169,
-            "return20": -0.1220125786163522,
-            "return60": 0.014534883720930232,
-            "volumeRatio": 0.7820259281437069,
-            "relativeStrength20": -0.1220125786163522,
-            "stockCount": 1,
-            "industryScore": 0.0,
-            "status": "弱勢避開",
-            "rank": 2
           }
         ],
         "usIndustries": [],
@@ -506827,31 +506812,31 @@
           "overheated": [],
           "exit": [
             {
-              "code": "1565.TWO",
-              "name": "精華",
-              "industry": "生技醫療業",
-              "baseIndustry": "生技醫療業",
-              "close": 97.1,
-              "price": 97.1,
+              "code": "2947.TWO",
+              "name": "振宇五金",
+              "industry": "居家生活",
+              "baseIndustry": "居家生活",
+              "close": 60.0,
+              "price": 60.0,
               "date": "2026-09-11",
-              "return5": -1.52,
-              "return20": 2.64,
-              "return60": 3.41,
-              "relativeStrength20": 2.64,
-              "volumeRatio": 1.04,
-              "signal": "出場警示",
+              "return5": -2.76,
+              "return20": -4.0,
+              "return60": -24.15,
+              "relativeStrength20": -4.0,
+              "volumeRatio": 1.12,
+              "signal": "停損警示",
               "bucket": "exit",
-              "score": 54.4,
+              "score": 45.5,
               "action": "出場",
-              "ma5": 98.4,
-              "ma10": 98.86,
-              "ma20": 97.21,
-              "ma60": 95.51,
-              "ma120": 97.57,
+              "ma5": 61.26,
+              "ma10": 61.37,
+              "ma20": 61.64,
+              "ma60": 65.93,
+              "ma120": 71.91,
               "stopPrices": {
-                "MA20": 97.21,
-                "最近回檔低點": 93.5,
-                "固定 7%": 90.3
+                "MA20": 61.64,
+                "最近回檔低點": 60.0,
+                "固定 7%": 55.8
               },
               "positionSizing": {
                 "valid": false,
@@ -506882,34 +506867,14 @@
         "status": "needs_sponsor",
         "source": "FinMind TaiwanStockTradingDailyReport",
         "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-        "generatedAt": "2026-09-11 12:00:21",
+        "generatedAt": "2026-09-11 15:35:00",
         "date": "2026-09-11",
         "targets": 22,
         "items": [],
         "errors": [
           {
-            "code": "5209",
-            "name": "新鼎",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "4442",
-            "name": "竣邦-KY",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
             "code": "3231",
             "name": "緯創",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "6531",
-            "name": "愛普*",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "6706",
-            "name": "惠特",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
@@ -506918,8 +506883,23 @@
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
+            "code": "5209",
+            "name": "新鼎",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "6706",
+            "name": "惠特",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
             "code": "3522",
             "name": "御嵿",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "6531",
+            "name": "愛普*",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
@@ -506928,13 +506908,18 @@
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "1528",
-            "name": "恩德",
+            "code": "4442",
+            "name": "竣邦-KY",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
             "code": "1736",
             "name": "喬山",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "1528",
+            "name": "恩德",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           }
         ]
