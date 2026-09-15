@@ -26,7 +26,9 @@ data/YYYY-MM-DD.json
 data/manifest.json
 ```
 
-這是一份輕量日期索引，只保存日期、市場寬度與各策略筆數。舊版 `data.json` 仍保留相容性，但只維持最近 20 筆日資料，避免檔案隨歷史資料無限膨脹。
+這是一份輕量日期索引，只保存日期、市場寬度與各策略筆數。新的頁面優先讀取 manifest，再只載入使用者選定日期的完整 JSON。
+
+目前舊版 `index.html` 仍依賴 `data.json`，因此 `data.json` 暫時保留完整歷史資料，避免既有首頁的歷史日期消失；產生時會使用 compact JSON 減少不必要的空白。等原首頁也完成按日懶載入後，再安全地縮小或移除 legacy `data.json`。
 
 ## 策略共振權重
 
@@ -54,8 +56,8 @@ data/manifest.json
 
 1. 更新當日 `data/YYYY-MM-DD.json`。
 2. 重建 `data/manifest.json`。
-3. 將 `data.json` 控制在最近 20 筆資料。
-4. 執行 `test_data_index.py`，確認索引建立與相容資料裁切邏輯正常。
+3. 重建相容用的完整 `data.json`（compact JSON）。
+4. 執行 `test_data_index.py`，確認日期索引、策略筆數與相容資料邏輯正常。
 
 ## 本機使用
 
