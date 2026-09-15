@@ -3,7 +3,6 @@ import re
 from pathlib import Path
 
 DATE_FILE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-DEFAULT_LEGACY_HISTORY_LIMIT = 20
 
 
 def _strategy_count(key, value):
@@ -39,11 +38,13 @@ def _load_daily_records(data_dir):
     return records
 
 
-def rebuild_data_indexes(data_dir="data", legacy_file="data.json", legacy_limit=DEFAULT_LEGACY_HISTORY_LIMIT):
-    """Rebuild the tiny date manifest and a bounded legacy data.json fallback.
+def rebuild_data_indexes(data_dir="data", legacy_file="data.json", legacy_limit=None):
+    """Build a lightweight date manifest while keeping the legacy history compatible.
 
-    The website should use data/manifest.json + data/YYYY-MM-DD.json.  data.json is
-    intentionally kept as a short compatibility window for older clients/tools.
+    New pages should load data/manifest.json first and then fetch only the selected
+    data/YYYY-MM-DD.json file.  By default data.json still contains the complete
+    history so the existing dashboard keeps every historical date.  A caller may
+    provide legacy_limit later, after all legacy clients have migrated to lazy load.
     """
     directory = Path(data_dir)
     directory.mkdir(parents=True, exist_ok=True)
@@ -65,7 +66,12 @@ def rebuild_data_indexes(data_dir="data", legacy_file="data.json", legacy_limit=
     with manifest_path.open("w", encoding="utf-8") as file:
         json.dump(manifest, file, ensure_ascii=False, separators=(",", ":"))
 
-    legacy_records = records[-max(1, int(legacy_limit)):] if records else []
+    if legacy_limit is None:
+        legacy_records = records
+    else:
+        legacy_records = records[-max(1, int(legacy_limit)):] if records else []
+
+    # Compact JSON keeps the legacy file smaller without removing historical dates.
     with Path(legacy_file).open("w", encoding="utf-8") as file:
         json.dump(legacy_records, file, ensure_ascii=False, separators=(",", ":"))
 
