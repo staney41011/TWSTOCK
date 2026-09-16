@@ -1,178 +1,59 @@
 {
   "date": "2026-09-15",
-  "market_breadth": 0.31,
+  "market_breadth": 0.9,
   "strategies": {
-    "momentum": [],
-    "day_trading": [],
-    "doji_rise": [
+    "momentum": [
       {
-        "code": "2354.TW",
-        "name": "鴻準",
+        "code": "1709.TW",
+        "name": "和益",
         "region": "TW",
-        "price": 64.6,
-        "date": "2026-09-15",
+        "price": 39.05,
+        "date": "2026-09-16",
         "fundamentals": {
-          "pe": 27.489363,
-          "growth": 0.656,
-          "rev_yoy": -0.264,
+          "pe": 19.525,
+          "growth": 4.874,
+          "rev_yoy": 0.226,
           "rev_qoq": null,
           "quarters": [
             {
               "date": "2026-06",
-              "revenue": 30341296000.0,
-              "qoq": 0.20045495061866092
+              "revenue": 2689168000.0,
+              "qoq": 0.10917721845301512
             },
             {
               "date": "2026-03",
-              "revenue": 25274831000.0,
-              "qoq": -0.40542787871927344
+              "revenue": 2424471000.0,
+              "qoq": 0.1825759050142891
             },
             {
               "date": "2025-12",
-              "revenue": 42509277000.0,
-              "qoq": 0.004197859399278198
+              "revenue": 2050161000.0,
+              "qoq": -0.04336081549652441
             },
             {
               "date": "2025-09",
-              "revenue": 42331575000.0,
-              "qoq": 0.026878421997173413
+              "revenue": 2143087000.0,
+              "qoq": -0.023133876278067806
             }
           ]
         },
-        "score": 60,
-        "pattern": "標準十字星",
-        "vol_ratio": 73.3,
-        "vol_avg_val": 6.1,
-        "trend": "多頭整理",
+        "score": 10,
         "reasons": [
-          "結構+十字星成立 (60分)"
-        ]
-      },
-      {
-        "code": "2351.TW",
-        "name": "順德",
-        "region": "TW",
-        "price": 251.5,
-        "date": "2026-09-15",
-        "fundamentals": {
-          "pe": 64.98708,
-          "growth": null,
-          "rev_yoy": 0.372,
-          "rev_qoq": null,
-          "quarters": [
-            {
-              "date": "2026-06",
-              "revenue": 3559376000.0,
-              "qoq": 0.2689216553061632
-            },
-            {
-              "date": "2026-03",
-              "revenue": 2805040000.0,
-              "qoq": 0.08564683115626512
-            },
-            {
-              "date": "2025-12",
-              "revenue": 2583750000.0,
-              "qoq": 0.016158643060978563
-            },
-            {
-              "date": "2025-09",
-              "revenue": 2542664000.0,
-              "qoq": -0.02009551381065574
-            }
-          ]
-        },
-        "score": 60,
-        "pattern": "標準十字星",
-        "vol_ratio": 140.3,
-        "vol_avg_val": 21.8,
-        "trend": "多頭整理",
-        "reasons": [
-          "結構+十字星成立 (60分)",
-          "均線多頭排列 (+5)",
-          "量能稍大 (-5)"
-        ]
-      }
-    ],
-    "macd_turn_red": [
-      {
-        "code": "2228.TW",
-        "name": "劍麟",
-        "region": "TW",
-        "price": 74.9,
-        "date": "2026-09-15",
-        "fundamentals": {
-          "pe": 19.205128,
-          "growth": -0.194,
-          "rev_yoy": -0.016,
-          "rev_qoq": null,
-          "quarters": [
-            {
-              "date": "2026-06",
-              "revenue": 1214225000.0,
-              "qoq": -0.010329302028367477
-            },
-            {
-              "date": "2026-03",
-              "revenue": 1226898000.0,
-              "qoq": 0.0320752240975531
-            },
-            {
-              "date": "2025-12",
-              "revenue": 1188768000.0,
-              "qoq": -0.04845578017840334
-            },
-            {
-              "date": "2025-09",
-              "revenue": 1249304000.0,
-              "qoq": 0.01247824998156263
-            }
-          ]
-        },
-        "pattern": "MACD翻紅第1天",
-        "macd_day": 1,
-        "macd_label": "第1天",
-        "cross_date": "2026-09-15",
-        "dif": -1.7665,
-        "macd_signal": -1.7723,
-        "histogram": 0.0058,
-        "histogram_prev": -0.0349,
-        "histogram_cross": 0.0058,
-        "hist_sequence": [
-          {
-            "date": "2026-09-09",
-            "value": -0.1854
-          },
-          {
-            "date": "2026-09-10",
-            "value": -0.1035
-          },
-          {
-            "date": "2026-09-11",
-            "value": -0.0757
-          },
-          {
-            "date": "2026-09-14",
-            "value": -0.0349
-          },
-          {
-            "date": "2026-09-15",
-            "value": 0.0058
-          }
-        ],
-        "reasons": [
-          "MACD(21,55,89) 柱狀體於 2026-09-15 由綠翻紅",
-          "目前為翻紅第1天，柱狀體 0.0058"
+          "(基礎) 創季新高 +3分",
+          "(加分) 兩年新高 +2分",
+          "★營收年增>15% (+3分)",
+          "(加分) EPS高成長 (+1分)",
+          "(加分) 本益比合理 (+1分)"
         ]
       },
       {
         "code": "2305.TW",
         "name": "全友",
         "region": "TW",
-        "price": 44.95,
-        "date": "2026-09-15",
+        "price": 49.4,
+        "date": "2026-09-16",
         "fundamentals": {
-          "pe": 54.817074,
+          "pe": 60.243904,
           "growth": null,
           "rev_yoy": 1.067,
           "rev_qoq": null,
@@ -199,188 +80,20 @@
             }
           ]
         },
-        "pattern": "MACD翻紅第2天",
-        "macd_day": 2,
-        "macd_label": "第2天",
-        "cross_date": "2026-09-14",
-        "dif": 2.9745,
-        "macd_signal": 2.0728,
-        "histogram": 0.9017,
-        "histogram_prev": 0.3679,
-        "histogram_cross": 0.3679,
-        "hist_sequence": [
-          {
-            "date": "2026-09-09",
-            "value": -1.204
-          },
-          {
-            "date": "2026-09-10",
-            "value": -0.7783
-          },
-          {
-            "date": "2026-09-11",
-            "value": -0.2776
-          },
-          {
-            "date": "2026-09-14",
-            "value": 0.3679
-          },
-          {
-            "date": "2026-09-15",
-            "value": 0.9017
-          }
-        ],
+        "score": 8,
         "reasons": [
-          "MACD(21,55,89) 柱狀體於 2026-09-14 由綠翻紅",
-          "目前為翻紅第2天，柱狀體 0.9017"
-        ]
-      },
-      {
-        "code": "2338.TW",
-        "name": "光罩",
-        "region": "TW",
-        "price": 46.1,
-        "date": "2026-09-15",
-        "fundamentals": {
-          "pe": 999,
-          "growth": null,
-          "rev_yoy": -0.048,
-          "rev_qoq": null,
-          "quarters": [
-            {
-              "date": "2026-06",
-              "revenue": 1513784000.0,
-              "qoq": -0.016199923182455965
-            },
-            {
-              "date": "2026-03",
-              "revenue": 1538711000.0,
-              "qoq": 0.12329594150463784
-            },
-            {
-              "date": "2025-12",
-              "revenue": 1369818000.0,
-              "qoq": -0.05553307073204533
-            },
-            {
-              "date": "2025-09",
-              "revenue": 1450361000.0,
-              "qoq": -0.0877848311847103
-            }
-          ]
-        },
-        "pattern": "MACD翻紅第2天",
-        "macd_day": 2,
-        "macd_label": "第2天",
-        "cross_date": "2026-09-14",
-        "dif": -0.6765,
-        "macd_signal": -1.1236,
-        "histogram": 0.447,
-        "histogram_prev": 0.1565,
-        "histogram_cross": 0.1565,
-        "hist_sequence": [
-          {
-            "date": "2026-09-09",
-            "value": -1.2606
-          },
-          {
-            "date": "2026-09-10",
-            "value": -0.8083
-          },
-          {
-            "date": "2026-09-11",
-            "value": -0.299
-          },
-          {
-            "date": "2026-09-14",
-            "value": 0.1565
-          },
-          {
-            "date": "2026-09-15",
-            "value": 0.447
-          }
-        ],
-        "reasons": [
-          "MACD(21,55,89) 柱狀體於 2026-09-14 由綠翻紅",
-          "目前為翻紅第2天，柱狀體 0.447"
-        ]
-      },
-      {
-        "code": "1314.TW",
-        "name": "中石化",
-        "region": "TW",
-        "price": 8.11,
-        "date": "2026-09-15",
-        "fundamentals": {
-          "pe": 999,
-          "growth": null,
-          "rev_yoy": -0.207,
-          "rev_qoq": null,
-          "quarters": [
-            {
-              "date": "2026-06",
-              "revenue": 3887347000.0,
-              "qoq": -0.05009280744727227
-            },
-            {
-              "date": "2026-03",
-              "revenue": 4092344000.0,
-              "qoq": 0.21586469027024568
-            },
-            {
-              "date": "2025-12",
-              "revenue": 3365789000.0,
-              "qoq": -0.24299444827794056
-            },
-            {
-              "date": "2025-09",
-              "revenue": 4446188000.0,
-              "qoq": -0.0929453060578328
-            }
-          ]
-        },
-        "pattern": "MACD翻紅第2天",
-        "macd_day": 2,
-        "macd_label": "第2天",
-        "cross_date": "2026-09-14",
-        "dif": 0.0275,
-        "macd_signal": 0.0268,
-        "histogram": 0.0008,
-        "histogram_prev": 0.0006,
-        "histogram_cross": 0.0006,
-        "hist_sequence": [
-          {
-            "date": "2026-09-09",
-            "value": -0.0119
-          },
-          {
-            "date": "2026-09-10",
-            "value": -0.0087
-          },
-          {
-            "date": "2026-09-11",
-            "value": -0.0066
-          },
-          {
-            "date": "2026-09-14",
-            "value": 0.0006
-          },
-          {
-            "date": "2026-09-15",
-            "value": 0.0008
-          }
-        ],
-        "reasons": [
-          "MACD(21,55,89) 柱狀體於 2026-09-14 由綠翻紅",
-          "目前為翻紅第2天，柱狀體 0.0008"
+          "(基礎) 創季新高 +3分",
+          "(基礎) 量增1.2倍",
+          "(加分) 兩年新高 +2分",
+          "★營收年增>15% (+3分)"
         ]
       },
       {
         "code": "1528.TW",
         "name": "恩德",
         "region": "TW",
-        "price": 24.65,
-        "date": "2026-09-15",
+        "price": 25.15,
+        "date": "2026-09-16",
         "fundamentals": {
           "pe": 999,
           "growth": null,
@@ -409,110 +122,295 @@
             }
           ]
         },
-        "pattern": "MACD翻紅第3天",
-        "macd_day": 3,
-        "macd_label": "第3天",
-        "cross_date": "2026-09-11",
-        "dif": -0.326,
-        "macd_signal": -0.8559,
-        "histogram": 0.5299,
-        "histogram_prev": 0.2568,
-        "histogram_cross": 0.0247,
-        "hist_sequence": [
-          {
-            "date": "2026-09-09",
-            "value": -0.1455
-          },
-          {
-            "date": "2026-09-10",
-            "value": -0.1109
-          },
-          {
-            "date": "2026-09-11",
-            "value": 0.0247
-          },
-          {
-            "date": "2026-09-14",
-            "value": 0.2568
-          },
-          {
-            "date": "2026-09-15",
-            "value": 0.5299
-          }
-        ],
+        "score": 4,
         "reasons": [
-          "MACD(21,55,89) 柱狀體於 2026-09-11 由綠翻紅",
-          "目前為翻紅第3天，柱狀體 0.5299"
+          "(基礎) 創季新高 +3分",
+          "(基礎) 量增1.2倍",
+          "(加分) 營收正成長 (+1分)"
         ]
-      },
+      }
+    ],
+    "day_trading": [],
+    "doji_rise": [],
+    "macd_turn_red": [
       {
-        "code": "1456.TW",
-        "name": "怡華",
+        "code": "2228.TW",
+        "name": "劍麟",
         "region": "TW",
-        "price": 13.9,
-        "date": "2026-09-15",
+        "price": 75.0,
+        "date": "2026-09-16",
         "fundamentals": {
-          "pe": 4.946619,
-          "growth": null,
-          "rev_yoy": -0.499,
+          "pe": 19.230768,
+          "growth": -0.194,
+          "rev_yoy": -0.016,
           "rev_qoq": null,
           "quarters": [
             {
               "date": "2026-06",
-              "revenue": 148557000.0,
-              "qoq": -0.3214933294358909
+              "revenue": 1214225000.0,
+              "qoq": -0.010329302028367477
             },
             {
               "date": "2026-03",
-              "revenue": 218947000.0,
-              "qoq": 0.05580738183185935
+              "revenue": 1226898000.0,
+              "qoq": 0.0320752240975531
             },
             {
               "date": "2025-12",
-              "revenue": 207374000.0,
-              "qoq": 0.2846540786995738
+              "revenue": 1188768000.0,
+              "qoq": -0.04845578017840334
             },
             {
               "date": "2025-09",
-              "revenue": 161424000.0,
-              "qoq": -0.4553129460354095
+              "revenue": 1249304000.0,
+              "qoq": 0.01247824998156263
+            }
+          ]
+        },
+        "pattern": "MACD翻紅第2天",
+        "macd_day": 2,
+        "macd_label": "第2天",
+        "cross_date": "2026-09-15",
+        "dif": -1.7194,
+        "macd_signal": -1.7711,
+        "histogram": 0.0518,
+        "histogram_prev": 0.0058,
+        "histogram_cross": 0.0058,
+        "hist_sequence": [
+          {
+            "date": "2026-09-10",
+            "value": -0.1035
+          },
+          {
+            "date": "2026-09-11",
+            "value": -0.0757
+          },
+          {
+            "date": "2026-09-14",
+            "value": -0.0349
+          },
+          {
+            "date": "2026-09-15",
+            "value": 0.0058
+          },
+          {
+            "date": "2026-09-16",
+            "value": 0.0518
+          }
+        ],
+        "reasons": [
+          "MACD(21,55,89) 柱狀體於 2026-09-15 由綠翻紅",
+          "目前為翻紅第2天，柱狀體 0.0518"
+        ]
+      },
+      {
+        "code": "2305.TW",
+        "name": "全友",
+        "region": "TW",
+        "price": 49.4,
+        "date": "2026-09-16",
+        "fundamentals": {
+          "pe": 60.243904,
+          "growth": null,
+          "rev_yoy": 1.067,
+          "rev_qoq": null,
+          "quarters": [
+            {
+              "date": "2026-06",
+              "revenue": 385528000.0,
+              "qoq": 0.561259283857225
+            },
+            {
+              "date": "2026-03",
+              "revenue": 246934000.0,
+              "qoq": 0.13182139026648454
+            },
+            {
+              "date": "2025-12",
+              "revenue": 218174000.0,
+              "qoq": 0.238906997081237
+            },
+            {
+              "date": "2025-09",
+              "revenue": 176102000.0,
+              "qoq": -0.05605197283433123
             }
           ]
         },
         "pattern": "MACD翻紅第3天",
         "macd_day": 3,
         "macd_label": "第3天",
-        "cross_date": "2026-09-11",
-        "dif": 0.0676,
-        "macd_signal": 0.0561,
-        "histogram": 0.0115,
-        "histogram_prev": 0.0222,
-        "histogram_cross": 0.009,
+        "cross_date": "2026-09-14",
+        "dif": 3.6964,
+        "macd_signal": 2.1089,
+        "histogram": 1.5875,
+        "histogram_prev": 0.9017,
+        "histogram_cross": 0.3679,
         "hist_sequence": [
           {
-            "date": "2026-09-09",
-            "value": -0.0254
-          },
-          {
             "date": "2026-09-10",
-            "value": -0.0097
+            "value": -0.7783
           },
           {
             "date": "2026-09-11",
-            "value": 0.009
+            "value": -0.2776
           },
           {
             "date": "2026-09-14",
-            "value": 0.0222
+            "value": 0.3679
           },
           {
             "date": "2026-09-15",
-            "value": 0.0115
+            "value": 0.9017
+          },
+          {
+            "date": "2026-09-16",
+            "value": 1.5875
           }
         ],
         "reasons": [
-          "MACD(21,55,89) 柱狀體於 2026-09-11 由綠翻紅",
-          "目前為翻紅第3天，柱狀體 0.0115"
+          "MACD(21,55,89) 柱狀體於 2026-09-14 由綠翻紅",
+          "目前為翻紅第3天，柱狀體 1.5875"
+        ]
+      },
+      {
+        "code": "2338.TW",
+        "name": "光罩",
+        "region": "TW",
+        "price": 50.7,
+        "date": "2026-09-16",
+        "fundamentals": {
+          "pe": 999,
+          "growth": null,
+          "rev_yoy": -0.048,
+          "rev_qoq": null,
+          "quarters": [
+            {
+              "date": "2026-06",
+              "revenue": 1513784000.0,
+              "qoq": -0.016199923182455965
+            },
+            {
+              "date": "2026-03",
+              "revenue": 1538711000.0,
+              "qoq": 0.12329594150463784
+            },
+            {
+              "date": "2025-12",
+              "revenue": 1369818000.0,
+              "qoq": -0.05553307073204533
+            },
+            {
+              "date": "2025-09",
+              "revenue": 1450361000.0,
+              "qoq": -0.0877848311847103
+            }
+          ]
+        },
+        "pattern": "MACD翻紅第3天",
+        "macd_day": 3,
+        "macd_label": "第3天",
+        "cross_date": "2026-09-14",
+        "dif": -0.1569,
+        "macd_signal": -1.1021,
+        "histogram": 0.9452,
+        "histogram_prev": 0.447,
+        "histogram_cross": 0.1565,
+        "hist_sequence": [
+          {
+            "date": "2026-09-10",
+            "value": -0.8083
+          },
+          {
+            "date": "2026-09-11",
+            "value": -0.299
+          },
+          {
+            "date": "2026-09-14",
+            "value": 0.1565
+          },
+          {
+            "date": "2026-09-15",
+            "value": 0.447
+          },
+          {
+            "date": "2026-09-16",
+            "value": 0.9452
+          }
+        ],
+        "reasons": [
+          "MACD(21,55,89) 柱狀體於 2026-09-14 由綠翻紅",
+          "目前為翻紅第3天，柱狀體 0.9452"
+        ]
+      },
+      {
+        "code": "1314.TW",
+        "name": "中石化",
+        "region": "TW",
+        "price": 8.18,
+        "date": "2026-09-16",
+        "fundamentals": {
+          "pe": 999,
+          "growth": null,
+          "rev_yoy": -0.207,
+          "rev_qoq": null,
+          "quarters": [
+            {
+              "date": "2026-06",
+              "revenue": 3887347000.0,
+              "qoq": -0.05009280744727227
+            },
+            {
+              "date": "2026-03",
+              "revenue": 4092344000.0,
+              "qoq": 0.21586469027024568
+            },
+            {
+              "date": "2025-12",
+              "revenue": 3365789000.0,
+              "qoq": -0.24299444827794056
+            },
+            {
+              "date": "2025-09",
+              "revenue": 4446188000.0,
+              "qoq": -0.0929453060578328
+            }
+          ]
+        },
+        "pattern": "MACD翻紅第3天",
+        "macd_day": 3,
+        "macd_label": "第3天",
+        "cross_date": "2026-09-14",
+        "dif": 0.0314,
+        "macd_signal": 0.0269,
+        "histogram": 0.0046,
+        "histogram_prev": 0.0008,
+        "histogram_cross": 0.0006,
+        "hist_sequence": [
+          {
+            "date": "2026-09-10",
+            "value": -0.0087
+          },
+          {
+            "date": "2026-09-11",
+            "value": -0.0066
+          },
+          {
+            "date": "2026-09-14",
+            "value": 0.0006
+          },
+          {
+            "date": "2026-09-15",
+            "value": 0.0008
+          },
+          {
+            "date": "2026-09-16",
+            "value": 0.0046
+          }
+        ],
+        "reasons": [
+          "MACD(21,55,89) 柱狀體於 2026-09-14 由綠翻紅",
+          "目前為翻紅第3天，柱狀體 0.0046"
         ]
       }
     ],
@@ -655,15 +553,6 @@
         "updated_at": "2026-09-15",
         "details": [
           {
-            "etf_code": "00408A",
-            "etf_name": "主動第一金優股息",
-            "issuer": "第一金",
-            "side": "buy",
-            "action": "added",
-            "shares_delta": 150000,
-            "amount": 6787500
-          },
-          {
             "etf_code": "00404A",
             "etf_name": "主動聯博動能50",
             "issuer": "聯博",
@@ -671,6 +560,15 @@
             "action": "increased",
             "shares_delta": 51000,
             "amount": 2307750
+          },
+          {
+            "etf_code": "00408A",
+            "etf_name": "主動第一金優股息",
+            "issuer": "第一金",
+            "side": "buy",
+            "action": "added",
+            "shares_delta": 150000,
+            "amount": 6787500
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -695,15 +593,6 @@
         "updated_at": "2026-09-15",
         "details": [
           {
-            "etf_code": "00408A",
-            "etf_name": "主動第一金優股息",
-            "issuer": "第一金",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -6000,
-            "amount": -5568000
-          },
-          {
             "etf_code": "00404A",
             "etf_name": "主動聯博動能50",
             "issuer": "聯博",
@@ -711,6 +600,15 @@
             "action": "increased",
             "shares_delta": 3000,
             "amount": 2784000
+          },
+          {
+            "etf_code": "00408A",
+            "etf_name": "主動第一金優股息",
+            "issuer": "第一金",
+            "side": "sell",
+            "action": "decreased",
+            "shares_delta": -6000,
+            "amount": -5568000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -735,15 +633,6 @@
         "updated_at": "2026-09-15",
         "details": [
           {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 20000,
-            "amount": 62300000
-          },
-          {
             "etf_code": "00994A",
             "etf_name": "主動第一金台股優",
             "issuer": "第一金",
@@ -753,13 +642,13 @@
             "amount": -43610000
           },
           {
-            "etf_code": "00408A",
-            "etf_name": "主動第一金優股息",
-            "issuer": "第一金",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -10000,
-            "amount": -31150000
+            "etf_code": "00406A",
+            "etf_name": "主動中信台灣收益",
+            "issuer": "中國信託",
+            "side": "buy",
+            "action": "increased",
+            "shares_delta": 20000,
+            "amount": 62300000
           },
           {
             "etf_code": "00404A",
@@ -769,6 +658,15 @@
             "action": "increased",
             "shares_delta": 2000,
             "amount": 6230000
+          },
+          {
+            "etf_code": "00408A",
+            "etf_name": "主動第一金優股息",
+            "issuer": "第一金",
+            "side": "sell",
+            "action": "decreased",
+            "shares_delta": -10000,
+            "amount": -31150000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -802,15 +700,6 @@
             "amount": -59805000
           },
           {
-            "etf_code": "00408A",
-            "etf_name": "主動第一金優股息",
-            "issuer": "第一金",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -99000,
-            "amount": -21928500
-          },
-          {
             "etf_code": "00404A",
             "etf_name": "主動聯博動能50",
             "issuer": "聯博",
@@ -818,6 +707,15 @@
             "action": "increased",
             "shares_delta": 15000,
             "amount": 3322500
+          },
+          {
+            "etf_code": "00408A",
+            "etf_name": "主動第一金優股息",
+            "issuer": "第一金",
+            "side": "sell",
+            "action": "decreased",
+            "shares_delta": -99000,
+            "amount": -21928500
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -842,15 +740,6 @@
         "updated_at": "2026-09-15",
         "details": [
           {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -130000,
-            "amount": -126360000
-          },
-          {
             "etf_code": "00995A",
             "etf_name": "主動中信台灣卓越",
             "issuer": "中國信託",
@@ -867,6 +756,15 @@
             "action": "decreased",
             "shares_delta": -80000,
             "amount": -77760000
+          },
+          {
+            "etf_code": "00406A",
+            "etf_name": "主動中信台灣收益",
+            "issuer": "中國信託",
+            "side": "sell",
+            "action": "decreased",
+            "shares_delta": -130000,
+            "amount": -126360000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -891,15 +789,6 @@
         "updated_at": "2026-09-15",
         "details": [
           {
-            "etf_code": "00403A",
-            "etf_name": "主動統一升級50",
-            "issuer": "統一",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -1000000,
-            "amount": -592000000
-          },
-          {
             "etf_code": "00404A",
             "etf_name": "主動聯博動能50",
             "issuer": "聯博",
@@ -907,6 +796,15 @@
             "action": "increased",
             "shares_delta": 12000,
             "amount": 7104000
+          },
+          {
+            "etf_code": "00403A",
+            "etf_name": "主動統一升級50",
+            "issuer": "統一",
+            "side": "sell",
+            "action": "decreased",
+            "shares_delta": -1000000,
+            "amount": -592000000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -958,16 +856,16 @@
       "title": "Druckenmiller 風格雷達",
       "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
       "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-09-15 23:21:44",
+      "generatedAt": "2026-09-16 02:16:07",
       "targetDate": "2026-09-15",
-      "status": "no_data",
+      "status": "ok",
       "market": {
         "state": "Defense",
         "label": "防守盤",
         "suggested_exposure": "0%～20%",
         "score": 0,
         "description": "市場廣度偏弱，保留現金比追高更重要。",
-        "breadth": 0.31
+        "breadth": 0.9
       },
       "industries": [
         {
@@ -1016,15 +914,6 @@
           ]
         },
         {
-          "name": "金融-證券期貨",
-          "score": -12.0,
-          "netAmount": 0.0,
-          "signals": 1,
-          "sources": [
-            "聖杯出場警示"
-          ]
-        },
-        {
           "name": "光電業",
           "score": -13.0,
           "netAmount": -1065680000.0,
@@ -1034,7 +923,212 @@
           ]
         }
       ],
-      "candidates": [],
+      "candidates": [
+        {
+          "code": "1709",
+          "name": "和益",
+          "industry": null,
+          "price": 39.05,
+          "date": "2026-09-16",
+          "score": 64,
+          "scoreParts": [
+            {
+              "source": "動能突破",
+              "points": 44
+            },
+            {
+              "source": "基本面改善",
+              "points": 20
+            },
+            {
+              "source": "大盤環境",
+              "points": 0
+            }
+          ],
+          "signals": [
+            "動能突破"
+          ],
+          "warnings": [],
+          "thesis": [
+            "創高後仍有基本面支撐",
+            "營收 YoY > 15%",
+            "EPS 高成長",
+            "估值未過熱"
+          ],
+          "fundamentals": {
+            "pe": 19.525,
+            "growth": 4.874,
+            "rev_yoy": 0.226,
+            "rev_qoq": null,
+            "quarters": [
+              {
+                "date": "2026-06",
+                "revenue": 2689168000.0,
+                "qoq": 0.10917721845301512
+              },
+              {
+                "date": "2026-03",
+                "revenue": 2424471000.0,
+                "qoq": 0.1825759050142891
+              },
+              {
+                "date": "2025-12",
+                "revenue": 2050161000.0,
+                "qoq": -0.04336081549652441
+              },
+              {
+                "date": "2025-09",
+                "revenue": 2143087000.0,
+                "qoq": -0.023133876278067806
+              }
+            ]
+          },
+          "conviction": "觀察核心",
+          "signalCount": 1,
+          "thesisBreak": [
+            "主動 ETF 流向轉為連續賣超",
+            "MACD 柱狀體翻回綠色或突破失敗",
+            "營收 / EPS 成長 thesis 消失"
+          ]
+        },
+        {
+          "code": "2305",
+          "name": "全友",
+          "industry": null,
+          "price": 49.4,
+          "date": "2026-09-16",
+          "score": 62.0,
+          "scoreParts": [
+            {
+              "source": "動能突破",
+              "points": 42.0
+            },
+            {
+              "source": "基本面改善",
+              "points": 8
+            },
+            {
+              "source": "MACD 翻紅",
+              "points": 8
+            },
+            {
+              "source": "大盤環境",
+              "points": 0
+            }
+          ],
+          "signals": [
+            "動能突破",
+            "MACD 翻紅"
+          ],
+          "warnings": [],
+          "thesis": [
+            "創高後仍有基本面支撐",
+            "營收 YoY > 30%",
+            "估值偏高",
+            "MACD翻紅第3天"
+          ],
+          "fundamentals": {
+            "pe": 60.243904,
+            "growth": null,
+            "rev_yoy": 1.067,
+            "rev_qoq": null,
+            "quarters": [
+              {
+                "date": "2026-06",
+                "revenue": 385528000.0,
+                "qoq": 0.561259283857225
+              },
+              {
+                "date": "2026-03",
+                "revenue": 246934000.0,
+                "qoq": 0.13182139026648454
+              },
+              {
+                "date": "2025-12",
+                "revenue": 218174000.0,
+                "qoq": 0.238906997081237
+              },
+              {
+                "date": "2025-09",
+                "revenue": 176102000.0,
+                "qoq": -0.05605197283433123
+              }
+            ]
+          },
+          "conviction": "觀察核心",
+          "signalCount": 2,
+          "thesisBreak": [
+            "主動 ETF 流向轉為連續賣超",
+            "MACD 柱狀體翻回綠色或突破失敗",
+            "營收 / EPS 成長 thesis 消失"
+          ]
+        },
+        {
+          "code": "1528",
+          "name": "恩德",
+          "industry": null,
+          "price": 25.15,
+          "date": "2026-09-16",
+          "score": 38.0,
+          "scoreParts": [
+            {
+              "source": "動能突破",
+              "points": 34.0
+            },
+            {
+              "source": "基本面改善",
+              "points": 4
+            },
+            {
+              "source": "大盤環境",
+              "points": 0
+            }
+          ],
+          "signals": [
+            "動能突破"
+          ],
+          "warnings": [],
+          "thesis": [
+            "創高後仍有基本面支撐",
+            "營收正成長"
+          ],
+          "fundamentals": {
+            "pe": 999,
+            "growth": null,
+            "rev_yoy": 0.012,
+            "rev_qoq": null,
+            "quarters": [
+              {
+                "date": "2026-06",
+                "revenue": 777343000.0,
+                "qoq": 0.09161442710615303
+              },
+              {
+                "date": "2026-03",
+                "revenue": 712104000.0,
+                "qoq": 0.04585830102220655
+              },
+              {
+                "date": "2025-12",
+                "revenue": 680880000.0,
+                "qoq": -0.13297270865804836
+              },
+              {
+                "date": "2025-09",
+                "revenue": 785304000.0,
+                "qoq": 0.022292981193185443
+              }
+            ]
+          },
+          "conviction": "只觀察",
+          "signalCount": 1,
+          "thesisBreak": [
+            "主動 ETF 流向轉為連續賣超",
+            "MACD 柱狀體翻回綠色或突破失敗",
+            "營收 / EPS 成長 thesis 消失"
+          ]
+        }
+      ],
       "principles": [
         "大盤流動性與廣度決定倉位，不在弱盤硬做大部位。",
         "集中在少數高信念標的，訊號越多越值得追蹤。",
@@ -1050,7 +1144,7 @@
       "title": "台股聖杯雷達",
       "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
       "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-09-15 23:21:44",
+      "generatedAt": "2026-09-16 02:16:07",
       "targetDate": "2026-09-15",
       "dataSource": "twstock universe + yfinance history",
       "market": {
@@ -1067,75 +1161,14 @@
         "maxIndustryExposure": 0.4,
         "stopMode": "MA20"
       },
-      "industries": [
-        {
-          "industry": "金融-證券期貨",
-          "baseIndustries": [
-            "金融保險業"
-          ],
-          "return5": 0.01809408893112921,
-          "return20": 0.008363256907519157,
-          "return60": -0.02939996393966606,
-          "volumeRatio": 1.088292450610237,
-          "relativeStrength20": 0.008363256907519157,
-          "stockCount": 1,
-          "industryScore": 100.0,
-          "status": "主流強勢",
-          "rank": 1
-        }
-      ],
+      "industries": [],
       "usIndustries": [],
       "usTaiwanMatches": [],
       "candidates": {
         "breakout": [],
         "pullback": [],
         "overheated": [],
-        "exit": [
-          {
-            "code": "6023.TWO",
-            "name": "元大期",
-            "industry": "金融-證券期貨",
-            "baseIndustry": "金融保險業",
-            "close": 84.4,
-            "price": 84.4,
-            "date": "2026-09-15",
-            "return5": 1.81,
-            "return20": 0.84,
-            "return60": -2.94,
-            "relativeStrength20": 0.84,
-            "volumeRatio": 1.09,
-            "signal": "減碼警示",
-            "bucket": "exit",
-            "score": 52.6,
-            "action": "減碼",
-            "ma5": 84.88,
-            "ma10": 84.91,
-            "ma20": 84.14,
-            "ma60": 86.25,
-            "ma120": 86.19,
-            "stopPrices": {
-              "MA20": 84.14,
-              "最近回檔低點": 81.2,
-              "固定 7%": 78.49
-            },
-            "positionSizing": {
-              "valid": true,
-              "riskAmount": 10000.0,
-              "positionValue": 200000.0,
-              "rawPositionValue": 3184890.0,
-              "shares": 2369,
-              "lots": 2,
-              "oddLot": 369,
-              "stopPrice": 84.14,
-              "maxLoss": 628.0,
-              "riskRewardTo8Pct": 25.48,
-              "firstTakeProfit": 91.15,
-              "secondTakeProfit": 97.06,
-              "exceedsSingleLimit": true,
-              "exceedsIndustryLimit": false
-            }
-          }
-        ]
+        "exit": []
       },
       "rerun": {
         "githubActions": "Actions > Daily Stock Scan > Run workflow，可選只重跑台股聖杯與美股產業資料。",
@@ -1159,29 +1192,39 @@
       "status": "needs_sponsor",
       "source": "FinMind TaiwanStockTradingDailyReport",
       "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-      "generatedAt": "2026-09-15 23:21:46",
+      "generatedAt": "2026-09-16 02:16:08",
       "date": "2026-09-15",
-      "targets": 19,
+      "targets": 16,
       "items": [],
       "errors": [
+        {
+          "code": "2454",
+          "name": "聯發科",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "2542",
+          "name": "興富發",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "2338",
+          "name": "光罩",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
         {
           "code": "2228",
           "name": "劍麟",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "6870",
-          "name": "騰雲",
+          "code": "1709",
+          "name": "和益",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "2427",
-          "name": "三商電",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "2454",
-          "name": "聯發科",
+          "code": "1314",
+          "name": "中石化",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
@@ -1195,91 +1238,17 @@
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "2338",
-          "name": "光罩",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "2542",
-          "name": "興富發",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "1314",
-          "name": "中石化",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
           "code": "1528",
           "name": "恩德",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "2308",
+          "name": "台達電",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         }
       ]
     },
-    "cbas": [
-      {
-        "code": "2427.TW",
-        "name": "三商電",
-        "price": 24.35,
-        "pct_change": 6.8,
-        "cb_code": "24271",
-        "cb_name": "三商電一",
-        "cb_price": 104.95,
-        "conversion_price": 28.0,
-        "conversion_value": 86.96,
-        "premium_pct": 20.68,
-        "double_low": 125.63,
-        "cb_trade_date": "2026-09-15",
-        "cb_units": 45.0,
-        "cb_trade_value": 4565400.0,
-        "maturity_date": "2028-12-13",
-        "put_option_date": "2026-12-13",
-        "put_option_price": 101.51,
-        "guaranteed": false,
-        "desc": "CB:三商電一 | 雙低:125.63"
-      },
-      {
-        "code": "6870.TWO",
-        "name": "騰雲",
-        "price": 329.0,
-        "pct_change": 8.05,
-        "cb_code": "68701",
-        "cb_name": "騰雲一",
-        "cb_price": 167.0,
-        "conversion_price": 248.5,
-        "conversion_value": 132.39,
-        "premium_pct": 26.14,
-        "double_low": 193.14,
-        "cb_trade_date": "2026-09-15",
-        "cb_units": 190.0,
-        "cb_trade_value": 31732000.0,
-        "maturity_date": "2029-12-05",
-        "put_option_date": "2027-12-05",
-        "put_option_price": 100.0,
-        "guaranteed": false,
-        "desc": "CB:騰雲一 | 雙低:193.14"
-      },
-      {
-        "code": "6870.TWO",
-        "name": "騰雲",
-        "price": 329.0,
-        "pct_change": 8.05,
-        "cb_code": "68702",
-        "cb_name": "騰雲二",
-        "cb_price": 175.0,
-        "conversion_price": 236.6,
-        "conversion_value": 139.05,
-        "premium_pct": 25.85,
-        "double_low": 200.85,
-        "cb_trade_date": "2026-09-15",
-        "cb_units": 28.0,
-        "cb_trade_value": 4885000.0,
-        "maturity_date": "2029-12-05",
-        "put_option_date": "2027-12-05",
-        "put_option_price": 100.0,
-        "guaranteed": false,
-        "desc": "CB:騰雲二 | 雙低:200.85"
-      }
-    ]
+    "cbas": []
   }
 }
