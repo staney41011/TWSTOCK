@@ -1,0 +1,39 @@
+name: Sector Rotation Checks
+
+on:
+  pull_request:
+    paths:
+      - 'sector_rotation.py'
+      - 'test_sector_rotation.py'
+      - 'sector-rotation.html'
+      - 'main.py'
+      - '.github/workflows/ci_sector_rotation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Python syntax and sector rotation unit tests
+        run: |
+          python -m py_compile main.py sector_rotation.py test_sector_rotation.py
+          python -m unittest -v test_sector_rotation
+      - name: JavaScript syntax check
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          text = Path('sector-rotation.html').read_text(encoding='utf-8')
+          scripts = re.findall(r'<script(?:\s[^>]*)?>(.*?)</script>', text, flags=re.S)
+          inline = [script for script in scripts if 'app.mount' in script]
+          assert len(inline) == 1
+          Path('/tmp/sector-rotation.js').write_text(inline[0], encoding='utf-8')
+          PY
+          node --check /tmp/sector-rotation.js

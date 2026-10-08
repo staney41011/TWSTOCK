@@ -16,9 +16,11 @@ from datetime import datetime, timedelta, timezone
 from druckenmiller import generate_druckenmiller_report
 from holy_grail import generate_holy_grail_report_from_yfinance
 from key_branches import empty_key_branch_report, generate_key_branch_report
+from sector_rotation import snapshot_stock, snapshot_benchmark, build_sector_rotation_report
 
 # --- 全域設定 ---
 DATA_FILE = "data.json"
+SECTOR_DATA_FILE = "sector_rotation.json"
 DATA_DIR = "data"
 tw_stock_map = twstock.codes 
 
@@ -577,7 +579,10 @@ def analyze_stock(stock_info):
     if res := strategy_macd_turn_red(df): pkg['macd_turn_red'] = {**base, **res}; has_res = True
     # Low Volatility 已移除
         
-    return {"result": pkg if has_res else None, "is_60d_high": is_60d_high, "trade_date": real_trade_date}
+    code_info = tw_stock_map.get(ticker.split(".")[0])
+    industry = getattr(code_info, "group", "") if getattr(code_info, "type", "") == "股票" else ""
+    sector_stock = snapshot_stock(ticker, display_name, industry, df) if industry else None
+    return {"result": pkg if has_res else None, "is_60d_high": is_60d_high, "trade_date": real_trade_date, "sector_stock": sector_stock}
 
 def main():
     print("啟動全策略掃描 (Clean版 + CBAS)...")
@@ -618,12 +623,15 @@ def main():
         "key_branches": empty_key_branch_report(),
     }
     stat_total = 0; stat_new_high = 0; detected_market_date = None
+    sector_stocks = []
     
     with ThreadPoolExecutor(max_workers=20) as exc:
         futures = [exc.submit(analyze_stock, s) for s in stocks]
         for f in as_completed(futures):
             ret = f.result()
             if ret:
+                if ret.get("sector_stock"):
+                    sector_stocks.append(ret["sector_stock"])
                 if detected_market_date is None and ret.get("trade_date"): detected_market_date = ret["trade_date"]
                 stat_total += 1
                 if ret['is_60d_high']: stat_new_high += 1
@@ -654,6 +662,25 @@ def main():
     
     final_date = detected_market_date if detected_market_date else expected_date
     print(f"確認歸檔日期: {final_date}")
+
+    # 使用本次掃描已下載的歷史股價；不再逐檔重抓資料。
+    try:
+        print(f"計算產業輪動：{len(sector_stocks)} 檔有效樣本")
+        try:
+            benchmark_df = yf.Ticker("^TWII").history(period="9mo")
+            benchmark_bars = snapshot_benchmark(benchmark_df)
+        except Exception as bench_error:
+            print(f"加權指數取得失敗，改用有效樣本等權比較：{bench_error}")
+            benchmark_bars = []
+        sector_report = build_sector_rotation_report(sector_stocks, benchmark_bars, target_date=final_date)
+        if sector_report["days"]:
+            with open(SECTOR_DATA_FILE, "w", encoding="utf-8") as f:
+                json.dump(clean_for_json(sector_report), f, ensure_ascii=False, separators=(",", ":"))
+            print(f"產業輪動完成：{sector_report['as_of']} / {sector_report['coverage']['industries']} 個產業")
+        else:
+            print("警告：產業輪動樣本不足，本次保留舊檔，不覆蓋為空值。")
+    except Exception as sector_error:
+        print(f"產業輪動產生失敗，原有策略繼續執行：{sector_error}")
 
     try:
         print(f"產生 Druckenmiller 風格雷達：{final_date}")

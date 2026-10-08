@@ -85,6 +85,7 @@
         </section>
 
         <nav class="mb-6 flex gap-2 overflow-x-auto pb-2">
+            <a href="./sector-rotation.html" class="flex-shrink-0 rounded-md border border-teal-500/60 bg-teal-500/10 px-4 py-2 text-sm font-semibold text-teal-200 hover:bg-teal-500/20">📈 產業輪動雷達 <span class="text-teal-400">NEW</span></a>
             <button v-for="tab in tabs" :key="tab.key" @click="currentStrategy = tab.key"
                 :class="currentStrategy === tab.key ? 'tab-active' : 'tab-inactive'"
                 class="flex-shrink-0 rounded-md border px-4 py-2 text-sm font-semibold">
