@@ -32,7 +32,8 @@ jobs:
           import re
           text = Path('sector-rotation.html').read_text(encoding='utf-8')
           scripts = re.findall(r'<script(?:\s[^>]*)?>(.*?)</script>', text, flags=re.S)
-          assert len(scripts) == 1 and 'app.mount' in scripts[0]
-          Path('/tmp/sector-rotation.js').write_text(scripts[0], encoding='utf-8')
+          inline = [script for script in scripts if 'app.mount' in script]
+          assert len(inline) == 1
+          Path('/tmp/sector-rotation.js').write_text(inline[0], encoding='utf-8')
           PY
           node --check /tmp/sector-rotation.js
