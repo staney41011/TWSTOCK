@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="TWSTOCK 台股產業輪動雷達：相對強弱四象限、動能軌跡、產業排行與成分股穿透分析。">
+<title>產業輪動雷達｜TWSTOCK</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+[v-cloak]{display:none}
+body{background:#101114;color:#e7e5e4}
+.surface{background:#18181b;border-color:#303037}
+.control{background:#242429;border:1px solid #414149;border-radius:9px;padding:8px 12px;color:#eee}
+.action{border:1px solid #484850;border-radius:9px;padding:8px 12px;cursor:pointer}
+.action:disabled{opacity:.4;cursor:not-allowed}
+.active{background:#f5f5f4;color:#18181b;border-color:#f5f5f4}
+.inactive{background:#232329;color:#ddd}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px}
+.scrollbar::-webkit-scrollbar{height:6px;width:6px}
+.scrollbar::-webkit-scrollbar-thumb{background:#51515a;border-radius:5px}
+@media(min-width:1024px){#rotation-chart{height:550px}}
+</style>
+</head>
+<body>
+<div id="app" v-cloak class="max-w-[1550px] mx-auto px-4 md:px-8 py-7">
+<header class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 border-b border-zinc-800 pb-6">
+  <div>
+    <a href="./index.html" class="text-teal-300 text-sm hover:underline">← TWSTOCK 台股策略雷達</a>
+    <h1 class="text-3xl md:text-4xl font-bold mt-2">產業輪動雷達 <span class="text-teal-400">RRG</span></h1>
+    <p class="text-stone-400 mt-2 text-sm leading-6">從相對強弱、動能變化、上漲廣度與估算成交值，觀察台股產業輪動。</p>
+  </div>
+  <div class="flex flex-wrap gap-2 items-center text-sm">
+    <a href="./index.html" class="action inactive">返回策略總覽</a>
+    <button @click="loadReport" class="action inactive">重新讀取</button>
+  </div>
+</header>
+
+<div v-if="loading" class="py-28 text-center text-teal-300">正在載入產業輪動資料…</div>
+<div v-else-if="error" class="mt-8 surface border rounded-xl p-7">
+  <h2 class="text-xl font-semibold text-amber-300">產業資料尚未就緒</h2>
+  <p class="mt-3 text-stone-300">{{error}}</p>
+  <p class="mt-2 text-stone-400 text-sm">首次部署後，需等待一次「Daily Stock Scan」完整掃描，產生 sector_rotation.json。只重新執行聖杯雷達的模式不會更新本報表。</p>
+  <a class="inline-block mt-4 text-sky-300 underline" target="_blank" rel="noopener noreferrer" href="https://github.com/staney41011/TWSTOCK/actions/workflows/daily_scan.yml">前往 GitHub Actions</a>
+</div>
+<main v-else-if="currentDay" class="mt-6 space-y-5">
+  <div class="flex flex-wrap gap-2 text-sm items-center">
+    <span class="rounded bg-teal-400/15 text-teal-200 px-3 py-1.5 font-semibold">市場資料：{{currentDay.date}}</span>
+    <span class="rounded bg-zinc-800 text-stone-300 px-3 py-1.5">基準：{{report.benchmark.name}}</span>
+    <span class="rounded bg-zinc-800 text-stone-300 px-3 py-1.5">有效樣本 {{report.coverage.stocks}} 檔</span>
+    <span v-if="isOld" class="rounded bg-amber-500/15 text-amber-200 px-3 py-1.5">歷史回放中，非最新資料</span>
+    <span class="ml-auto text-xs text-stone-500">最後計算：{{report.generated_at}}</span>
+  </div>
+
+  <section class="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div v-for="card in summaryCards" :key="card.label" class="surface border rounded-xl p-4">
+      <p class="text-stone-400 text-xs">{{card.label}}</p>
+      <p class="text-2xl font-bold mt-1" :style="{color:card.color}">{{card.value}}</p>
+    </div>
+  </section>
+
+  <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1.9fr)_minmax(320px,1fr)] gap-5">
+    <section class="surface border rounded-xl p-4 md:p-5 min-w-0">
+      <div class="flex items-start justify-between flex-wrap gap-3">
+        <div>
+          <h2 class="font-bold text-xl">相對輪動四象限</h2>
+          <p class="text-xs text-stone-400 mt-1">X：產業相對 {{horizon}} 日報酬（百分點）　Y：近5日相對動能變化（百分點）</p>
+        </div>
+        <select class="control text-sm" v-model.number="horizon" aria-label="選擇比較週期">
+          <option v-for="h in horizons" :key="h" :value="h">{{h === 1 ? '當日' : '近 ' + h + ' 日'}}</option>
+        </select>
+      </div>
+      <div class="mt-3 flex flex-wrap gap-3 text-xs text-stone-300">
+        <span v-for="state in states" :key="state.name"><i class="dot" :style="{background:state.color}"></i>{{state.name}}</span>
+      </div>
+      <div id="rotation-chart" role="img" aria-label="產業相對強弱與動能泡泡圖，點選產業查看個股" class="w-full h-[390px] md:h-[500px]"></div>
+      <div class="flex gap-2 flex-wrap items-center justify-between border-t border-zinc-800 pt-4 text-sm">
+        <div class="flex flex-wrap gap-2 items-center">
+          <button class="action inactive" @click="step(-1)" :disabled="dayIndex<=0" aria-label="上一交易日">←</button>
+          <button class="action" :class="playing?'active':'inactive'" @click="togglePlay" :disabled="!report.days || report.days.length<2">{{playing?'暫停':'播放軌跡'}}</button>
+          <button class="action inactive" @click="step(1)" :disabled="dayIndex >= report.days.length-1" aria-label="下一交易日">→</button>
+          <label class="text-xs text-stone-400" for="trail-count">軌跡</label>
+          <select id="trail-count" class="control text-xs" v-model.number="trailCount">
+            <option :value="5">5 天</option><option :value="10">10 天</option><option :value="20">20 天</option>
+          </select>
+        </div>
+        <span class="text-stone-400 text-xs">泡泡面積依估算成交值調整；點擊圓點可查看產業</span>
+      </div>
+      <div class="mt-3 flex items-center gap-3">
+        <input class="w-full accent-teal-400" type="range" :min="0" :max="report.days.length-1" step="1" v-model.number="dayIndex" aria-label="歷史交易日回放">
+        <span class="shrink-0 text-xs text-teal-300 tabular-nums">{{dayIndex+1}} / {{report.days.length}}</span>
+      </div>
+    </section>
+
+    <section class="surface border rounded-xl p-4 md:p-5 min-w-0">
+      <div class="flex justify-between gap-2 items-center">
+        <h2 class="text-xl font-bold">產業強度排行</h2>
+        <span class="text-stone-500 text-xs">{{filteredIndustries.length}} 個產業</span>
+      </div>
+      <input class="control w-full text-sm mt-4" type="search" v-model.trim="query" placeholder="搜尋產業名稱…" aria-label="搜尋產業名稱">
+      <div class="mt-3 flex gap-2 text-xs">
+        <button @click="sortBy='score'" class="action flex-1" :class="sortBy==='score'?'active':'inactive'">綜合評分</button>
+        <button @click="sortBy='relative'" class="action flex-1" :class="sortBy==='relative'?'active':'inactive'">相對強弱</button>
+        <button @click="sortBy='breadth'" class="action flex-1" :class="sortBy==='breadth'?'active':'inactive'">上漲廣度</button>
+      </div>
+      <div class="mt-3 max-h-[565px] overflow-y-auto scrollbar space-y-2 pr-1">
+        <button v-for="(industry,index) in filteredIndustries" :key="industry.name"
+            @click="selectedIndustry=industry.name"
+            class="w-full text-left rounded-lg border p-3 transition hover:border-teal-400"
+            :class="selectedIndustry===industry.name?'bg-teal-400/10 border-teal-500/70':'border-zinc-800 bg-zinc-900/50'">
+          <div class="flex justify-between gap-2 items-center">
+            <div class="min-w-0">
+              <span class="text-xs text-stone-500 mr-2 tabular-nums">{{index+1}}.</span>
+              <span class="font-semibold">{{industry.name}}</span>
+            </div>
+            <span class="font-bold tabular-nums text-teal-200">{{industry.score.toFixed(1)}}</span>
+          </div>
+          <div class="flex justify-between gap-2 mt-1 text-xs">
+            <span :style="{color:stateColor(industry)}">{{industryState(industry)}}</span>
+            <span class="text-stone-400">相對 {{signed(relativeFor(industry))}} pp · 廣度 {{industry.breadth.toFixed(0)}}%</span>
+          </div>
+        </button>
+        <div v-if="!filteredIndustries.length" class="py-10 text-center text-stone-500">找不到符合條件的產業</div>
+      </div>
+    </section>
+  </div>
+
+  <section v-if="industryDetail" class="surface border rounded-xl p-4 md:p-6 space-y-5">
+    <div class="flex justify-between gap-3 flex-col sm:flex-row">
+      <div>
+        <p class="text-teal-300 text-sm">產業穿透分析</p>
+        <h2 class="text-2xl font-bold mt-1">{{industryDetail.name}}</h2>
+        <p class="text-sm mt-1" :style="{color:stateColor(industryDetail)}">{{industryState(industryDetail)}} · 樣本 {{industryDetail.count}} 檔</p>
+      </div>
+      <div class="flex flex-wrap gap-2 text-sm">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2">相對報酬 <strong>{{signed(relativeFor(industryDetail))}} pp</strong></div>
+        <div class="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2">動能變化 <strong>{{signed(industryDetail.momentum)}} pp</strong></div>
+        <div class="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2">量能比 <strong>{{number(industryDetail.volume_ratio,2)}}x</strong></div>
+        <div class="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2">廣度 <strong>{{number(industryDetail.breadth,1)}}%</strong></div>
+      </div>
+    </div>
+    <div class="border-l-2 border-teal-500 bg-teal-500/5 px-4 py-3 text-sm leading-6">
+      <strong class="text-teal-200">規則式解讀（非 AI 推論）：</strong>
+      {{industryNarrative}}
+    </div>
+    <div class="flex flex-wrap justify-between gap-2 items-center">
+      <h3 class="font-semibold text-lg">產業成分股｜近5日漲幅排序</h3>
+      <button class="action inactive text-sm" @click="exportCsv">匯出 CSV</button>
+    </div>
+    <div class="overflow-x-auto scrollbar">
+      <table class="w-full min-w-[640px] border-collapse text-sm">
+        <thead class="bg-zinc-800 text-stone-300">
+          <tr><th class="p-3 text-left">代號</th><th class="p-3 text-left">名稱</th><th class="p-3 text-right">收盤價</th><th class="p-3 text-right">近5日</th><th class="p-3 text-right">近20日</th><th class="p-3 text-right">當日估算成交值</th></tr>
+        </thead>
+        <tbody>
+          <tr v-for="stock in industryDetail.stocks" :key="stock.code" class="border-b border-zinc-800">
+            <td class="p-3 font-mono"><a class="text-sky-300 hover:underline" :href="'https://tw.stock.yahoo.com/quote/'+stock.code" target="_blank" rel="noopener noreferrer">{{stock.code}} ↗</a></td>
+            <td class="p-3">{{stock.name}}</td>
+            <td class="p-3 text-right tabular-nums">{{number(stock.close,2)}}</td>
+            <td class="p-3 text-right tabular-nums" :class="returnTone(stock.return5)">{{signed(stock.return5)}}%</td>
+            <td class="p-3 text-right tabular-nums" :class="returnTone(stock.return20)">{{signed(stock.return20)}}%</td>
+            <td class="p-3 text-right tabular-nums">{{money(stock.turnover)}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-stone-500 text-xs">表格最多顯示每產業近 5 日表現前 30 檔；產業報酬仍以符合條件的全部樣本計算。股價與估算成交值以行情提供方為準。</p>
+  </section>
+
+  <section class="surface border rounded-xl p-5 space-y-2 text-sm">
+    <h2 class="font-bold">資料口徑、限制與更新</h2>
+    <p class="text-stone-300">X 軸是產業相對 {{horizon}} 日報酬；Y 軸是近 5 日相對動能與前 5 日的差（百分點），不是法人資金淨流入。</p>
+    <p class="text-stone-400">{{report.methodology.return}}；上漲廣度＝近 5 日上漲檔數占比；估算成交值＝收盤價 × 成交股數，不能視為主力淨買超。</p>
+    <p v-if="report.benchmark.source==='sample_equal_weight'" class="text-amber-200">提醒：加權指數歷史資料不完整，本次以有效樣本股票等權平均作比較基準，不是加權指數。</p>
+    <p class="text-stone-500">歷史軌跡僅使用對應日期以前資料計算。不同交易日可能存在樣本數差異，未經實盤回測驗證，僅供研究與教育用途。</p>
+  </section>
+</main>
+</div>
+<script>
+(function(){
+  'use strict';
+  const states=[
+    {name:'領先',color:'#fb7185'},
+    {name:'改善中',color:'#38bdf8'},
+    {name:'減弱中',color:'#fbbf24'},
+    {name:'落後',color:'#34d399'}
+  ];
+  const app=Vue.createApp({
+    data(){return {loading:true,error:'',report:{days:[],coverage:{},benchmark:{},methodology:{}},dayIndex:0,horizon:20,horizons:[1,5,10,20,60],selectedIndustry:'',query:'',sortBy:'score',trailCount:10,playing:false,playTimer:null,chart:null,resizeHandler:null,states};},
+    computed:{
+      currentDay(){return this.report.days?.[this.dayIndex]||null;},
+      industries(){return this.currentDay?.industries||[];},
+      filteredIndustries(){
+        const rows=this.industries.filter(r=>r.name.includes(this.query));
+        return rows.sort((a,b)=>this.sortBy==='relative'?(this.relativeFor(b)??-9999)-(this.relativeFor(a)??-9999):this.sortBy==='breadth'?b.breadth-a.breadth:b.score-a.score);
+      },
+      industryDetail(){return this.industries.find(i=>i.name===this.selectedIndustry)||this.industries[0]||null;},
+      summaryCards(){
+        const a=this.industries;
+        return [
+          {label:'領先產業',value:a.filter(i=>this.industryState(i)==='領先').length,color:'#fb7185'},
+          {label:'改善中產業',value:a.filter(i=>this.industryState(i)==='改善中').length,color:'#38bdf8'},
+          {label:'平均上漲廣度',value:a.length?(a.reduce((s,i)=>s+i.breadth,0)/a.length).toFixed(1)+'%':'-',color:'#f5f5f4'},
+          {label:'動能最強',value:[...a].sort((x,y)=>y.momentum-x.momentum)[0]?.name||'-',color:'#fbbf24'}
+        ];
+      },
+      isOld(){return this.report.days?.length>0&&this.dayIndex!==this.report.days.length-1;},
+      industryNarrative(){
+        const row=this.industryDetail;if(!row)return '';
+        const state=this.industryState(row);
+        const phase={領先:'強度與動能皆為正，屬於相對領先階段。',改善中:'仍落後基準，但相對動能已加速，值得持續追蹤。',減弱中:'強度高於基準，但動能放緩，應留意是否持續降溫。',落後:'強度與動能皆偏弱，暫不宜只因跌深就推定反轉。'}[state];
+        const breadth=row.breadth>=65?'多數樣本個股同步上漲。':row.breadth<=35?'上漲家數較少，族群行情不普遍。':'成分股漲跌分歧。';
+        const volume=row.volume_ratio==null?'量能比資料不足。':row.volume_ratio>=1.2?'估算成交值較20日平均放大，但不代表資金淨買超。':row.volume_ratio<=0.8?'成交熱度相對低迷。':'成交熱度接近近期平均。';
+        return phase+' '+breadth+' '+volume+' 請再核對個股基本面、政策題材及資料覆蓋率。';
+      }
+    },
+    watch:{dayIndex(){this.stopPlayIfEnd();this.$nextTick(this.draw);},horizon(){this.$nextTick(this.draw);},selectedIndustry(){this.$nextTick(this.draw);},trailCount(){this.$nextTick(this.draw);},query(){this.$nextTick(this.draw);}},
+    methods:{
+      async loadReport(){
+        this.loading=true;this.error='';this.stopPlay();
+        try{
+          const res=await fetch('./sector_rotation.json?v='+Date.now(),{cache:'no-store'});
+          if(!res.ok)throw Error('HTTP '+res.status);
+          const json=await res.json();
+          if(!Array.isArray(json.days)||json.days.length===0)throw Error('找不到有效產業輪動快照');
+          this.report=json;this.dayIndex=json.days.length-1;
+          this.selectedIndustry=json.days[this.dayIndex].industries[0]?.name||'';
+        }catch(e){this.error='資料讀取失敗：'+String(e.message||e);}
+        finally{this.loading=false;this.$nextTick(this.draw);}
+      },
+      relativeFor(item){const value=item?.relative?.[String(this.horizon)];return value===null||value===undefined?null:Number(value);},
+      industryState(item){const x=this.relativeFor(item),y=Number(item?.momentum);if(x==null||!Number.isFinite(x)||!Number.isFinite(y))return '資料不足';return x>=0?(y>=0?'領先':'減弱中'):(y>=0?'改善中':'落後');},
+      stateColor(item){return this.states.find(s=>s.name===this.industryState(item))?.color||'#a1a1aa';},
+      number(value,digits=1){if(value===null||value===undefined||!Number.isFinite(Number(value)))return '-';return Number(value).toLocaleString('zh-TW',{minimumFractionDigits:digits,maximumFractionDigits:digits});},
+      signed(value){if(value===null||value===undefined||!Number.isFinite(Number(value)))return '-';const n=Number(value);return (n>0?'+':'')+n.toFixed(2);},
+      money(value){if(value==null)return '-';const n=Number(value);if(!Number.isFinite(n))return '-';return n>=1e8?(n/1e8).toFixed(2)+' 億':n>=1e4?(n/1e4).toFixed(1)+' 萬':n.toLocaleString('zh-TW');},
+      returnTone(value){return value>0?'text-red-300':value<0?'text-emerald-300':'text-stone-300';},
+      step(delta){this.stopPlay();this.dayIndex=Math.max(0,Math.min(this.report.days.length-1,this.dayIndex+delta));},
+      togglePlay(){
+        if(this.playing){this.stopPlay();return;}
+        if(this.dayIndex>=this.report.days.length-1)this.dayIndex=0;
+        this.playing=true;
+        this.playTimer=window.setInterval(()=>{if(this.dayIndex>=this.report.days.length-1){this.stopPlay();return;}this.dayIndex+=1;},1150);
+      },
+      stopPlay(){this.playing=false;if(this.playTimer){clearInterval(this.playTimer);this.playTimer=null;}},
+      stopPlayIfEnd(){if(this.playing&&this.dayIndex>=this.report.days.length-1)this.stopPlay();},
+      exportCsv(){
+        if(!this.industryDetail)return;
+        const header=['產業','日期','代碼','股票名稱','收盤價','近5日報酬%','近20日報酬%','估算當日成交值'];
+        const safe=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+        const rows=this.industryDetail.stocks.map(r=>[this.industryDetail.name,this.currentDay.date,r.code,r.name,r.close,r.return5,r.return20,r.turnover].map(safe).join(','));
+        const csv='\uFEFF'+[header.map(safe).join(','),...rows].join('\r\n');
+        const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+        const anchor=document.createElement('a');anchor.href=url;anchor.download='TWSTOCK_'+this.currentDay.date+'_'+this.industryDetail.name+'.csv';anchor.click();URL.revokeObjectURL(url);
+      },
+      draw(){
+        const node=document.getElementById('rotation-chart');if(!node||!this.currentDay||!window.echarts)return;
+        if(!this.chart){
+          this.chart=echarts.init(node,null,{renderer:'canvas'});
+          this.chart.on('click',event=>{if(event.seriesType==='scatter'&&event.data?.name)this.selectedIndustry=event.data.name;});
+        }
+        const maxValue=Math.max(...this.industries.map(i=>i.turnover20||0),1);
+        const points=this.industries.filter(i=>!this.query||i.name.includes(this.query)).filter(i=>this.relativeFor(i)!=null).map(i=>({
+          name:i.name,value:[this.relativeFor(i),i.momentum,i.score],raw:i,
+          symbolSize:Math.round(16+40*Math.sqrt((i.turnover20||0)/maxValue)),
+          itemStyle:{color:this.stateColor(i),opacity:i.name===this.selectedIndustry?1:0.72,borderColor:i.name===this.selectedIndustry?'#fff':'#000',borderWidth:i.name===this.selectedIndustry?2.4:0.5}
+        }));
+        const timeline=this.report.days.slice(Math.max(0,this.dayIndex-this.trailCount+1),this.dayIndex+1)
+          .map(day=>day.industries.find(i=>i.name===this.selectedIndustry))
+          .filter(i=>i&&i.relative?.[String(this.horizon)]!=null)
+          .map(i=>[Number(i.relative[String(this.horizon)]),Number(i.momentum)]);
+        const trail=timeline.length>=2?[{type:'line',data:timeline,symbol:'circle',symbolSize:5,silent:true,showSymbol:true,lineStyle:{color:'#e2e8f0',width:2,type:'dashed',opacity:.8},itemStyle:{color:'#e2e8f0'},z:2}]:[];
+        this.chart.setOption({
+          backgroundColor:'transparent',animationDuration:250,
+          grid:{top:30,right:55,bottom:60,left:65,containLabel:false},
+          xAxis:{type:'value',name:'相對報酬 (pp)',nameLocation:'middle',nameGap:36,scale:true,
+            min:v=>Math.min(-1,Math.floor(v.min*1.2)),max:v=>Math.max(1,Math.ceil(v.max*1.2)),
+            nameTextStyle:{color:'#a8a29e'},axisLabel:{color:'#a8a29e'},axisLine:{lineStyle:{color:'#555'}},splitLine:{lineStyle:{color:'#33333b'}}},
+          yAxis:{type:'value',name:'動能加速度 (pp)',nameLocation:'middle',nameGap:48,scale:true,
+            min:v=>Math.min(-1,Math.floor(v.min*1.2)),max:v=>Math.max(1,Math.ceil(v.max*1.2)),
+            nameTextStyle:{color:'#a8a29e'},axisLabel:{color:'#a8a29e'},axisLine:{lineStyle:{color:'#555'}},splitLine:{lineStyle:{color:'#33333b'}}},
+          tooltip:{trigger:'item',backgroundColor:'#242428',borderColor:'#555',textStyle:{color:'#eee'},
+            formatter:p=>{if(p.seriesType!=='scatter')return '';
+              const r=p.data.raw;const escaped=String(r.name).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+              return '<strong>'+escaped+'</strong><br>階段：'+this.industryState(r)+'<br>相對：'+this.signed(this.relativeFor(r))+' pp<br>動能：'+this.signed(r.momentum)+' pp<br>廣度：'+this.number(r.breadth,1)+'%<br>樣本：'+r.count+' 檔';
+            }},
+          series:[...trail,{type:'scatter',data:points,z:3,
+            label:{show:true,position:'right',formatter:p=>p.data.name,color:'#e7e5e4',fontSize:11},
+            labelLayout:{hideOverlap:true},emphasis:{focus:'series',scale:1.18},
+            markLine:{silent:true,symbol:'none',label:{show:false},lineStyle:{color:'#666',type:'dashed',width:1},data:[{xAxis:0},{yAxis:0}]}
+          }],
+          toolbox:{right:4,top:0,feature:{saveAsImage:{title:'儲存泡泡圖',backgroundColor:'#18181b'}},iconStyle:{borderColor:'#a8a29e'}}
+        },true);
+        this.chart.resize();
+      }
+    },
+    mounted(){
+      this.resizeHandler=()=>this.chart?.resize();
+      window.addEventListener('resize',this.resizeHandler);
+      this.loadReport();
+    },
+    beforeUnmount(){
+      this.stopPlay();window.removeEventListener('resize',this.resizeHandler);
+      if(this.chart){this.chart.dispose();this.chart=null;}
+    }
+  });
+  app.mount('#app');
+})();
+</script>
+</body>
+</html>
