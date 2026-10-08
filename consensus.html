@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TWSTOCK 策略共振雷達</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        [v-cloak] { display: none; }
+        body { background: #0c1014; color: #e7e5e4; }
+        .surface { background: #151a20; border-color: #29313a; }
+        .tab-active { background: #67e8f9; color: #083344; border-color: #67e8f9; }
+        .tab-inactive { background: #151a20; color: #a8a29e; border-color: #374151; }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak class="mx-auto min-h-screen max-w-7xl px-4 py-5 md:px-8 md:py-8">
+    <header class="mb-6 flex flex-col gap-4 border-b border-zinc-800 pb-5 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+            <div class="mb-2 flex flex-wrap items-center gap-3">
+                <span class="text-sm font-semibold text-cyan-300">TWSTOCK</span>
+                <span class="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-2 py-1 text-xs text-cyan-100">NEW</span>
+            </div>
+            <h1 class="text-3xl font-bold text-stone-50 md:text-4xl">策略共振雷達</h1>
+            <p class="mt-3 max-w-3xl text-sm leading-6 text-stone-400">把動能、十字星、隔日沖、MACD、CBAS、主動 ETF、台股聖杯、Druckenmiller 與關鍵分點交叉比對，優先找同時被多個獨立策略偵測的股票。</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            <a href="./index.html" class="surface rounded-md border px-4 py-2 text-sm font-semibold text-stone-200 hover:bg-zinc-800">返回主雷達</a>
+            <button @click="loadIndex(true)" class="rounded-md bg-cyan-300 px-4 py-2 text-sm font-bold text-cyan-950 hover:bg-cyan-200">重新整理</button>
+        </div>
+    </header>
+
+    <div v-if="errorMsg" class="mb-5 rounded-lg border border-red-700 bg-red-950/40 p-4 text-sm text-red-100">{{ errorMsg }}</div>
+    <div v-if="loading" class="py-24 text-center text-lg text-cyan-200">資料載入中…</div>
+
+    <main v-else>
+        <section class="surface mb-5 rounded-lg border p-4">
+            <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                <label class="text-sm text-stone-400">
+                    資料日期
+                    <select v-model="selectedDate" @change="loadSelectedDate" class="mt-2 w-full rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-stone-100 outline-none">
+                        <option v-for="item in reversedManifest" :key="item.date" :value="item.date">{{ item.date }}</option>
+                    </select>
+                </label>
+                <label class="text-sm text-stone-400">
+                    最少共振策略
+                    <select v-model.number="minSignals" class="mt-2 w-full rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-stone-100 outline-none">
+                        <option :value="2">2 個以上</option>
+                        <option :value="3">3 個以上</option>
+                        <option :value="4">4 個以上</option>
+                        <option :value="5">5 個以上</option>
+                    </select>
+                </label>
+                <label class="text-sm text-stone-400 xl:col-span-2">
+                    搜尋股票
+                    <input v-model.trim="searchText" type="search" placeholder="輸入代號或名稱，例如 2330 / 台積電" class="mt-2 w-full rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-stone-100 outline-none placeholder:text-stone-600">
+                </label>
+            </div>
+            <div class="mt-4 flex flex-wrap gap-2 text-xs text-stone-500">
+                <span>市場寬度 {{ formatPercent(currentRecord.market_breadth, true) }}</span>
+                <span>·</span>
+                <span>資料更新 {{ lastLoadedAt || '-' }}</span>
+                <span>·</span>
+                <span>頁面只載入選定日期，不再下載整包歷史資料</span>
+            </div>
+        </section>
+
+        <section class="mb-5 grid grid-cols-2 gap-3 md:grid-cols-4">
+            <article class="surface rounded-lg border p-4">
+                <div class="text-xs text-stone-500">共振標的</div>
+                <div class="mt-1 text-3xl font-bold text-cyan-200">{{ consensusItems.length }}</div>
+            </article>
+            <article class="surface rounded-lg border p-4">
+                <div class="text-xs text-stone-500">3+ 策略</div>
+                <div class="mt-1 text-3xl font-bold text-fuchsia-200">{{ threePlusCount }}</div>
+            </article>
+            <article class="surface rounded-lg border p-4">
+                <div class="text-xs text-stone-500">最高共振數</div>
+                <div class="mt-1 text-3xl font-bold text-amber-200">{{ topHitCount }}</div>
+            </article>
+            <article class="surface rounded-lg border p-4">
+                <div class="text-xs text-stone-500">最高共振分數</div>
+                <div class="mt-1 text-3xl font-bold text-emerald-200">{{ topScore }}</div>
+            </article>
+        </section>
+
+        <section class="surface rounded-lg border p-4 md:p-5">
+            <div class="mb-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-stone-50">共振排行</h2>
+                    <p class="mt-1 text-sm text-stone-400">先依策略數排序，再依加權分數排序；賣出、過熱與偏空訊號只列為風險標記，不計入正向共振。</p>
+                </div>
+                <div class="flex gap-2 text-xs">
+                    <button @click="sortMode = 'signals'" :class="sortMode === 'signals' ? 'tab-active' : 'tab-inactive'" class="rounded-md border px-3 py-2 font-semibold">策略數優先</button>
+                    <button @click="sortMode = 'score'" :class="sortMode === 'score' ? 'tab-active' : 'tab-inactive'" class="rounded-md border px-3 py-2 font-semibold">分數優先</button>
+                </div>
+            </div>
+
+            <div v-if="filteredItems.length" class="overflow-x-auto">
+                <table class="min-w-[1050px] w-full border-collapse text-sm">
+                    <thead class="bg-zinc-800 text-stone-400">
+                        <tr>
+                            <th class="border border-zinc-700 px-3 py-2 text-left">排名</th>
+                            <th class="border border-zinc-700 px-3 py-2 text-left">股票</th>
+                            <th class="border border-zinc-700 px-3 py-2 text-right">價格</th>
+                            <th class="border border-zinc-700 px-3 py-2 text-right">策略數</th>
+                            <th class="border border-zinc-700 px-3 py-2 text-right">共振分數</th>
+                            <th class="border border-zinc-700 px-3 py-2 text-left">正向訊號</th>
+                            <th class="border border-zinc-700 px-3 py-2 text-left">風險標記</th>
+                            <th class="border border-zinc-700 px-3 py-2 text-left">連結</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in filteredItems" :key="item.code" class="hover:bg-zinc-800/60">
+                            <td class="border border-zinc-700 px-3 py-3 font-semibold text-stone-500">#{{ index + 1 }}</td>
+                            <td class="border border-zinc-700 px-3 py-3">
+                                <div class="font-semibold text-stone-100">{{ item.name }}</div>
+                                <div class="mt-1 font-mono text-xs text-stone-500">{{ item.code }}</div>
+                            </td>
+                            <td class="border border-zinc-700 px-3 py-3 text-right">{{ formatPrice(item.price) }}</td>
+                            <td class="border border-zinc-700 px-3 py-3 text-right">
+                                <span class="rounded-md bg-cyan-400/15 px-2 py-1 font-bold text-cyan-100">{{ item.hitCount }}</span>
+                            </td>
+                            <td class="border border-zinc-700 px-3 py-3 text-right font-bold text-amber-200">{{ item.score }}</td>
+                            <td class="border border-zinc-700 px-3 py-3">
+                                <div class="flex max-w-[430px] flex-wrap gap-1.5">
+                                    <span v-for="source in item.sources" :key="source" class="rounded-md bg-cyan-400/10 px-2 py-1 text-xs font-semibold text-cyan-100">{{ source }}</span>
+                                </div>
+                            </td>
+                            <td class="border border-zinc-700 px-3 py-3">
+                                <div v-if="item.risks.length" class="flex max-w-[300px] flex-wrap gap-1.5">
+                                    <span v-for="risk in item.risks" :key="risk" class="rounded-md bg-amber-400/10 px-2 py-1 text-xs text-amber-100">{{ risk }}</span>
+                                </div>
+                                <span v-else class="text-stone-600">—</span>
+                            </td>
+                            <td class="border border-zinc-700 px-3 py-3">
+                                <a :href="yahooUrl(item.code)" target="_blank" class="text-cyan-300 hover:text-cyan-100">Yahoo 股市</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div v-else class="py-16 text-center text-stone-500">目前沒有符合條件的共振標的</div>
+        </section>
+
+        <section class="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+            <article v-for="item in sourceLegend" :key="item.name" class="surface rounded-lg border p-4">
+                <div class="flex items-center justify-between gap-3">
+                    <span class="text-sm font-semibold text-stone-100">{{ item.name }}</span>
+                    <span class="rounded-md bg-zinc-800 px-2 py-1 text-xs text-cyan-200">+{{ item.weight }}</span>
+                </div>
+                <p class="mt-2 text-xs leading-5 text-stone-500">{{ item.note }}</p>
+            </article>
+        </section>
+
+        <p class="mt-5 text-xs leading-5 text-stone-600">本頁僅為策略訊號整理與研究工具，不構成投資建議。共振代表多個規則同時命中，不等於保證上漲。</p>
+    </main>
+</div>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+    data() {
+        return {
+            loading: true,
+            errorMsg: '',
+            manifest: [],
+            selectedDate: '',
+            currentRecord: {},
+            cache: {},
+            minSignals: 2,
+            searchText: '',
+            sortMode: 'signals',
+            lastLoadedAt: '',
+            sourceLegend: [
+                { name: '台股聖杯', weight: 4, note: '強勢突破 / 回檔轉強候選' },
+                { name: 'Druck 雷達', weight: 4, note: '高信念與產業趨勢候選' },
+                { name: '動能爆發', weight: 3, note: '新高、量能與基本面動能' },
+                { name: '可轉債 CBAS', weight: 3, note: '正股突破搭配可轉債訊號' },
+                { name: '主動 ETF', weight: 3, note: '主動 ETF 淨買進方向共振' },
+                { name: '關鍵分點', weight: 3, note: '分點籌碼偏多' },
+                { name: 'MACD 翻紅', weight: 2, note: '中期 MACD 柱狀體翻紅' },
+                { name: '十字星', weight: 2, note: '多頭結構中的十字星整理' },
+                { name: '隔日沖', weight: 2, note: '短線型態策略訊號' },
+            ],
+        };
+    },
+    computed: {
+        reversedManifest() {
+            return Array.isArray(this.manifest) ? [...this.manifest].reverse() : [];
+        },
+        consensusItems() {
+            const strategies = this.currentRecord?.strategies || {};
+            const buckets = new Map();
+
+            const normalizeCode = value => String(value || '').split('.')[0].trim();
+            const ensure = item => {
+                const raw = item?.code || item?.stock_code || item?.stockCode || '';
+                const code = normalizeCode(raw);
+                if (!code) return null;
+                if (!buckets.has(code)) {
+                    const candidatePrice = Number(item?.price ?? item?.close);
+                    buckets.set(code, {
+                        code,
+                        name: item?.name || code,
+                        price: Number.isFinite(candidatePrice) ? candidatePrice : null,
+                        score: 0,
+                        hitCount: 0,
+                        sources: [],
+                        risks: [],
+                    });
+                }
+                const row = buckets.get(code);
+                const candidatePrice = Number(item?.price ?? item?.close);
+                if ((!row.name || row.name === code) && item?.name) row.name = item.name;
+                if (!Number.isFinite(Number(row.price)) && Number.isFinite(candidatePrice)) row.price = candidatePrice;
+                return row;
+            };
+
+            const addPositive = (rows, source, weight, predicate = null) => {
+                if (!Array.isArray(rows)) return;
+                rows.forEach(item => {
+                    if (predicate && !predicate(item)) return;
+                    const row = ensure(item);
+                    if (!row || row.sources.includes(source)) return;
+                    row.sources.push(source);
+                    row.score += weight;
+                    row.hitCount = row.sources.length;
+                });
+            };
+
+            const addRisk = (rows, label, predicate = null) => {
+                if (!Array.isArray(rows)) return;
+                rows.forEach(item => {
+                    if (predicate && !predicate(item)) return;
+                    const row = ensure(item);
+                    if (!row || row.risks.includes(label)) return;
+                    row.risks.push(label);
+                });
+            };
+
+            addPositive(strategies.momentum, '動能爆發', 3);
+            addPositive(strategies.doji_rise, '十字星', 2);
+            addPositive(strategies.day_trading, '隔日沖', 2);
+            addPositive(strategies.macd_turn_red, 'MACD翻紅', 2);
+            addPositive(strategies.cbas, '可轉債 CBAS', 3);
+            addPositive(strategies.active_etf, '主動 ETF', 3, item => Number(item?.buy_count || 0) > Number(item?.sell_count || 0));
+            addRisk(strategies.active_etf, '主動 ETF 偏賣', item => Number(item?.sell_count || 0) > Number(item?.buy_count || 0));
+
+            const holy = strategies.holy_grail?.candidates || {};
+            addPositive(holy.breakout, '聖杯突破', 4);
+            addPositive(holy.pullback, '聖杯回檔', 4);
+            addRisk(holy.overheated, '聖杯過熱');
+            addRisk(holy.exit, '聖杯出場');
+
+            addPositive(strategies.druckenmiller?.candidates, 'Druck 雷達', 4);
+            addPositive(strategies.key_branches?.items, '關鍵分點', 3, item => item?.bias === '偏多');
+            addRisk(strategies.key_branches?.items, '分點偏空', item => item?.bias === '偏空');
+
+            return [...buckets.values()]
+                .filter(item => item.hitCount >= 2)
+                .sort((a, b) => b.hitCount - a.hitCount || b.score - a.score || a.code.localeCompare(b.code));
+        },
+        filteredItems() {
+            const needle = this.searchText.toLowerCase();
+            const rows = this.consensusItems.filter(item => {
+                if (item.hitCount < this.minSignals) return false;
+                if (!needle) return true;
+                return item.code.toLowerCase().includes(needle) || String(item.name || '').toLowerCase().includes(needle);
+            });
+            return [...rows].sort((a, b) => {
+                if (this.sortMode === 'score') return b.score - a.score || b.hitCount - a.hitCount || a.code.localeCompare(b.code);
+                return b.hitCount - a.hitCount || b.score - a.score || a.code.localeCompare(b.code);
+            });
+        },
+        threePlusCount() {
+            return this.consensusItems.filter(item => item.hitCount >= 3).length;
+        },
+        topHitCount() {
+            return this.consensusItems.length ? Math.max(...this.consensusItems.map(item => item.hitCount)) : 0;
+        },
+        topScore() {
+            return this.consensusItems.length ? Math.max(...this.consensusItems.map(item => item.score)) : 0;
+        },
+    },
+    methods: {
+        async loadIndex(force = false) {
+            this.loading = true;
+            this.errorMsg = '';
+            try {
+                const stamp = Date.now();
+                const response = await fetch(`./data/manifest.json?t=${stamp}`, { cache: 'no-store' });
+                if (response.ok) {
+                    const manifest = await response.json();
+                    if (!Array.isArray(manifest)) throw new Error('manifest.json 格式錯誤');
+                    this.manifest = manifest;
+                } else {
+                    const fallback = await fetch(`./data.json?t=${stamp}`, { cache: 'no-store' });
+                    if (!fallback.ok) throw new Error(`資料索引讀取失敗：HTTP ${fallback.status}`);
+                    const history = await fallback.json();
+                    if (!Array.isArray(history)) throw new Error('data.json 格式錯誤');
+                    this.manifest = history.map(item => ({ date: item.date, market_breadth: item.market_breadth }));
+                    history.forEach(item => { if (item?.date) this.cache[item.date] = item; });
+                }
+
+                const latest = this.manifest[this.manifest.length - 1]?.date || '';
+                if (force || !this.selectedDate || !this.manifest.some(item => item.date === this.selectedDate)) this.selectedDate = latest;
+                await this.loadSelectedDate(force);
+                this.lastLoadedAt = new Date().toLocaleString('zh-TW', { hour12: false });
+            } catch (error) {
+                this.errorMsg = error.message;
+            } finally {
+                this.loading = false;
+            }
+        },
+        async loadSelectedDate(force = false) {
+            if (!this.selectedDate) {
+                this.currentRecord = {};
+                return;
+            }
+            if (!force && this.cache[this.selectedDate]) {
+                this.currentRecord = this.cache[this.selectedDate];
+                return;
+            }
+            const response = await fetch(`./data/${this.selectedDate}.json?t=${Date.now()}`, { cache: 'no-store' });
+            if (!response.ok) {
+                if (this.cache[this.selectedDate]) {
+                    this.currentRecord = this.cache[this.selectedDate];
+                    return;
+                }
+                throw new Error(`${this.selectedDate} 單日資料讀取失敗：HTTP ${response.status}`);
+            }
+            const record = await response.json();
+            this.cache[this.selectedDate] = record;
+            this.currentRecord = record;
+            this.lastLoadedAt = new Date().toLocaleString('zh-TW', { hour12: false });
+        },
+        formatPrice(value) {
+            const number = Number(value);
+            return Number.isFinite(number) ? number.toFixed(2) : '-';
+        },
+        formatPercent(value, alreadyPercent = true) {
+            const number = Number(value);
+            if (!Number.isFinite(number)) return '-';
+            const pct = alreadyPercent ? number : number * 100;
+            return `${pct > 0 ? '+' : ''}${pct.toFixed(2)}%`;
+        },
+        yahooUrl(code) {
+            return `https://tw.stock.yahoo.com/quote/${String(code || '').split('.')[0]}`;
+        },
+    },
+    mounted() {
+        this.loadIndex();
+    },
+}).mount('#app');
+</script>
+</body>
+</html>
