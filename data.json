@@ -621863,7 +621863,7 @@
           "price": 47.9,
           "date": "2026-10-16",
           "fundamentals": {
-            "pe": 7.449456,
+            "pe": 7.3018293,
             "growth": 0.599,
             "rev_yoy": 0.047,
             "rev_qoq": null,
@@ -624213,7 +624213,7 @@
         "title": "Druckenmiller 風格雷達",
         "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
         "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-10-16 22:23:25",
+        "generatedAt": "2026-10-17 00:58:57",
         "targetDate": "2026-10-16",
         "status": "ok",
         "market": {
@@ -624227,11 +624227,13 @@
         "industries": [
           {
             "name": "電子零組件業",
-            "score": 248.7,
+            "score": 196.7,
             "netAmount": 5066468000.0,
-            "signals": 12,
+            "signals": 17,
             "sources": [
-              "主動 ETF"
+              "主動 ETF",
+              "聖杯過熱",
+              "聖杯出場警示"
             ]
           },
           {
@@ -624244,27 +624246,19 @@
             ]
           },
           {
+            "name": "金融-金控銀行",
+            "score": 33.5,
+            "netAmount": 0.0,
+            "signals": 4,
+            "sources": [
+              "聖杯突破",
+              "聖杯回檔轉強"
+            ]
+          },
+          {
             "name": "光電業",
             "score": 24.0,
             "netAmount": 889600000.0,
-            "signals": 1,
-            "sources": [
-              "主動 ETF"
-            ]
-          },
-          {
-            "name": "電腦及週邊設備業",
-            "score": 24.0,
-            "netAmount": 696150000.0,
-            "signals": 1,
-            "sources": [
-              "主動 ETF"
-            ]
-          },
-          {
-            "name": "塑膠工業",
-            "score": 24.0,
-            "netAmount": 591589000.0,
             "signals": 1,
             "sources": [
               "主動 ETF"
@@ -624277,6 +624271,34 @@
             "signals": 1,
             "sources": [
               "主動 ETF"
+            ]
+          },
+          {
+            "name": "鋼鐵-上游原料",
+            "score": 11.0,
+            "netAmount": 0.0,
+            "signals": 1,
+            "sources": [
+              "聖杯突破"
+            ]
+          },
+          {
+            "name": "資訊服務-資安雲端",
+            "score": 7.5,
+            "netAmount": 0.0,
+            "signals": 1,
+            "sources": [
+              "聖杯回檔轉強"
+            ]
+          },
+          {
+            "name": "電腦週邊-品牌通路",
+            "score": -1.0,
+            "netAmount": 0.0,
+            "signals": 2,
+            "sources": [
+              "聖杯突破",
+              "聖杯出場警示"
             ]
           }
         ],
@@ -624671,7 +624693,7 @@
               "估值未過熱"
             ],
             "fundamentals": {
-              "pe": 7.449456,
+              "pe": 7.3018293,
               "growth": 0.599,
               "rev_yoy": 0.047,
               "rev_qoq": null,
@@ -624767,6 +624789,77 @@
             },
             "conviction": "小部位試單",
             "signalCount": 1,
+            "thesisBreak": [
+              "主動 ETF 流向轉為連續賣超",
+              "MACD 柱狀體翻回綠色或突破失敗",
+              "營收 / EPS 成長 thesis 消失"
+            ]
+          },
+          {
+            "code": "2023",
+            "name": "燁輝",
+            "industry": "鋼鐵-上游原料",
+            "price": 15.05,
+            "date": "2026-10-16",
+            "score": 53.0,
+            "scoreParts": [
+              {
+                "source": "動能突破",
+                "points": 32.0
+              },
+              {
+                "source": "基本面改善",
+                "points": -6
+              },
+              {
+                "source": "聖杯突破",
+                "points": 22
+              },
+              {
+                "source": "大盤環境",
+                "points": 5
+              }
+            ],
+            "signals": [
+              "動能突破",
+              "聖杯突破"
+            ],
+            "warnings": [],
+            "thesis": [
+              "創高後仍有基本面支撐",
+              "營收 YoY 轉弱",
+              "強勢突破"
+            ],
+            "fundamentals": {
+              "pe": 999,
+              "growth": null,
+              "rev_yoy": -0.04,
+              "rev_qoq": null,
+              "quarters": [
+                {
+                  "date": "2026-06",
+                  "revenue": 17374790000.0,
+                  "qoq": 0.06493183955454114
+                },
+                {
+                  "date": "2026-03",
+                  "revenue": 16315401000.0,
+                  "qoq": 0.0919927940286496
+                },
+                {
+                  "date": "2025-12",
+                  "revenue": 14940942000.0,
+                  "qoq": -0.06467291376521227
+                },
+                {
+                  "date": "2025-09",
+                  "revenue": 15974029000.0,
+                  "qoq": -0.11722017148798752
+                }
+              ]
+            },
+            "conviction": "小部位試單",
+            "signalCount": 2,
             "thesisBreak": [
               "主動 ETF 流向轉為連續賣超",
               "MACD 柱狀體翻回綠色或突破失敗",
@@ -624870,86 +624963,6 @@
               "buyCount": 4,
               "sellCount": 0,
               "netAmount": 1647135000
-            },
-            "conviction": "小部位試單",
-            "signalCount": 1,
-            "thesisBreak": [
-              "主動 ETF 流向轉為連續賣超",
-              "MACD 柱狀體翻回綠色或突破失敗",
-              "營收 / EPS 成長 thesis 消失"
-            ]
-          },
-          {
-            "code": "3037",
-            "name": "欣興",
-            "industry": "電子零組件業",
-            "price": null,
-            "date": "2026-10-16",
-            "score": 53,
-            "scoreParts": [
-              {
-                "source": "主動 ETF",
-                "points": 48
-              },
-              {
-                "source": "大盤環境",
-                "points": 5
-              }
-            ],
-            "signals": [
-              "主動 ETF"
-            ],
-            "warnings": [],
-            "thesis": [
-              "主動 ETF 同向加碼"
-            ],
-            "fundamentals": {},
-            "activeEtf": {
-              "side": "buy",
-              "etfCount": 4,
-              "buyCount": 4,
-              "sellCount": 0,
-              "netAmount": 1112890000
-            },
-            "conviction": "小部位試單",
-            "signalCount": 1,
-            "thesisBreak": [
-              "主動 ETF 流向轉為連續賣超",
-              "MACD 柱狀體翻回綠色或突破失敗",
-              "營收 / EPS 成長 thesis 消失"
-            ]
-          },
-          {
-            "code": "3008",
-            "name": "大立光",
-            "industry": "光電業",
-            "price": null,
-            "date": "2026-10-16",
-            "score": 53.0,
-            "scoreParts": [
-              {
-                "source": "主動 ETF",
-                "points": 48.0
-              },
-              {
-                "source": "大盤環境",
-                "points": 5
-              }
-            ],
-            "signals": [
-              "主動 ETF"
-            ],
-            "warnings": [],
-            "thesis": [
-              "主動 ETF 同向加碼"
-            ],
-            "fundamentals": {},
-            "activeEtf": {
-              "side": "buy",
-              "etfCount": 3,
-              "buyCount": 3,
-              "sellCount": 0,
-              "netAmount": 889600000
             },
             "conviction": "小部位試單",
             "signalCount": 1,
@@ -625587,46 +625600,6 @@
             ]
           },
           {
-            "code": "6274",
-            "name": "台燿",
-            "industry": "電子零組件業",
-            "price": null,
-            "date": "2026-10-16",
-            "score": 45.0,
-            "scoreParts": [
-              {
-                "source": "主動 ETF",
-                "points": 40.0
-              },
-              {
-                "source": "大盤環境",
-                "points": 5
-              }
-            ],
-            "signals": [
-              "主動 ETF"
-            ],
-            "warnings": [],
-            "thesis": [
-              "主動 ETF 同向加碼"
-            ],
-            "fundamentals": {},
-            "activeEtf": {
-              "side": "buy",
-              "etfCount": 2,
-              "buyCount": 2,
-              "sellCount": 0,
-              "netAmount": 302005000
-            },
-            "conviction": "只觀察",
-            "signalCount": 1,
-            "thesisBreak": [
-              "主動 ETF 流向轉為連續賣超",
-              "MACD 柱狀體翻回綠色或突破失敗",
-              "營收 / EPS 成長 thesis 消失"
-            ]
-          },
-          {
             "code": "3443",
             "name": "創意",
             "industry": "半導體業",
@@ -625772,6 +625745,86 @@
               "MACD 柱狀體翻回綠色或突破失敗",
               "營收 / EPS 成長 thesis 消失"
             ]
+          },
+          {
+            "code": "2330",
+            "name": "台積電",
+            "industry": "半導體業",
+            "price": null,
+            "date": "2026-10-16",
+            "score": 40.3,
+            "scoreParts": [
+              {
+                "source": "主動 ETF",
+                "points": 35.3
+              },
+              {
+                "source": "大盤環境",
+                "points": 5
+              }
+            ],
+            "signals": [
+              "主動 ETF"
+            ],
+            "warnings": [],
+            "thesis": [
+              "主動 ETF 同向加碼"
+            ],
+            "fundamentals": {},
+            "activeEtf": {
+              "side": "buy",
+              "etfCount": 2,
+              "buyCount": 2,
+              "sellCount": 0,
+              "netAmount": 65340000
+            },
+            "conviction": "只觀察",
+            "signalCount": 1,
+            "thesisBreak": [
+              "主動 ETF 流向轉為連續賣超",
+              "MACD 柱狀體翻回綠色或突破失敗",
+              "營收 / EPS 成長 thesis 消失"
+            ]
+          },
+          {
+            "code": "6510",
+            "name": "精測",
+            "industry": "半導體業",
+            "price": null,
+            "date": "2026-10-16",
+            "score": 40.0,
+            "scoreParts": [
+              {
+                "source": "主動 ETF",
+                "points": 35.0
+              },
+              {
+                "source": "大盤環境",
+                "points": 5
+              }
+            ],
+            "signals": [
+              "主動 ETF"
+            ],
+            "warnings": [],
+            "thesis": [
+              "主動 ETF 同向加碼"
+            ],
+            "fundamentals": {},
+            "activeEtf": {
+              "side": "buy",
+              "etfCount": 2,
+              "buyCount": 2,
+              "sellCount": 0,
+              "netAmount": 49920000
+            },
+            "conviction": "只觀察",
+            "signalCount": 1,
+            "thesisBreak": [
+              "主動 ETF 流向轉為連續賣超",
+              "MACD 柱狀體翻回綠色或突破失敗",
+              "營收 / EPS 成長 thesis 消失"
+            ]
           }
         ],
         "principles": [
@@ -625789,7 +625842,7 @@
         "title": "台股聖杯雷達",
         "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
         "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-10-16 22:23:25",
+        "generatedAt": "2026-10-17 00:58:56",
         "targetDate": "2026-10-16",
         "dataSource": "twstock universe + yfinance history",
         "market": {
@@ -625806,14 +625859,2285 @@
           "maxIndustryExposure": 0.4,
           "stopMode": "MA20"
         },
-        "industries": [],
+        "industries": [
+          {
+            "industry": "電腦及週邊設備業",
+            "baseIndustries": [
+              "電腦及週邊設備業"
+            ],
+            "return5": 0.03394202522400415,
+            "return20": 0.1714831213261815,
+            "return60": 0.1727913146318185,
+            "volumeRatio": 1.3958507279512828,
+            "relativeStrength20": 0.1714831213261815,
+            "stockCount": 8,
+            "industryScore": 93.2,
+            "status": "主流強勢",
+            "rank": 1
+          },
+          {
+            "industry": "航運-貨櫃",
+            "baseIndustries": [
+              "航運業"
+            ],
+            "return5": 0.07539646088196307,
+            "return20": 0.07953940595579082,
+            "return60": 0.16904815949791038,
+            "volumeRatio": 1.735602478873132,
+            "relativeStrength20": 0.07953940595579082,
+            "stockCount": 5,
+            "industryScore": 84.0,
+            "status": "主流強勢",
+            "rank": 2
+          },
+          {
+            "industry": "金融-證券期貨",
+            "baseIndustries": [
+              "金融保險業"
+            ],
+            "return5": 0.0302545254701669,
+            "return20": 0.09051035104186204,
+            "return60": 0.15148595255249203,
+            "volumeRatio": 1.2707051065778208,
+            "relativeStrength20": 0.09051035104186204,
+            "stockCount": 8,
+            "industryScore": 80.9,
+            "status": "主流強勢",
+            "rank": 3
+          },
+          {
+            "industry": "電子零組件業",
+            "baseIndustries": [
+              "電子零組件業"
+            ],
+            "return5": 0.016893503556934787,
+            "return20": 0.1275817841363528,
+            "return60": 0.16614122418696428,
+            "volumeRatio": 1.0395132204796702,
+            "relativeStrength20": 0.1275817841363528,
+            "stockCount": 8,
+            "industryScore": 80.0,
+            "status": "主流強勢",
+            "rank": 4
+          },
+          {
+            "industry": "資訊服務-資安雲端",
+            "baseIndustries": [
+              "資訊服務業"
+            ],
+            "return5": 0.06859980268862247,
+            "return20": 0.0660344256798019,
+            "return60": 0.17294078995490406,
+            "volumeRatio": 1.491598140951141,
+            "relativeStrength20": 0.0660344256798019,
+            "stockCount": 5,
+            "industryScore": 79.2,
+            "status": "轉強觀察",
+            "rank": 5
+          },
+          {
+            "industry": "塑膠工業",
+            "baseIndustries": [
+              "塑膠工業"
+            ],
+            "return5": 0.006213631662706282,
+            "return20": 0.11408771777085147,
+            "return60": 0.11144694168030879,
+            "volumeRatio": 1.3681412934593098,
+            "relativeStrength20": 0.11408771777085147,
+            "stockCount": 8,
+            "industryScore": 78.2,
+            "status": "轉強觀察",
+            "rank": 6
+          },
+          {
+            "industry": "鋼鐵-上游原料",
+            "baseIndustries": [
+              "鋼鐵工業"
+            ],
+            "return5": 0.041857680207541194,
+            "return20": 0.06933264974334312,
+            "return60": 0.08880946049956882,
+            "volumeRatio": 1.310499818070903,
+            "relativeStrength20": 0.06933264974334312,
+            "stockCount": 5,
+            "industryScore": 75.2,
+            "status": "轉強觀察",
+            "rank": 7
+          },
+          {
+            "industry": "金融-金控銀行",
+            "baseIndustries": [
+              "金融保險業"
+            ],
+            "return5": 0.05855963656955205,
+            "return20": 0.04899960044121424,
+            "return60": 0.24123169626983879,
+            "volumeRatio": 1.1294828299178583,
+            "relativeStrength20": 0.04899960044121424,
+            "stockCount": 8,
+            "industryScore": 74.1,
+            "status": "轉強觀察",
+            "rank": 8
+          },
+          {
+            "industry": "電子零組件-PCB",
+            "baseIndustries": [
+              "電子零組件業"
+            ],
+            "return5": -0.06094735809328935,
+            "return20": 0.1471442216358704,
+            "return60": 0.19094493943873295,
+            "volumeRatio": 1.1631562579751347,
+            "relativeStrength20": 0.1471442216358704,
+            "stockCount": 8,
+            "industryScore": 70.2,
+            "status": "轉強觀察",
+            "rank": 9
+          },
+          {
+            "industry": "綠能環保",
+            "baseIndustries": [
+              "綠能環保"
+            ],
+            "return5": -0.021494031096620857,
+            "return20": 0.124747582777082,
+            "return60": 0.09662034551949421,
+            "volumeRatio": 1.2682109001884863,
+            "relativeStrength20": 0.124747582777082,
+            "stockCount": 8,
+            "industryScore": 69.7,
+            "status": "轉強觀察",
+            "rank": 10
+          }
+        ],
         "usIndustries": [],
         "usTaiwanMatches": [],
         "candidates": {
-          "breakout": [],
-          "pullback": [],
-          "overheated": [],
-          "exit": []
+          "breakout": [
+            {
+              "code": "2023.TW",
+              "name": "燁輝",
+              "industry": "鋼鐵-上游原料",
+              "baseIndustry": "鋼鐵工業",
+              "close": 15.05,
+              "price": 15.05,
+              "date": "2026-10-16",
+              "return5": 7.89,
+              "return20": 9.85,
+              "return60": 9.45,
+              "relativeStrength20": 9.85,
+              "volumeRatio": 1.68,
+              "signal": "強勢突破",
+              "bucket": "breakout",
+              "score": 93.9,
+              "action": "可分批",
+              "ma5": 14.46,
+              "ma10": 14.17,
+              "ma20": 13.91,
+              "ma60": 13.86,
+              "ma120": 13.84,
+              "stopPrices": {
+                "MA20": 13.91,
+                "最近回檔低點": 13.55,
+                "固定 7%": 14.0
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 132308.0,
+                "rawPositionValue": 132308.0,
+                "shares": 8791,
+                "lots": 8,
+                "oddLot": 791,
+                "stopPrice": 13.91,
+                "maxLoss": 10000.0,
+                "riskRewardTo8Pct": 1.06,
+                "firstTakeProfit": 16.25,
+                "secondTakeProfit": 17.31,
+                "exceedsSingleLimit": false,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "2377.TW",
+              "name": "微星",
+              "industry": "電腦週邊-品牌通路",
+              "baseIndustry": "電腦及週邊設備業",
+              "close": 161.5,
+              "price": 161.5,
+              "date": "2026-10-16",
+              "return5": 4.53,
+              "return20": 9.12,
+              "return60": 10.62,
+              "relativeStrength20": 9.12,
+              "volumeRatio": 1.49,
+              "signal": "強勢突破",
+              "bucket": "breakout",
+              "score": 89.4,
+              "action": "可分批",
+              "ma5": 158.1,
+              "ma10": 156.6,
+              "ma20": 154.55,
+              "ma60": 151.51,
+              "ma120": 139.52,
+              "stopPrices": {
+                "MA20": 154.55,
+                "最近回檔低點": 148.5,
+                "固定 7%": 150.2
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 232374.0,
+                "shares": 1238,
+                "lots": 1,
+                "oddLot": 238,
+                "stopPrice": 154.55,
+                "maxLoss": 8604.0,
+                "riskRewardTo8Pct": 1.86,
+                "firstTakeProfit": 174.42,
+                "secondTakeProfit": 185.72,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "2027.TW",
+              "name": "大成鋼",
+              "industry": "鋼鐵-不鏽鋼扣件",
+              "baseIndustry": "鋼鐵工業",
+              "close": 50.9,
+              "price": 50.9,
+              "date": "2026-10-16",
+              "return5": 5.49,
+              "return20": 13.11,
+              "return60": 23.69,
+              "relativeStrength20": 13.11,
+              "volumeRatio": 1.17,
+              "signal": "強勢突破",
+              "bucket": "breakout",
+              "score": 87.8,
+              "action": "可分批",
+              "ma5": 49.45,
+              "ma10": 48.69,
+              "ma20": 47.89,
+              "ma60": 47.52,
+              "ma120": 44.13,
+              "stopPrices": {
+                "MA20": 47.89,
+                "最近回檔低點": 45.1,
+                "固定 7%": 47.34
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 169384.0,
+                "rawPositionValue": 169384.0,
+                "shares": 3327,
+                "lots": 3,
+                "oddLot": 327,
+                "stopPrice": 47.89,
+                "maxLoss": 9998.0,
+                "riskRewardTo8Pct": 1.36,
+                "firstTakeProfit": 54.97,
+                "secondTakeProfit": 58.54,
+                "exceedsSingleLimit": false,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "2882.TW",
+              "name": "國泰金",
+              "industry": "金融-金控銀行",
+              "baseIndustry": "金融保險業",
+              "close": 116.0,
+              "price": 116.0,
+              "date": "2026-10-16",
+              "return5": 5.45,
+              "return20": 5.45,
+              "return60": 21.09,
+              "relativeStrength20": 5.45,
+              "volumeRatio": 1.08,
+              "signal": "強勢突破",
+              "bucket": "breakout",
+              "score": 83.1,
+              "action": "可分批",
+              "ma5": 114.2,
+              "ma10": 112.9,
+              "ma20": 112.2,
+              "ma60": 106.07,
+              "ma120": 98.59,
+              "stopPrices": {
+                "MA20": 112.2,
+                "最近回檔低點": 109.0,
+                "固定 7%": 107.88
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 305263.0,
+                "shares": 1724,
+                "lots": 1,
+                "oddLot": 724,
+                "stopPrice": 112.2,
+                "maxLoss": 6551.0,
+                "riskRewardTo8Pct": 2.44,
+                "firstTakeProfit": 125.28,
+                "secondTakeProfit": 133.4,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            }
+          ],
+          "pullback": [
+            {
+              "code": "2801.TW",
+              "name": "彰銀",
+              "industry": "金融-金控銀行",
+              "baseIndustry": "金融保險業",
+              "close": 29.5,
+              "price": 29.5,
+              "date": "2026-10-16",
+              "return5": 5.55,
+              "return20": 5.36,
+              "return60": 24.43,
+              "relativeStrength20": 5.36,
+              "volumeRatio": 0.95,
+              "signal": "回檔轉強",
+              "bucket": "pullback",
+              "score": 82.0,
+              "action": "可觀察",
+              "ma5": 28.83,
+              "ma10": 28.21,
+              "ma20": 28.23,
+              "ma60": 25.92,
+              "ma120": 23.67,
+              "stopPrices": {
+                "MA20": 28.23,
+                "最近回檔低點": 27.1,
+                "固定 7%": 27.44
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 231827.0,
+                "shares": 6779,
+                "lots": 6,
+                "oddLot": 779,
+                "stopPrice": 28.23,
+                "maxLoss": 8626.0,
+                "riskRewardTo8Pct": 1.85,
+                "firstTakeProfit": 31.86,
+                "secondTakeProfit": 33.92,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "6214.TW",
+              "name": "精誠",
+              "industry": "資訊服務-資安雲端",
+              "baseIndustry": "資訊服務業",
+              "close": 197.5,
+              "price": 197.5,
+              "date": "2026-10-16",
+              "return5": 2.86,
+              "return20": 3.95,
+              "return60": 39.58,
+              "relativeStrength20": 3.95,
+              "volumeRatio": 0.91,
+              "signal": "回檔轉強",
+              "bucket": "pullback",
+              "score": 80.9,
+              "action": "可觀察",
+              "ma5": 195.4,
+              "ma10": 192.4,
+              "ma20": 191.55,
+              "ma60": 175.14,
+              "ma120": 154.22,
+              "stopPrices": {
+                "MA20": 191.55,
+                "最近回檔低點": 183.0,
+                "固定 7%": 183.68
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 331933.0,
+                "shares": 1012,
+                "lots": 1,
+                "oddLot": 12,
+                "stopPrice": 191.55,
+                "maxLoss": 6021.0,
+                "riskRewardTo8Pct": 2.66,
+                "firstTakeProfit": 213.3,
+                "secondTakeProfit": 227.12,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "2883.TW",
+              "name": "凱基金",
+              "industry": "金融-金控銀行",
+              "baseIndustry": "金融保險業",
+              "close": 39.1,
+              "price": 39.1,
+              "date": "2026-10-16",
+              "return5": 4.13,
+              "return20": 2.49,
+              "return60": 31.65,
+              "relativeStrength20": 2.49,
+              "volumeRatio": 0.93,
+              "signal": "回檔轉強",
+              "bucket": "pullback",
+              "score": 78.2,
+              "action": "可觀察",
+              "ma5": 38.74,
+              "ma10": 38.2,
+              "ma20": 38.65,
+              "ma60": 34.65,
+              "ma120": 30.26,
+              "stopPrices": {
+                "MA20": 38.65,
+                "最近回檔低點": 36.4,
+                "固定 7%": 36.36
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 859344.0,
+                "shares": 5115,
+                "lots": 5,
+                "oddLot": 115,
+                "stopPrice": 38.65,
+                "maxLoss": 2327.0,
+                "riskRewardTo8Pct": 6.87,
+                "firstTakeProfit": 42.23,
+                "secondTakeProfit": 44.96,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "2834.TW",
+              "name": "臺企銀",
+              "industry": "金融-金控銀行",
+              "baseIndustry": "金融保險業",
+              "close": 18.05,
+              "price": 18.05,
+              "date": "2026-10-16",
+              "return5": 3.44,
+              "return20": 0.28,
+              "return60": 7.3,
+              "relativeStrength20": 0.28,
+              "volumeRatio": 0.89,
+              "signal": "回檔轉強",
+              "bucket": "pullback",
+              "score": 75.1,
+              "action": "可觀察",
+              "ma5": 17.78,
+              "ma10": 17.6,
+              "ma20": 17.83,
+              "ma60": 17.2,
+              "ma120": 16.52,
+              "stopPrices": {
+                "MA20": 17.83,
+                "最近回檔低點": 17.25,
+                "固定 7%": 16.79
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 802225.0,
+                "shares": 11080,
+                "lots": 11,
+                "oddLot": 80,
+                "stopPrice": 17.83,
+                "maxLoss": 2493.0,
+                "riskRewardTo8Pct": 6.42,
+                "firstTakeProfit": 19.49,
+                "secondTakeProfit": 20.76,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "2065.TWO",
+              "name": "世豐",
+              "industry": "鋼鐵-不鏽鋼扣件",
+              "baseIndustry": "鋼鐵工業",
+              "close": 35.8,
+              "price": 35.8,
+              "date": "2026-10-16",
+              "return5": 0,
+              "return20": 2.14,
+              "return60": 11.18,
+              "relativeStrength20": 2.14,
+              "volumeRatio": 0.65,
+              "signal": "回檔轉強",
+              "bucket": "pullback",
+              "score": 73.6,
+              "action": "可觀察",
+              "ma5": 35.7,
+              "ma10": 35.67,
+              "ma20": 35.48,
+              "ma60": 34.98,
+              "ma120": 33.93,
+              "stopPrices": {
+                "MA20": 35.48,
+                "最近回檔低點": 35.0,
+                "固定 7%": 33.29
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 1101541.0,
+                "shares": 5586,
+                "lots": 5,
+                "oddLot": 586,
+                "stopPrice": 35.48,
+                "maxLoss": 1815.0,
+                "riskRewardTo8Pct": 8.81,
+                "firstTakeProfit": 38.66,
+                "secondTakeProfit": 41.17,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            }
+          ],
+          "overheated": [
+            {
+              "code": "1815.TWO",
+              "name": "富喬",
+              "industry": "電子零組件業",
+              "baseIndustry": "電子零組件業",
+              "close": 140.0,
+              "price": 140.0,
+              "date": "2026-10-16",
+              "return5": 3.7,
+              "return20": 22.27,
+              "return60": 85.61,
+              "relativeStrength20": 22.27,
+              "volumeRatio": 1.39,
+              "signal": "過熱觀察",
+              "bucket": "overheated",
+              "score": 92.6,
+              "action": "過熱勿追",
+              "ma5": 132.9,
+              "ma10": 130.85,
+              "ma20": 124.28,
+              "ma60": 105.62,
+              "ma120": 101.17,
+              "stopPrices": {
+                "MA20": 124.28,
+                "最近回檔低點": 111.0,
+                "固定 7%": 130.2
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 89030.0,
+                "rawPositionValue": 89030.0,
+                "shares": 635,
+                "lots": 0,
+                "oddLot": 635,
+                "stopPrice": 124.28,
+                "maxLoss": 9985.0,
+                "riskRewardTo8Pct": 0.71,
+                "firstTakeProfit": 151.2,
+                "secondTakeProfit": 161.0,
+                "exceedsSingleLimit": false,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "1569.TWO",
+              "name": "濱川",
+              "industry": "電腦及週邊設備業",
+              "baseIndustry": "電腦及週邊設備業",
+              "close": 78.9,
+              "price": 78.9,
+              "date": "2026-10-16",
+              "return5": 12.71,
+              "return20": 59.72,
+              "return60": 83.92,
+              "relativeStrength20": 59.72,
+              "volumeRatio": 1.76,
+              "signal": "過熱觀察",
+              "bucket": "overheated",
+              "score": 89.7,
+              "action": "過熱勿追",
+              "ma5": 79.4,
+              "ma10": 74.42,
+              "ma20": 67.35,
+              "ma60": 51.96,
+              "ma120": 51.53,
+              "stopPrices": {
+                "MA20": 67.35,
+                "最近回檔低點": 49.35,
+                "固定 7%": 73.38
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 68312.0,
+                "rawPositionValue": 68312.0,
+                "shares": 865,
+                "lots": 0,
+                "oddLot": 865,
+                "stopPrice": 67.35,
+                "maxLoss": 9991.0,
+                "riskRewardTo8Pct": 0.55,
+                "firstTakeProfit": 85.21,
+                "secondTakeProfit": 90.74,
+                "exceedsSingleLimit": false,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "3287.TWO",
+              "name": "廣寰科",
+              "industry": "電腦及週邊設備業",
+              "baseIndustry": "電腦及週邊設備業",
+              "close": 59.6,
+              "price": 59.6,
+              "date": "2026-10-16",
+              "return5": 37.17,
+              "return20": 73.26,
+              "return60": 103.76,
+              "relativeStrength20": 73.26,
+              "volumeRatio": 2.59,
+              "signal": "過熱觀察",
+              "bucket": "overheated",
+              "score": 88.6,
+              "action": "過熱勿追",
+              "ma5": 55.25,
+              "ma10": 48.15,
+              "ma20": 44.47,
+              "ma60": 37.48,
+              "ma120": 34.81,
+              "stopPrices": {
+                "MA20": 44.47,
+                "最近回檔低點": 34.4,
+                "固定 7%": 55.43
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 39405.0,
+                "rawPositionValue": 39405.0,
+                "shares": 661,
+                "lots": 0,
+                "oddLot": 661,
+                "stopPrice": 44.47,
+                "maxLoss": 9998.0,
+                "riskRewardTo8Pct": 0.32,
+                "firstTakeProfit": 64.37,
+                "secondTakeProfit": 68.54,
+                "exceedsSingleLimit": false,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "1301.TW",
+              "name": "台塑",
+              "industry": "塑膠工業",
+              "baseIndustry": "塑膠工業",
+              "close": 82.1,
+              "price": 82.1,
+              "date": "2026-10-16",
+              "return5": 0.98,
+              "return20": 32.42,
+              "return60": 30.32,
+              "relativeStrength20": 32.42,
+              "volumeRatio": 2.09,
+              "signal": "過熱觀察",
+              "bucket": "overheated",
+              "score": 88.0,
+              "action": "過熱勿追",
+              "ma5": 82.86,
+              "ma10": 77.64,
+              "ma20": 71.24,
+              "ma60": 64.02,
+              "ma120": 57.76,
+              "stopPrices": {
+                "MA20": 71.24,
+                "最近回檔低點": 61.7,
+                "固定 7%": 76.35
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 75633.0,
+                "rawPositionValue": 75633.0,
+                "shares": 921,
+                "lots": 0,
+                "oddLot": 921,
+                "stopPrice": 71.24,
+                "maxLoss": 9997.0,
+                "riskRewardTo8Pct": 0.61,
+                "firstTakeProfit": 88.67,
+                "secondTakeProfit": 94.41,
+                "exceedsSingleLimit": false,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "6021.TWO",
+              "name": "美好證",
+              "industry": "金融-證券期貨",
+              "baseIndustry": "金融保險業",
+              "close": 55.8,
+              "price": 55.8,
+              "date": "2026-10-16",
+              "return5": 29.02,
+              "return20": 26.24,
+              "return60": 51.42,
+              "relativeStrength20": 26.24,
+              "volumeRatio": 2.81,
+              "signal": "過熱觀察",
+              "bucket": "overheated",
+              "score": 86.2,
+              "action": "過熱勿追",
+              "ma5": 53.85,
+              "ma10": 48.24,
+              "ma20": 45.85,
+              "ma60": 40.33,
+              "ma120": 38.72,
+              "stopPrices": {
+                "MA20": 45.85,
+                "最近回檔低點": 40.85,
+                "固定 7%": 51.89
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 56080.0,
+                "rawPositionValue": 56080.0,
+                "shares": 1005,
+                "lots": 1,
+                "oddLot": 5,
+                "stopPrice": 45.85,
+                "maxLoss": 10000.0,
+                "riskRewardTo8Pct": 0.45,
+                "firstTakeProfit": 60.26,
+                "secondTakeProfit": 64.17,
+                "exceedsSingleLimit": false,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "5432.TWO",
+              "name": "新門",
+              "industry": "綠能環保",
+              "baseIndustry": "綠能環保",
+              "close": 203.5,
+              "price": 203.5,
+              "date": "2026-10-16",
+              "return5": 13.37,
+              "return20": 42.31,
+              "return60": 66.8,
+              "relativeStrength20": 42.31,
+              "volumeRatio": 1.22,
+              "signal": "過熱觀察",
+              "bucket": "overheated",
+              "score": 80.3,
+              "action": "過熱勿追",
+              "ma5": 195.3,
+              "ma10": 188.9,
+              "ma20": 173.2,
+              "ma60": 147.49,
+              "ma120": 145.02,
+              "stopPrices": {
+                "MA20": 173.2,
+                "最近回檔低點": 143.0,
+                "固定 7%": 189.26
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 67162.0,
+                "rawPositionValue": 67162.0,
+                "shares": 330,
+                "lots": 0,
+                "oddLot": 330,
+                "stopPrice": 173.2,
+                "maxLoss": 9999.0,
+                "riskRewardTo8Pct": 0.54,
+                "firstTakeProfit": 219.78,
+                "secondTakeProfit": 234.02,
+                "exceedsSingleLimit": false,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "2313.TW",
+              "name": "華通",
+              "industry": "電子零組件-PCB",
+              "baseIndustry": "電子零組件業",
+              "close": 248.0,
+              "price": 248.0,
+              "date": "2026-10-16",
+              "return5": 0,
+              "return20": 13.5,
+              "return60": 18.1,
+              "relativeStrength20": 13.5,
+              "volumeRatio": 1.21,
+              "signal": "過熱觀察",
+              "bucket": "overheated",
+              "score": 59.2,
+              "action": "過熱勿追",
+              "ma5": 244.4,
+              "ma10": 244.25,
+              "ma20": 234.1,
+              "ma60": 221.55,
+              "ma120": 234.79,
+              "stopPrices": {
+                "MA20": 234.1,
+                "最近回檔低點": 216.0,
+                "固定 7%": 230.64
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 178417.0,
+                "rawPositionValue": 178417.0,
+                "shares": 719,
+                "lots": 0,
+                "oddLot": 719,
+                "stopPrice": 234.1,
+                "maxLoss": 9994.0,
+                "riskRewardTo8Pct": 1.43,
+                "firstTakeProfit": 267.84,
+                "secondTakeProfit": 285.2,
+                "exceedsSingleLimit": false,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "4906.TW",
+              "name": "正文",
+              "industry": "通信網路-網通設備",
+              "baseIndustry": "通信網路業",
+              "close": 44.85,
+              "price": 44.85,
+              "date": "2026-10-16",
+              "return5": 7.3,
+              "return20": 27.78,
+              "return60": 29.44,
+              "relativeStrength20": 27.78,
+              "volumeRatio": 0.92,
+              "signal": "過熱觀察",
+              "bucket": "overheated",
+              "score": 55.7,
+              "action": "過熱勿追",
+              "ma5": 42.32,
+              "ma10": 42.26,
+              "ma20": 40.36,
+              "ma60": 36.87,
+              "ma120": 39.07,
+              "stopPrices": {
+                "MA20": 40.36,
+                "最近回檔低點": 35.0,
+                "固定 7%": 41.71
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 99889.0,
+                "rawPositionValue": 99889.0,
+                "shares": 2227,
+                "lots": 2,
+                "oddLot": 227,
+                "stopPrice": 40.36,
+                "maxLoss": 9999.0,
+                "riskRewardTo8Pct": 0.8,
+                "firstTakeProfit": 48.44,
+                "secondTakeProfit": 51.58,
+                "exceedsSingleLimit": false,
+                "exceedsIndustryLimit": false
+              }
+            }
+          ],
+          "exit": [
+            {
+              "code": "1336.TWO",
+              "name": "台翰",
+              "industry": "電子零組件業",
+              "baseIndustry": "電子零組件業",
+              "close": 18.15,
+              "price": 18.15,
+              "date": "2026-10-16",
+              "return5": 1.97,
+              "return20": 12.73,
+              "return60": 9.01,
+              "relativeStrength20": 12.73,
+              "volumeRatio": 1.7,
+              "signal": "減碼警示",
+              "bucket": "exit",
+              "score": 95.2,
+              "action": "減碼",
+              "ma5": 18.42,
+              "ma10": 18.21,
+              "ma20": 17.64,
+              "ma60": 16.66,
+              "ma120": 15.47,
+              "stopPrices": {
+                "MA20": 17.64,
+                "最近回檔低點": 16.1,
+                "固定 7%": 16.88
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 354147.0,
+                "shares": 11019,
+                "lots": 11,
+                "oddLot": 19,
+                "stopPrice": 17.64,
+                "maxLoss": 5647.0,
+                "riskRewardTo8Pct": 2.83,
+                "firstTakeProfit": 19.6,
+                "secondTakeProfit": 20.87,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "2855.TW",
+              "name": "統一證",
+              "industry": "金融-證券期貨",
+              "baseIndustry": "金融保險業",
+              "close": 58.3,
+              "price": 58.3,
+              "date": "2026-10-16",
+              "return5": -0.51,
+              "return20": 13.2,
+              "return60": 33.56,
+              "relativeStrength20": 13.2,
+              "volumeRatio": 0.89,
+              "signal": "減碼警示",
+              "bucket": "exit",
+              "score": 88.6,
+              "action": "減碼",
+              "ma5": 59.14,
+              "ma10": 58.63,
+              "ma20": 57.09,
+              "ma60": 50.49,
+              "ma120": 48.28,
+              "stopPrices": {
+                "MA20": 57.09,
+                "最近回檔低點": 51.0,
+                "固定 7%": 54.22
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 483818.0,
+                "shares": 3430,
+                "lots": 3,
+                "oddLot": 430,
+                "stopPrice": 57.09,
+                "maxLoss": 4133.0,
+                "riskRewardTo8Pct": 3.87,
+                "firstTakeProfit": 62.96,
+                "secondTakeProfit": 67.04,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "5205.TWO",
+              "name": "中茂",
+              "industry": "綠能環保",
+              "baseIndustry": "綠能環保",
+              "close": 28.15,
+              "price": 28.15,
+              "date": "2026-10-16",
+              "return5": -15.47,
+              "return20": 50.53,
+              "return60": 27.38,
+              "relativeStrength20": 50.53,
+              "volumeRatio": 1.73,
+              "signal": "減碼警示",
+              "bucket": "exit",
+              "score": 63.4,
+              "action": "減碼",
+              "ma5": 33.85,
+              "ma10": 30.82,
+              "ma20": 24.51,
+              "ma60": 22.19,
+              "ma120": 22.66,
+              "stopPrices": {
+                "MA20": 24.51,
+                "最近回檔低點": 16.5,
+                "固定 7%": 26.18
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 77388.0,
+                "rawPositionValue": 77388.0,
+                "shares": 2749,
+                "lots": 2,
+                "oddLot": 749,
+                "stopPrice": 24.51,
+                "maxLoss": 9999.0,
+                "riskRewardTo8Pct": 0.62,
+                "firstTakeProfit": 30.4,
+                "secondTakeProfit": 32.37,
+                "exceedsSingleLimit": false,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "3533.TW",
+              "name": "嘉澤",
+              "industry": "電子零組件-PCB",
+              "baseIndustry": "電子零組件業",
+              "close": 1805.0,
+              "price": 1805.0,
+              "date": "2026-10-16",
+              "return5": -5.74,
+              "return20": 18.75,
+              "return60": -11.08,
+              "relativeStrength20": 18.75,
+              "volumeRatio": 1.38,
+              "signal": "減碼警示",
+              "bucket": "exit",
+              "score": 60.5,
+              "action": "減碼",
+              "ma5": 1859.0,
+              "ma10": 1863.0,
+              "ma20": 1766.5,
+              "ma60": 1763.25,
+              "ma120": 2059.08,
+              "stopPrices": {
+                "MA20": 1766.5,
+                "最近回檔低點": 1495.0,
+                "固定 7%": 1678.65
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 468831.0,
+                "shares": 110,
+                "lots": 0,
+                "oddLot": 110,
+                "stopPrice": 1766.5,
+                "maxLoss": 4235.0,
+                "riskRewardTo8Pct": 3.75,
+                "firstTakeProfit": 1949.4,
+                "secondTakeProfit": 2075.75,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "5864.TWO",
+              "name": "致和證",
+              "industry": "金融-證券期貨",
+              "baseIndustry": "金融保險業",
+              "close": 38.7,
+              "price": 38.7,
+              "date": "2026-10-16",
+              "return5": -1.9,
+              "return20": 13.49,
+              "return60": 18.17,
+              "relativeStrength20": 13.49,
+              "volumeRatio": 1.1,
+              "signal": "減碼警示",
+              "bucket": "exit",
+              "score": 60.3,
+              "action": "減碼",
+              "ma5": 39.39,
+              "ma10": 39.35,
+              "ma20": 37.97,
+              "ma60": 34.91,
+              "ma120": 35.53,
+              "stopPrices": {
+                "MA20": 37.97,
+                "最近回檔低點": 34.05,
+                "固定 7%": 35.99
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 531958.0,
+                "shares": 5167,
+                "lots": 5,
+                "oddLot": 167,
+                "stopPrice": 37.97,
+                "maxLoss": 3759.0,
+                "riskRewardTo8Pct": 4.26,
+                "firstTakeProfit": 41.8,
+                "secondTakeProfit": 44.51,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "3008.TW",
+              "name": "大立光",
+              "industry": "光電-光學鏡頭",
+              "baseIndustry": "光電業",
+              "close": 6400.0,
+              "price": 6400.0,
+              "date": "2026-10-16",
+              "return5": -3.9,
+              "return20": 5.7,
+              "return60": 60.6,
+              "relativeStrength20": 5.7,
+              "volumeRatio": 1.75,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 57.2,
+              "action": "出場",
+              "ma5": 6897.0,
+              "ma10": 6786.5,
+              "ma20": 6497.5,
+              "ma60": 5792.83,
+              "ma120": 4770.75,
+              "stopPrices": {
+                "MA20": 6497.5,
+                "最近回檔低點": 5740.0,
+                "固定 7%": 5952.0
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "6274.TWO",
+              "name": "台燿",
+              "industry": "電子零組件-PCB",
+              "baseIndustry": "電子零組件業",
+              "close": 1615.0,
+              "price": 1615.0,
+              "date": "2026-10-16",
+              "return5": -7.18,
+              "return20": 17.88,
+              "return60": 30.77,
+              "relativeStrength20": 17.88,
+              "volumeRatio": 0.94,
+              "signal": "減碼警示",
+              "bucket": "exit",
+              "score": 56.9,
+              "action": "減碼",
+              "ma5": 1673.0,
+              "ma10": 1698.0,
+              "ma20": 1572.75,
+              "ma60": 1459.75,
+              "ma120": 1465.8,
+              "stopPrices": {
+                "MA20": 1572.75,
+                "最近回檔低點": 1275.0,
+                "固定 7%": 1501.95
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 382249.0,
+                "shares": 123,
+                "lots": 0,
+                "oddLot": 123,
+                "stopPrice": 1572.75,
+                "maxLoss": 5197.0,
+                "riskRewardTo8Pct": 3.06,
+                "firstTakeProfit": 1744.2,
+                "secondTakeProfit": 1857.25,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "6015.TWO",
+              "name": "宏遠證",
+              "industry": "金融-證券期貨",
+              "baseIndustry": "金融保險業",
+              "close": 17.85,
+              "price": 17.85,
+              "date": "2026-10-16",
+              "return5": -1.65,
+              "return20": 5.93,
+              "return60": 8.84,
+              "relativeStrength20": 5.93,
+              "volumeRatio": 1.12,
+              "signal": "減碼警示",
+              "bucket": "exit",
+              "score": 55.4,
+              "action": "減碼",
+              "ma5": 18.12,
+              "ma10": 18.03,
+              "ma20": 17.81,
+              "ma60": 16.66,
+              "ma120": 16.93,
+              "stopPrices": {
+                "MA20": 17.81,
+                "最近回檔低點": 16.8,
+                "固定 7%": 16.6
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 5099939.0,
+                "shares": 11204,
+                "lots": 11,
+                "oddLot": 204,
+                "stopPrice": 17.81,
+                "maxLoss": 392.0,
+                "riskRewardTo8Pct": 40.8,
+                "firstTakeProfit": 19.28,
+                "secondTakeProfit": 20.53,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "3037.TW",
+              "name": "欣興",
+              "industry": "電子零組件-PCB",
+              "baseIndustry": "電子零組件業",
+              "close": 1090.0,
+              "price": 1090.0,
+              "date": "2026-10-16",
+              "return5": -14.17,
+              "return20": 14.62,
+              "return60": 32.12,
+              "relativeStrength20": 14.62,
+              "volumeRatio": 1.11,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 55.2,
+              "action": "出場",
+              "ma5": 1157.0,
+              "ma10": 1230.0,
+              "ma20": 1161.1,
+              "ma60": 1035.88,
+              "ma120": 977.67,
+              "stopPrices": {
+                "MA20": 1161.1,
+                "最近回檔低點": 940.0,
+                "固定 7%": 1013.7
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "3031.TW",
+              "name": "佰鴻",
+              "industry": "光電-LED",
+              "baseIndustry": "光電業",
+              "close": 31.15,
+              "price": 31.15,
+              "date": "2026-10-16",
+              "return5": -6.17,
+              "return20": 35.43,
+              "return60": 25.6,
+              "relativeStrength20": 35.43,
+              "volumeRatio": 0.6,
+              "signal": "減碼警示",
+              "bucket": "exit",
+              "score": 53.6,
+              "action": "減碼",
+              "ma5": 32.24,
+              "ma10": 32.78,
+              "ma20": 30.76,
+              "ma60": 25.8,
+              "ma120": 28.15,
+              "stopPrices": {
+                "MA20": 30.76,
+                "最近回檔低點": 22.8,
+                "固定 7%": 28.97
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 803872.0,
+                "shares": 6420,
+                "lots": 6,
+                "oddLot": 420,
+                "stopPrice": 30.76,
+                "maxLoss": 2488.0,
+                "riskRewardTo8Pct": 6.43,
+                "firstTakeProfit": 33.64,
+                "secondTakeProfit": 35.82,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "2345.TW",
+              "name": "智邦",
+              "industry": "通信網路-網通設備",
+              "baseIndustry": "通信網路業",
+              "close": 1980.0,
+              "price": 1980.0,
+              "date": "2026-10-16",
+              "return5": -4.35,
+              "return20": 7.61,
+              "return60": -10.81,
+              "relativeStrength20": 7.61,
+              "volumeRatio": 1.0,
+              "signal": "減碼警示",
+              "bucket": "exit",
+              "score": 53.3,
+              "action": "減碼",
+              "ma5": 2030.0,
+              "ma10": 2032.5,
+              "ma20": 1942.25,
+              "ma60": 2067.17,
+              "ma120": 2252.17,
+              "stopPrices": {
+                "MA20": 1942.25,
+                "最近回檔低點": 1770.0,
+                "固定 7%": 1841.4
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 524503.0,
+                "shares": 101,
+                "lots": 0,
+                "oddLot": 101,
+                "stopPrice": 1942.25,
+                "maxLoss": 3813.0,
+                "riskRewardTo8Pct": 4.2,
+                "firstTakeProfit": 2138.4,
+                "secondTakeProfit": 2277.0,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "6016.TWO",
+              "name": "康和證",
+              "industry": "金融-證券期貨",
+              "baseIndustry": "金融保險業",
+              "close": 23.25,
+              "price": 23.25,
+              "date": "2026-10-16",
+              "return5": -2.92,
+              "return20": 6.16,
+              "return60": 6.98,
+              "relativeStrength20": 6.16,
+              "volumeRatio": 0.87,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 52.9,
+              "action": "出場",
+              "ma5": 23.58,
+              "ma10": 23.8,
+              "ma20": 23.61,
+              "ma60": 21.66,
+              "ma120": 22.38,
+              "stopPrices": {
+                "MA20": 23.61,
+                "最近回檔低點": 21.85,
+                "固定 7%": 21.62
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "2030.TW",
+              "name": "彰源",
+              "industry": "鋼鐵-不鏽鋼扣件",
+              "baseIndustry": "鋼鐵工業",
+              "close": 29.3,
+              "price": 29.3,
+              "date": "2026-10-16",
+              "return5": -17.58,
+              "return20": 31.98,
+              "return60": 69.36,
+              "relativeStrength20": 31.98,
+              "volumeRatio": 0.84,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 52.1,
+              "action": "出場",
+              "ma5": 29.54,
+              "ma10": 33.26,
+              "ma20": 31.08,
+              "ma60": 24.22,
+              "ma120": 21.03,
+              "stopPrices": {
+                "MA20": 31.08,
+                "最近回檔低點": 22.35,
+                "固定 7%": 27.25
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "3551.TWO",
+              "name": "世禾",
+              "industry": "綠能環保",
+              "baseIndustry": "綠能環保",
+              "close": 185.0,
+              "price": 185.0,
+              "date": "2026-10-16",
+              "return5": -6.57,
+              "return20": 9.79,
+              "return60": -3.39,
+              "relativeStrength20": 9.79,
+              "volumeRatio": 0.4,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 50.9,
+              "action": "出場",
+              "ma5": 191.5,
+              "ma10": 195.15,
+              "ma20": 189.45,
+              "ma60": 180.65,
+              "ma120": 191.97,
+              "stopPrices": {
+                "MA20": 189.45,
+                "最近回檔低點": 169.5,
+                "固定 7%": 172.05
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "3362.TWO",
+              "name": "先進光",
+              "industry": "光電-光學鏡頭",
+              "baseIndustry": "光電業",
+              "close": 172.0,
+              "price": 172.0,
+              "date": "2026-10-16",
+              "return5": -9.47,
+              "return20": 2.38,
+              "return60": 13.53,
+              "relativeStrength20": 2.38,
+              "volumeRatio": 1.66,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 50.8,
+              "action": "出場",
+              "ma5": 184.3,
+              "ma10": 186.25,
+              "ma20": 180.03,
+              "ma60": 180.91,
+              "ma120": 163.46,
+              "stopPrices": {
+                "MA20": 180.03,
+                "最近回檔低點": 167.5,
+                "固定 7%": 159.96
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "2316.TW",
+              "name": "楠梓電",
+              "industry": "電子零組件-PCB",
+              "baseIndustry": "電子零組件業",
+              "close": 162.5,
+              "price": 162.5,
+              "date": "2026-10-16",
+              "return5": -4.97,
+              "return20": 4.84,
+              "return60": 4.5,
+              "relativeStrength20": 4.84,
+              "volumeRatio": 1.04,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 50.5,
+              "action": "出場",
+              "ma5": 166.1,
+              "ma10": 169.7,
+              "ma20": 164.93,
+              "ma60": 159.77,
+              "ma120": 163.04,
+              "stopPrices": {
+                "MA20": 164.93,
+                "最近回檔低點": 154.0,
+                "固定 7%": 151.12
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "6026.TWO",
+              "name": "福邦證",
+              "industry": "金融-證券期貨",
+              "baseIndustry": "金融保險業",
+              "close": 15.7,
+              "price": 15.7,
+              "date": "2026-10-16",
+              "return5": -0.63,
+              "return20": 4.67,
+              "return60": 8.65,
+              "relativeStrength20": 4.67,
+              "volumeRatio": 0.74,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 50.4,
+              "action": "出場",
+              "ma5": 15.73,
+              "ma10": 15.81,
+              "ma20": 15.79,
+              "ma60": 14.98,
+              "ma120": 15.57,
+              "stopPrices": {
+                "MA20": 15.79,
+                "最近回檔低點": 15.05,
+                "固定 7%": 14.6
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "2645.TW",
+              "name": "長榮航太",
+              "industry": "航運-貨櫃",
+              "baseIndustry": "航運業",
+              "close": 171.0,
+              "price": 171.0,
+              "date": "2026-10-16",
+              "return5": -0.29,
+              "return20": 0.59,
+              "return60": -20.47,
+              "relativeStrength20": 0.59,
+              "volumeRatio": 1.26,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 50.2,
+              "action": "出場",
+              "ma5": 171.2,
+              "ma10": 171.9,
+              "ma20": 172.32,
+              "ma60": 178.46,
+              "ma120": 178.24,
+              "stopPrices": {
+                "MA20": 172.32,
+                "最近回檔低點": 168.5,
+                "固定 7%": 159.03
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "3025.TW",
+              "name": "星通",
+              "industry": "通信網路-網通設備",
+              "baseIndustry": "通信網路業",
+              "close": 54.5,
+              "price": 54.5,
+              "date": "2026-10-16",
+              "return5": -3.02,
+              "return20": 8.35,
+              "return60": -3.88,
+              "relativeStrength20": 8.35,
+              "volumeRatio": 0.5,
+              "signal": "減碼警示",
+              "bucket": "exit",
+              "score": 50.1,
+              "action": "減碼",
+              "ma5": 55.58,
+              "ma10": 56.33,
+              "ma20": 54.42,
+              "ma60": 54.22,
+              "ma120": 60.09,
+              "stopPrices": {
+                "MA20": 54.42,
+                "最近回檔低點": 50.1,
+                "固定 7%": 50.69
+              },
+              "positionSizing": {
+                "valid": true,
+                "riskAmount": 10000.0,
+                "positionValue": 200000.0,
+                "rawPositionValue": 6812539.0,
+                "shares": 3669,
+                "lots": 3,
+                "oddLot": 669,
+                "stopPrice": 54.42,
+                "maxLoss": 294.0,
+                "riskRewardTo8Pct": 54.5,
+                "firstTakeProfit": 58.86,
+                "secondTakeProfit": 62.67,
+                "exceedsSingleLimit": true,
+                "exceedsIndustryLimit": false
+              }
+            },
+            {
+              "code": "3213.TWO",
+              "name": "茂訊",
+              "industry": "電腦及週邊設備業",
+              "baseIndustry": "電腦及週邊設備業",
+              "close": 122.0,
+              "price": 122.0,
+              "date": "2026-10-16",
+              "return5": -1.21,
+              "return20": 0.83,
+              "return60": -2.79,
+              "relativeStrength20": 0.83,
+              "volumeRatio": 0.96,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 49.3,
+              "action": "出場",
+              "ma5": 123.1,
+              "ma10": 123.65,
+              "ma20": 124.05,
+              "ma60": 126.94,
+              "ma120": 124.92,
+              "stopPrices": {
+                "MA20": 124.05,
+                "最近回檔低點": 120.0,
+                "固定 7%": 113.46
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "3191.TWO",
+              "name": "雲嘉南",
+              "industry": "電子零組件業",
+              "baseIndustry": "電子零組件業",
+              "close": 16.7,
+              "price": 16.7,
+              "date": "2026-10-16",
+              "return5": -4.3,
+              "return20": 1.21,
+              "return60": -8.24,
+              "relativeStrength20": 1.21,
+              "volumeRatio": 1.17,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 49.1,
+              "action": "出場",
+              "ma5": 16.91,
+              "ma10": 17.15,
+              "ma20": 16.92,
+              "ma60": 17.55,
+              "ma120": 17.74,
+              "stopPrices": {
+                "MA20": 16.92,
+                "最近回檔低點": 16.3,
+                "固定 7%": 15.53
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "4304.TWO",
+              "name": "勝昱",
+              "industry": "塑膠工業",
+              "baseIndustry": "塑膠工業",
+              "close": 16.75,
+              "price": 16.75,
+              "date": "2026-10-16",
+              "return5": 0.6,
+              "return20": 8.06,
+              "return60": -6.94,
+              "relativeStrength20": 8.06,
+              "volumeRatio": 0.23,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 48.8,
+              "action": "出場",
+              "ma5": 16.81,
+              "ma10": 16.83,
+              "ma20": 17.22,
+              "ma60": 18.39,
+              "ma120": 21.76,
+              "stopPrices": {
+                "MA20": 17.22,
+                "最近回檔低點": 14.2,
+                "固定 7%": 15.58
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "3272.TWO",
+              "name": "東碩",
+              "industry": "電腦及週邊設備業",
+              "baseIndustry": "電腦及週邊設備業",
+              "close": 13.6,
+              "price": 13.6,
+              "date": "2026-10-16",
+              "return5": -2.16,
+              "return20": -3.2,
+              "return60": -9.93,
+              "relativeStrength20": -3.2,
+              "volumeRatio": 1.46,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 48.1,
+              "action": "出場",
+              "ma5": 13.87,
+              "ma10": 13.93,
+              "ma20": 13.95,
+              "ma60": 14.05,
+              "ma120": 15.46,
+              "stopPrices": {
+                "MA20": 13.95,
+                "最近回檔低點": 13.5,
+                "固定 7%": 12.65
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "2383.TW",
+              "name": "台光電",
+              "industry": "電子零組件-PCB",
+              "baseIndustry": "電子零組件業",
+              "close": 5165.0,
+              "price": 5165.0,
+              "date": "2026-10-16",
+              "return5": -13.92,
+              "return20": 0.98,
+              "return60": 6.94,
+              "relativeStrength20": 0.98,
+              "volumeRatio": 1.28,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 47.3,
+              "action": "出場",
+              "ma5": 5500.0,
+              "ma10": 5633.0,
+              "ma20": 5282.75,
+              "ma60": 5333.83,
+              "ma120": 5181.71,
+              "stopPrices": {
+                "MA20": 5282.75,
+                "最近回檔低點": 4635.0,
+                "固定 7%": 4803.45
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "4305.TWO",
+              "name": "世坤",
+              "industry": "塑膠工業",
+              "baseIndustry": "塑膠工業",
+              "close": 40.85,
+              "price": 40.85,
+              "date": "2026-10-16",
+              "return5": -0.24,
+              "return20": -2.74,
+              "return60": -1.09,
+              "relativeStrength20": -2.74,
+              "volumeRatio": 1.55,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 46.8,
+              "action": "出場",
+              "ma5": 40.81,
+              "ma10": 41.05,
+              "ma20": 41.57,
+              "ma60": 42.42,
+              "ma120": 42.98,
+              "stopPrices": {
+                "MA20": 41.57,
+                "最近回檔低點": 40.7,
+                "固定 7%": 37.99
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "3088.TWO",
+              "name": "艾訊",
+              "industry": "電腦及週邊設備業",
+              "baseIndustry": "電腦及週邊設備業",
+              "close": 122.5,
+              "price": 122.5,
+              "date": "2026-10-16",
+              "return5": -7.2,
+              "return20": 0,
+              "return60": -11.55,
+              "relativeStrength20": 0,
+              "volumeRatio": 0.9,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 46.0,
+              "action": "出場",
+              "ma5": 125.8,
+              "ma10": 129.7,
+              "ma20": 129.45,
+              "ma60": 129.43,
+              "ma120": 131.59,
+              "stopPrices": {
+                "MA20": 129.45,
+                "最近回檔低點": 121.5,
+                "固定 7%": 113.93
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "3071.TWO",
+              "name": "協禧",
+              "industry": "電腦及週邊設備業",
+              "baseIndustry": "電腦及週邊設備業",
+              "close": 21.95,
+              "price": 21.95,
+              "date": "2026-10-16",
+              "return5": -3.52,
+              "return20": -3.73,
+              "return60": -16.22,
+              "relativeStrength20": -3.73,
+              "volumeRatio": 1.3,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 45.4,
+              "action": "出場",
+              "ma5": 22.23,
+              "ma10": 22.49,
+              "ma20": 22.84,
+              "ma60": 24.17,
+              "ma120": 27.64,
+              "stopPrices": {
+                "MA20": 22.84,
+                "最近回檔低點": 21.6,
+                "固定 7%": 20.41
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "3019.TW",
+              "name": "亞光",
+              "industry": "光電-光學鏡頭",
+              "baseIndustry": "光電業",
+              "close": 134.5,
+              "price": 134.5,
+              "date": "2026-10-16",
+              "return5": -1.82,
+              "return20": 1.89,
+              "return60": -2.18,
+              "relativeStrength20": 1.89,
+              "volumeRatio": 0.91,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 45.4,
+              "action": "出場",
+              "ma5": 136.0,
+              "ma10": 137.65,
+              "ma20": 136.88,
+              "ma60": 136.37,
+              "ma120": 141.88,
+              "stopPrices": {
+                "MA20": 136.88,
+                "最近回檔低點": 132.5,
+                "固定 7%": 125.09
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "3714.TW",
+              "name": "富采",
+              "industry": "光電-LED",
+              "baseIndustry": "光電業",
+              "close": 63.4,
+              "price": 63.4,
+              "date": "2026-10-16",
+              "return5": -5.37,
+              "return20": 5.49,
+              "return60": 21.22,
+              "relativeStrength20": 5.49,
+              "volumeRatio": 0.55,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 45.2,
+              "action": "出場",
+              "ma5": 62.74,
+              "ma10": 65.41,
+              "ma20": 66.55,
+              "ma60": 60.77,
+              "ma120": 64.06,
+              "stopPrices": {
+                "MA20": 66.55,
+                "最近回檔低點": 60.3,
+                "固定 7%": 58.96
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "6023.TWO",
+              "name": "元大期",
+              "industry": "金融-證券期貨",
+              "baseIndustry": "金融保險業",
+              "close": 84.0,
+              "price": 84.0,
+              "date": "2026-10-16",
+              "return5": -0.12,
+              "return20": -0.47,
+              "return60": -3.23,
+              "relativeStrength20": -0.47,
+              "volumeRatio": 0.88,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 44.7,
+              "action": "出場",
+              "ma5": 83.54,
+              "ma10": 83.98,
+              "ma20": 85.3,
+              "ma60": 84.97,
+              "ma120": 86.08,
+              "stopPrices": {
+                "MA20": 85.3,
+                "最近回檔低點": 82.7,
+                "固定 7%": 78.12
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "2022.TW",
+              "name": "聚亨",
+              "industry": "鋼鐵-不鏽鋼扣件",
+              "baseIndustry": "鋼鐵工業",
+              "close": 7.06,
+              "price": 7.06,
+              "date": "2026-10-16",
+              "return5": -1.26,
+              "return20": -1.81,
+              "return60": -8.67,
+              "relativeStrength20": -1.81,
+              "volumeRatio": 1.21,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 42.5,
+              "action": "出場",
+              "ma5": 7.09,
+              "ma10": 7.16,
+              "ma20": 7.18,
+              "ma60": 7.47,
+              "ma120": 7.67,
+              "stopPrices": {
+                "MA20": 7.18,
+                "最近回檔低點": 6.95,
+                "固定 7%": 6.57
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "2419.TW",
+              "name": "仲琦",
+              "industry": "通信網路-網通設備",
+              "baseIndustry": "通信網路業",
+              "close": 27.7,
+              "price": 27.7,
+              "date": "2026-10-16",
+              "return5": 2.59,
+              "return20": 4.14,
+              "return60": 8.2,
+              "relativeStrength20": 4.14,
+              "volumeRatio": 0.3,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 42.3,
+              "action": "出場",
+              "ma5": 27.41,
+              "ma10": 27.57,
+              "ma20": 28.21,
+              "ma60": 26.19,
+              "ma120": 27.82,
+              "stopPrices": {
+                "MA20": 28.21,
+                "最近回檔低點": 26.8,
+                "固定 7%": 25.76
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "3206.TWO",
+              "name": "志豐",
+              "industry": "電子零組件業",
+              "baseIndustry": "電子零組件業",
+              "close": 33.8,
+              "price": 33.8,
+              "date": "2026-10-16",
+              "return5": -1.17,
+              "return20": -2.59,
+              "return60": -4.79,
+              "relativeStrength20": -2.59,
+              "volumeRatio": 0.94,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 42.2,
+              "action": "出場",
+              "ma5": 34.0,
+              "ma10": 34.04,
+              "ma20": 34.44,
+              "ma60": 34.22,
+              "ma120": 35.85,
+              "stopPrices": {
+                "MA20": 34.44,
+                "最近回檔低點": 33.6,
+                "固定 7%": 31.43
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "6803.TWO",
+              "name": "崑鼎",
+              "industry": "綠能環保",
+              "baseIndustry": "綠能環保",
+              "close": 261.5,
+              "price": 261.5,
+              "date": "2026-10-16",
+              "return5": -1.32,
+              "return20": -2.79,
+              "return60": -3.68,
+              "relativeStrength20": -2.79,
+              "volumeRatio": 1.13,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 41.7,
+              "action": "出場",
+              "ma5": 262.1,
+              "ma10": 263.3,
+              "ma20": 265.12,
+              "ma60": 268.43,
+              "ma120": 276.65,
+              "stopPrices": {
+                "MA20": 265.12,
+                "最近回檔低點": 260.0,
+                "固定 7%": 243.2
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "2395.TW",
+              "name": "研華",
+              "industry": "電腦週邊-品牌通路",
+              "baseIndustry": "電腦及週邊設備業",
+              "close": 685.0,
+              "price": 685.0,
+              "date": "2026-10-16",
+              "return5": -5.78,
+              "return20": 0,
+              "return60": 20.81,
+              "relativeStrength20": 0,
+              "volumeRatio": 0.97,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 41.7,
+              "action": "出場",
+              "ma5": 707.2,
+              "ma10": 719.0,
+              "ma20": 713.6,
+              "ma60": 669.17,
+              "ma120": 573.77,
+              "stopPrices": {
+                "MA20": 713.6,
+                "最近回檔低點": 676.0,
+                "固定 7%": 637.05
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "3115.TWO",
+              "name": "富榮綱",
+              "industry": "電子零組件業",
+              "baseIndustry": "電子零組件業",
+              "close": 8.17,
+              "price": 8.17,
+              "date": "2026-10-16",
+              "return5": 2.13,
+              "return20": -2.27,
+              "return60": -1.92,
+              "relativeStrength20": -2.27,
+              "volumeRatio": 0.58,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 40.4,
+              "action": "出場",
+              "ma5": 8.12,
+              "ma10": 8.19,
+              "ma20": 8.2,
+              "ma60": 8.72,
+              "ma120": 8.9,
+              "stopPrices": {
+                "MA20": 8.2,
+                "最近回檔低點": 7.58,
+                "固定 7%": 7.6
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "3211.TWO",
+              "name": "順達",
+              "industry": "電腦及週邊設備業",
+              "baseIndustry": "電腦及週邊設備業",
+              "close": 346.0,
+              "price": 346.0,
+              "date": "2026-10-16",
+              "return5": -10.82,
+              "return20": -4.16,
+              "return60": -8.95,
+              "relativeStrength20": -4.16,
+              "volumeRatio": 0.62,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 36.8,
+              "action": "出場",
+              "ma5": 359.9,
+              "ma10": 376.8,
+              "ma20": 378.8,
+              "ma60": 369.53,
+              "ma120": 387.74,
+              "stopPrices": {
+                "MA20": 378.8,
+                "最近回檔低點": 342.5,
+                "固定 7%": 321.78
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "6692.TWO",
+              "name": "進能服",
+              "industry": "綠能環保",
+              "baseIndustry": "綠能環保",
+              "close": 22.25,
+              "price": 22.25,
+              "date": "2026-10-16",
+              "return5": -2.41,
+              "return20": -5.12,
+              "return60": -6.71,
+              "relativeStrength20": -5.12,
+              "volumeRatio": 0.76,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 34.9,
+              "action": "出場",
+              "ma5": 22.45,
+              "ma10": 22.57,
+              "ma20": 22.91,
+              "ma60": 23.34,
+              "ma120": 25.33,
+              "stopPrices": {
+                "MA20": 22.91,
+                "最近回檔低點": 22.0,
+                "固定 7%": 20.69
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            },
+            {
+              "code": "4303.TWO",
+              "name": "信立",
+              "industry": "塑膠工業",
+              "baseIndustry": "塑膠工業",
+              "close": 31.95,
+              "price": 31.95,
+              "date": "2026-10-16",
+              "return5": 0.95,
+              "return20": -8.32,
+              "return60": 2.01,
+              "relativeStrength20": -8.32,
+              "volumeRatio": 0.96,
+              "signal": "出場警示",
+              "bucket": "exit",
+              "score": 33.9,
+              "action": "出場",
+              "ma5": 31.9,
+              "ma10": 31.9,
+              "ma20": 33.16,
+              "ma60": 33.87,
+              "ma120": 34.06,
+              "stopPrices": {
+                "MA20": 33.16,
+                "最近回檔低點": 31.15,
+                "固定 7%": 29.71
+              },
+              "positionSizing": {
+                "valid": false,
+                "message": "停損價高於或等於進場價，無法計算部位。"
+              }
+            }
+          ]
         },
         "rerun": {
           "githubActions": "Actions > Daily Stock Scan > Run workflow，可選只重跑台股聖杯與美股產業資料。",
@@ -625837,29 +628161,29 @@
         "status": "needs_sponsor",
         "source": "FinMind TaiwanStockTradingDailyReport",
         "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-        "generatedAt": "2026-10-16 22:23:27",
+        "generatedAt": "2026-10-17 00:59:00",
         "date": "2026-10-16",
         "targets": 36,
         "items": [],
         "errors": [
+          {
+            "code": "2027",
+            "name": "大成鋼",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
           {
             "code": "6269",
             "name": "台郡",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "3008",
-            "name": "大立光",
+            "code": "2377",
+            "name": "微星",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "1216",
-            "name": "統一",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "2368",
-            "name": "金像電",
+            "code": "2023",
+            "name": "燁輝",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
@@ -625868,28 +628192,28 @@
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "2454",
-            "name": "聯發科",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "3037",
-            "name": "欣興",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
             "code": "2010",
             "name": "春源",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "2308",
-            "name": "台達電",
+            "code": "1216",
+            "name": "統一",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "5274",
-            "name": "信驊",
+            "code": "2882",
+            "name": "國泰金",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "3017",
+            "name": "奇鋐",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "1303",
+            "name": "南亞",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           }
         ]
