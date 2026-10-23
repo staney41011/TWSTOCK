@@ -634716,7 +634716,7 @@
         "title": "Druckenmiller 風格雷達",
         "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
         "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-10-23 20:50:19",
+        "generatedAt": "2026-10-23 23:43:01",
         "targetDate": "2026-10-23",
         "status": "ok",
         "market": {
@@ -634771,15 +634771,6 @@
             "signals": 1,
             "sources": [
               "主動 ETF"
-            ]
-          },
-          {
-            "name": "半導體-設備材料",
-            "score": -12.0,
-            "netAmount": 0.0,
-            "signals": 1,
-            "sources": [
-              "聖杯出場警示"
             ]
           }
         ],
@@ -634960,7 +634951,7 @@
         "title": "台股聖杯雷達",
         "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
         "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-        "generatedAt": "2026-10-23 20:50:19",
+        "generatedAt": "2026-10-23 23:43:00",
         "targetDate": "2026-10-23",
         "dataSource": "twstock universe + yfinance history",
         "market": {
@@ -634977,138 +634968,14 @@
           "maxIndustryExposure": 0.4,
           "stopMode": "MA20"
         },
-        "industries": [
-          {
-            "industry": "電腦週邊-伺服器AI",
-            "baseIndustries": [
-              "電腦及週邊設備業"
-            ],
-            "return5": 0.025423728813559324,
-            "return20": -0.011437920820474054,
-            "return60": 0.02891157797614348,
-            "volumeRatio": 1.1781463309373115,
-            "relativeStrength20": -0.011437920820474054,
-            "stockCount": 1,
-            "industryScore": 77.0,
-            "status": "轉強觀察",
-            "rank": 1
-          },
-          {
-            "industry": "半導體-設備材料",
-            "baseIndustries": [
-              "半導體業"
-            ],
-            "return5": -0.10638297872340426,
-            "return20": 0.037037037037037035,
-            "return60": 0.3097713097713098,
-            "volumeRatio": 0.592463357403169,
-            "relativeStrength20": 0.037037037037037035,
-            "stockCount": 1,
-            "industryScore": 69.0,
-            "status": "轉強觀察",
-            "rank": 2
-          },
-          {
-            "industry": "通信網路-網通設備",
-            "baseIndustries": [
-              "通信網路業"
-            ],
-            "return5": -0.010830365925857987,
-            "return20": -0.0632478762895633,
-            "return60": 0.16595743057575632,
-            "volumeRatio": 0.6295388893546292,
-            "relativeStrength20": -0.0632478762895633,
-            "stockCount": 1,
-            "industryScore": 51.0,
-            "status": "中性",
-            "rank": 3
-          },
-          {
-            "industry": "食品工業",
-            "baseIndustries": [
-              "食品工業"
-            ],
-            "return5": -0.02066115637342102,
-            "return20": -0.05199996948242187,
-            "return60": 0.1285714649018787,
-            "volumeRatio": 0.46247019344567625,
-            "relativeStrength20": -0.05199996948242187,
-            "stockCount": 1,
-            "industryScore": 45.0,
-            "status": "弱勢避開",
-            "rank": 4
-          },
-          {
-            "industry": "通信網路業",
-            "baseIndustries": [
-              "通信網路業"
-            ],
-            "return5": -0.02682556577192021,
-            "return20": -0.01804506689085996,
-            "return60": -0.1385224218636295,
-            "volumeRatio": 1.9391997627514475,
-            "relativeStrength20": -0.01804506689085996,
-            "stockCount": 1,
-            "industryScore": 42.0,
-            "status": "弱勢避開",
-            "rank": 5
-          },
-          {
-            "industry": "建材營造業",
-            "baseIndustries": [
-              "建材營造業"
-            ],
-            "return5": -0.02439026983732244,
-            "return20": -0.07166976640313598,
-            "return60": -0.028777986251891086,
-            "volumeRatio": 0.5276516513703027,
-            "relativeStrength20": -0.07166976640313598,
-            "stockCount": 2,
-            "industryScore": 16.0,
-            "status": "弱勢避開",
-            "rank": 6
-          }
-        ],
+        "industries": [],
         "usIndustries": [],
         "usTaiwanMatches": [],
         "candidates": {
           "breakout": [],
           "pullback": [],
           "overheated": [],
-          "exit": [
-            {
-              "code": "6187.TWO",
-              "name": "萬潤",
-              "industry": "半導體-設備材料",
-              "baseIndustry": "半導體業",
-              "close": 1260.0,
-              "price": 1260.0,
-              "date": "2026-10-23",
-              "return5": -10.64,
-              "return20": 3.7,
-              "return60": 30.98,
-              "relativeStrength20": 3.7,
-              "volumeRatio": 0.59,
-              "signal": "出場警示",
-              "bucket": "exit",
-              "score": 41.0,
-              "action": "出場",
-              "ma5": 1315.0,
-              "ma10": 1419.0,
-              "ma20": 1396.25,
-              "ma60": 1278.82,
-              "ma120": 1186.28,
-              "stopPrices": {
-                "MA20": 1396.25,
-                "最近回檔低點": 1180.0,
-                "固定 7%": 1171.8
-              },
-              "positionSizing": {
-                "valid": false,
-                "message": "停損價高於或等於進場價，無法計算部位。"
-              }
-            }
-          ]
+          "exit": []
         },
         "rerun": {
           "githubActions": "Actions > Daily Stock Scan > Run workflow，可選只重跑台股聖杯與美股產業資料。",
@@ -635132,39 +634999,14 @@
         "status": "needs_sponsor",
         "source": "FinMind TaiwanStockTradingDailyReport",
         "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-        "generatedAt": "2026-10-23 20:50:21",
+        "generatedAt": "2026-10-23 23:43:02",
         "date": "2026-10-23",
-        "targets": 10,
+        "targets": 9,
         "items": [],
         "errors": [
           {
-            "code": "3037",
-            "name": "欣興",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "6274",
-            "name": "台燿",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
             "code": "1526",
             "name": "日馳",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "3017",
-            "name": "奇鋐",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "3711",
-            "name": "日月光投控",
-            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-          },
-          {
-            "code": "3653",
-            "name": "健策",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
@@ -635173,18 +635015,38 @@
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
+            "code": "3711",
+            "name": "日月光投控",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "3017",
+            "name": "奇鋐",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "3037",
+            "name": "欣興",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
+            "code": "3653",
+            "name": "健策",
+            "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+          },
+          {
             "code": "1303",
             "name": "南亞",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "2327",
-            "name": "國巨*",
+            "code": "6274",
+            "name": "台燿",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           },
           {
-            "code": "6187",
-            "name": "萬潤",
+            "code": "2327",
+            "name": "國巨*",
             "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
           }
         ]
