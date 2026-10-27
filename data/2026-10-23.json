@@ -75,55 +75,6 @@
           "MACD(21,55,89) 柱狀體於 2026-10-22 由綠翻紅",
           "目前為翻紅第2天，柱狀體 0.0861"
         ]
-      },
-      {
-        "code": "6732.TWO",
-        "name": "昇佳電子",
-        "region": "TW",
-        "price": 149.5,
-        "date": "2026-10-23",
-        "fundamentals": {
-          "pe": 999,
-          "growth": null,
-          "rev_yoy": null,
-          "rev_qoq": null,
-          "quarters": []
-        },
-        "pattern": "MACD翻紅第2天",
-        "macd_day": 2,
-        "macd_label": "第2天",
-        "cross_date": "2026-10-22",
-        "dif": -2.8206,
-        "macd_signal": -2.8482,
-        "histogram": 0.0277,
-        "histogram_prev": 0.0035,
-        "histogram_cross": 0.0035,
-        "hist_sequence": [
-          {
-            "date": "2026-10-19",
-            "value": -0.1708
-          },
-          {
-            "date": "2026-10-20",
-            "value": -0.1499
-          },
-          {
-            "date": "2026-10-21",
-            "value": -0.0141
-          },
-          {
-            "date": "2026-10-22",
-            "value": 0.0035
-          },
-          {
-            "date": "2026-10-23",
-            "value": 0.0277
-          }
-        ],
-        "reasons": [
-          "MACD(21,55,89) 柱狀體於 2026-10-22 由綠翻紅",
-          "目前為翻紅第2天，柱狀體 0.0277"
-        ]
       }
     ],
     "active_etf": [
@@ -452,7 +403,7 @@
       "title": "Druckenmiller 風格雷達",
       "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
       "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-10-26 20:52:49",
+      "generatedAt": "2026-10-27 00:12:43",
       "targetDate": "2026-10-23",
       "status": "ok",
       "market": {
@@ -507,15 +458,6 @@
           "signals": 1,
           "sources": [
             "主動 ETF"
-          ]
-        },
-        {
-          "name": "橡膠工業",
-          "score": -12.0,
-          "netAmount": 0.0,
-          "signals": 1,
-          "sources": [
-            "聖杯出場警示"
           ]
         }
       ],
@@ -696,7 +638,7 @@
       "title": "台股聖杯雷達",
       "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
       "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-10-26 20:52:49",
+      "generatedAt": "2026-10-27 00:12:42",
       "targetDate": "2026-10-23",
       "dataSource": "twstock universe + yfinance history",
       "market": {
@@ -713,78 +655,14 @@
         "maxIndustryExposure": 0.4,
         "stopMode": "MA20"
       },
-      "industries": [
-        {
-          "industry": "橡膠工業",
-          "baseIndustries": [
-            "橡膠工業"
-          ],
-          "return5": -0.02289500375534041,
-          "return20": 0.0350815917273178,
-          "return60": 0.04681367978869117,
-          "volumeRatio": 0.701503780876445,
-          "relativeStrength20": 0.0350815917273178,
-          "stockCount": 2,
-          "industryScore": 65.0,
-          "status": "轉強觀察",
-          "rank": 1
-        },
-        {
-          "industry": "汽車工業",
-          "baseIndustries": [
-            "汽車工業"
-          ],
-          "return5": 0.008025682281269817,
-          "return20": -0.027863765937728786,
-          "return60": -0.06962964093243634,
-          "volumeRatio": 1.1203700775663064,
-          "relativeStrength20": -0.027863765937728786,
-          "stockCount": 1,
-          "industryScore": 35.0,
-          "status": "弱勢避開",
-          "rank": 2
-        }
-      ],
+      "industries": [],
       "usIndustries": [],
       "usTaiwanMatches": [],
       "candidates": {
         "breakout": [],
         "pullback": [],
         "overheated": [],
-        "exit": [
-          {
-            "code": "2108.TW",
-            "name": "南帝",
-            "industry": "橡膠工業",
-            "baseIndustry": "橡膠工業",
-            "close": 28.7,
-            "price": 28.7,
-            "date": "2026-10-23",
-            "return5": -3.04,
-            "return20": 0.35,
-            "return60": 5.13,
-            "relativeStrength20": 0.35,
-            "volumeRatio": 0.44,
-            "signal": "出場警示",
-            "bucket": "exit",
-            "score": 39.0,
-            "action": "出場",
-            "ma5": 28.88,
-            "ma10": 29.31,
-            "ma20": 29.04,
-            "ma60": 29.1,
-            "ma120": 28.69,
-            "stopPrices": {
-              "MA20": 29.04,
-              "最近回檔低點": 28.1,
-              "固定 7%": 26.69
-            },
-            "positionSizing": {
-              "valid": false,
-              "message": "停損價高於或等於進場價，無法計算部位。"
-            }
-          }
-        ]
+        "exit": []
       },
       "rerun": {
         "githubActions": "Actions > Daily Stock Scan > Run workflow，可選只重跑台股聖杯與美股產業資料。",
@@ -808,14 +686,34 @@
       "status": "needs_sponsor",
       "source": "FinMind TaiwanStockTradingDailyReport",
       "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-      "generatedAt": "2026-10-26 20:52:50",
+      "generatedAt": "2026-10-27 00:12:44",
       "date": "2026-10-23",
-      "targets": 11,
+      "targets": 9,
       "items": [],
       "errors": [
         {
-          "code": "6732",
-          "name": "昇佳電子",
+          "code": "3711",
+          "name": "日月光投控",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "1303",
+          "name": "南亞",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "3653",
+          "name": "健策",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "6274",
+          "name": "台燿",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "3037",
+          "name": "欣興",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
@@ -829,38 +727,13 @@
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "6274",
-          "name": "台燿",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "1303",
-          "name": "南亞",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
           "code": "3017",
           "name": "奇鋐",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "3711",
-          "name": "日月光投控",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "3037",
-          "name": "欣興",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
           "code": "2327",
           "name": "國巨*",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "3653",
-          "name": "健策",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         }
       ]
