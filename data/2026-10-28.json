@@ -1,6 +1,6 @@
 {
   "date": "2026-10-28",
-  "market_breadth": 3.13,
+  "market_breadth": 3.37,
   "strategies": {
     "momentum": [
       {
@@ -373,6 +373,25 @@
           "(基礎) 創季新高 +3分",
           "(基礎) 量增1.2倍"
         ]
+      },
+      {
+        "code": "2393.TW",
+        "name": "億光",
+        "region": "TW",
+        "price": 69.0,
+        "date": "2026-10-28",
+        "fundamentals": {
+          "pe": 999,
+          "growth": null,
+          "rev_yoy": null,
+          "rev_qoq": null,
+          "quarters": []
+        },
+        "score": 3,
+        "reasons": [
+          "(基礎) 創季新高 +3分",
+          "(基礎) 量增1.2倍"
+        ]
       }
     ],
     "day_trading": [],
@@ -415,6 +434,31 @@
         "pattern": "標準十字星",
         "vol_ratio": 101.8,
         "vol_avg_val": 6.8,
+        "trend": "多頭整理",
+        "reasons": [
+          "結構+十字星成立 (60分)",
+          "流動性極佳 (+5)",
+          "量能平穩 (+5)",
+          "均線多頭排列 (+5)"
+        ]
+      },
+      {
+        "code": "2801.TW",
+        "name": "彰銀",
+        "region": "TW",
+        "price": 29.95,
+        "date": "2026-10-28",
+        "fundamentals": {
+          "pe": 999,
+          "growth": null,
+          "rev_yoy": null,
+          "rev_qoq": null,
+          "quarters": []
+        },
+        "score": 75,
+        "pattern": "標準十字星",
+        "vol_ratio": 95.2,
+        "vol_avg_val": 4.5,
         "trend": "多頭整理",
         "reasons": [
           "結構+十字星成立 (60分)",
@@ -1192,405 +1236,39 @@
     ],
     "active_etf": [
       {
-        "code": "2330",
-        "name": "台積電",
-        "industry": "半導體業",
-        "side": "buy",
-        "buy_count": 4,
-        "sell_count": 0,
-        "same_side_count": 4,
-        "etf_count": 4,
-        "net_signal": 4,
-        "net_shares": 817000,
-        "net_amount": 1981225000,
-        "buy_amount": 1981225000,
-        "sell_amount": 0,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 410000,
-            "amount": 994250000
-          },
-          {
-            "etf_code": "00410A",
-            "etf_name": "主動永豐科技趨勢",
-            "issuer": "永豐",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 10000,
-            "amount": 24250000
-          },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 22000,
-            "amount": 53350000
-          },
-          {
-            "etf_code": "00981A",
-            "etf_name": "主動統一台股增長",
-            "issuer": "統一",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 375000,
-            "amount": 909375000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
         "code": "3711",
         "name": "日月光投控",
         "industry": "半導體業",
         "side": "buy",
-        "buy_count": 5,
+        "buy_count": 3,
         "sell_count": 0,
-        "same_side_count": 5,
-        "etf_count": 5,
-        "net_signal": 5,
-        "net_shares": 2156000,
-        "net_amount": 1498420000,
-        "buy_amount": 1498420000,
+        "same_side_count": 3,
+        "etf_count": 3,
+        "net_signal": 3,
+        "net_shares": 2514000,
+        "net_amount": 1747230000,
+        "buy_amount": 1747230000,
         "sell_amount": 0,
         "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00403A",
-            "etf_name": "主動統一升級50",
-            "issuer": "統一",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 399000,
-            "amount": 277305000
-          },
-          {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 350000,
-            "amount": 243250000
-          },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 34000,
-            "amount": 23630000
-          },
-          {
-            "etf_code": "00981A",
-            "etf_name": "主動統一台股增長",
-            "issuer": "統一",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 1073000,
-            "amount": 745735000
-          },
-          {
-            "etf_code": "00991A",
-            "etf_name": "主動復華未來50",
-            "issuer": "復華",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 300000,
-            "amount": 208500000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "3037",
-        "name": "欣興",
-        "industry": "電子零組件業",
-        "side": "buy",
-        "buy_count": 3,
-        "sell_count": 1,
-        "same_side_count": 3,
-        "etf_count": 4,
-        "net_signal": 2,
-        "net_shares": 1214000,
-        "net_amount": 1335400000,
-        "buy_amount": 1343100000,
-        "sell_amount": -7700000,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
+        "updated_at": "2026-10-28",
         "details": [
           {
             "etf_code": "00401A",
             "etf_name": "主動摩根台灣鑫收",
             "issuer": "摩根",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -7000,
-            "amount": -7700000
+            "side": "buy",
+            "action": "increased",
+            "shares_delta": 38000,
+            "amount": 26410000
           },
-          {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 800000,
-            "amount": 880000000
-          },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 21000,
-            "amount": 23100000
-          },
-          {
-            "etf_code": "00982A",
-            "etf_name": "主動群益台灣強棒",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "added",
-            "shares_delta": 400000,
-            "amount": 440000000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "2454",
-        "name": "聯發科",
-        "industry": "半導體業",
-        "side": "buy",
-        "buy_count": 3,
-        "sell_count": 0,
-        "same_side_count": 3,
-        "etf_count": 3,
-        "net_signal": 3,
-        "net_shares": 273000,
-        "net_amount": 1156155000,
-        "buy_amount": 1156155000,
-        "sell_amount": 0,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 180000,
-            "amount": 762300000
-          },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 3000,
-            "amount": 12705000
-          },
-          {
-            "etf_code": "00981A",
-            "etf_name": "主動統一台股增長",
-            "issuer": "統一",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 90000,
-            "amount": 381150000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "3653",
-        "name": "健策",
-        "industry": "電子零組件業",
-        "side": "buy",
-        "buy_count": 2,
-        "sell_count": 1,
-        "same_side_count": 2,
-        "etf_count": 3,
-        "net_signal": 1,
-        "net_shares": 152000,
-        "net_amount": 969000000,
-        "buy_amount": 981750000,
-        "sell_amount": -12750000,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 150000,
-            "amount": 956250000
-          },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 4000,
-            "amount": 25500000
-          },
-          {
-            "etf_code": "00996A",
-            "etf_name": "主動兆豐台灣豐收",
-            "issuer": "兆豐",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -2000,
-            "amount": -12750000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "1303",
-        "name": "南亞",
-        "industry": "塑膠工業",
-        "side": "buy",
-        "buy_count": 5,
-        "sell_count": 0,
-        "same_side_count": 5,
-        "etf_count": 5,
-        "net_signal": 5,
-        "net_shares": 2163000,
-        "net_amount": 689997000,
-        "buy_amount": 689997000,
-        "sell_amount": 0,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 1500000,
-            "amount": 478500000
-          },
-          {
-            "etf_code": "00407A",
-            "etf_name": "主動凱基台灣",
-            "issuer": "凱基",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 400000,
-            "amount": 127600000
-          },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 39000,
-            "amount": 12441000
-          },
-          {
-            "etf_code": "00991A",
-            "etf_name": "主動復華未來50",
-            "issuer": "復華",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 200000,
-            "amount": 63800000
-          },
-          {
-            "etf_code": "00995A",
-            "etf_name": "主動中信台灣卓越",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 24000,
-            "amount": 7656000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "3017",
-        "name": "奇鋐",
-        "industry": "電腦及週邊設備業",
-        "side": "buy",
-        "buy_count": 4,
-        "sell_count": 1,
-        "same_side_count": 4,
-        "etf_count": 5,
-        "net_signal": 3,
-        "net_shares": 214000,
-        "net_amount": 688010000,
-        "buy_amount": 1170260000,
-        "sell_amount": -482250000,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
           {
             "etf_code": "00403A",
             "etf_name": "主動統一升級50",
             "issuer": "統一",
             "side": "buy",
             "action": "increased",
-            "shares_delta": 55000,
-            "amount": 176825000
-          },
-          {
-            "etf_code": "00405A",
-            "etf_name": "主動富邦台灣龍耀",
-            "issuer": "富邦",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -150000,
-            "amount": -482250000
-          },
-          {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 225000,
-            "amount": 723375000
-          },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 4000,
-            "amount": 12860000
+            "shares_delta": 500000,
+            "amount": 347500000
           },
           {
             "etf_code": "00981A",
@@ -1598,8 +1276,8 @@
             "issuer": "統一",
             "side": "buy",
             "action": "increased",
-            "shares_delta": 80000,
-            "amount": 257200000
+            "shares_delta": 1976000,
+            "amount": 1373320000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -1611,146 +1289,17 @@
         "name": "金像電",
         "industry": "電子零組件業",
         "side": "buy",
-        "buy_count": 2,
-        "sell_count": 0,
-        "same_side_count": 2,
-        "etf_count": 2,
-        "net_signal": 2,
-        "net_shares": 490000,
-        "net_amount": 580650000,
-        "buy_amount": 580650000,
-        "sell_amount": 0,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 410000,
-            "amount": 485850000
-          },
-          {
-            "etf_code": "00981A",
-            "etf_name": "主動統一台股增長",
-            "issuer": "統一",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 80000,
-            "amount": 94800000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "8046",
-        "name": "南電",
-        "industry": "電子零組件業",
-        "side": "buy",
-        "buy_count": 2,
-        "sell_count": 0,
-        "same_side_count": 2,
-        "etf_count": 2,
-        "net_signal": 2,
-        "net_shares": 439000,
-        "net_amount": 570700000,
-        "buy_amount": 570700000,
-        "sell_amount": 0,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 430000,
-            "amount": 559000000
-          },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 9000,
-            "amount": 11700000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "6223",
-        "name": "旺矽",
-        "industry": "半導體業",
-        "side": "buy",
-        "buy_count": 2,
-        "sell_count": 1,
-        "same_side_count": 2,
-        "etf_count": 3,
-        "net_signal": 1,
-        "net_shares": 97000,
-        "net_amount": 464630000,
-        "buy_amount": 584380000,
-        "sell_amount": -119750000,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 120000,
-            "amount": 574800000
-          },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 2000,
-            "amount": 9580000
-          },
-          {
-            "etf_code": "00980A",
-            "etf_name": "主動野村臺灣優選",
-            "issuer": "野村",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -25000,
-            "amount": -119750000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "3081",
-        "name": "聯亞",
-        "industry": "通信網路業",
-        "side": "buy",
         "buy_count": 4,
         "sell_count": 0,
         "same_side_count": 4,
         "etf_count": 4,
         "net_signal": 4,
-        "net_shares": 185000,
-        "net_amount": 462500000,
-        "buy_amount": 462500000,
+        "net_shares": 757000,
+        "net_amount": 897045000,
+        "buy_amount": 897045000,
         "sell_amount": 0,
         "date": "2026-10-28",
-        "updated_at": "2026-10-27",
+        "updated_at": "2026-10-28",
         "details": [
           {
             "etf_code": "00406A",
@@ -1758,8 +1307,8 @@
             "issuer": "中國信託",
             "side": "buy",
             "action": "increased",
-            "shares_delta": 123000,
-            "amount": 307500000
+            "shares_delta": 47000,
+            "amount": 55695000
           },
           {
             "etf_code": "00407A",
@@ -1767,26 +1316,26 @@
             "issuer": "凱基",
             "side": "buy",
             "action": "increased",
-            "shares_delta": 40000,
-            "amount": 100000000
+            "shares_delta": 29000,
+            "amount": 34365000
           },
           {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
+            "etf_code": "00981A",
+            "etf_name": "主動統一台股增長",
+            "issuer": "統一",
             "side": "buy",
             "action": "increased",
-            "shares_delta": 10000,
-            "amount": 25000000
+            "shares_delta": 657000,
+            "amount": 778545000
           },
           {
             "etf_code": "00995A",
             "etf_name": "主動中信台灣卓越",
             "issuer": "中國信託",
             "side": "buy",
-            "action": "added",
-            "shares_delta": 12000,
-            "amount": 30000000
+            "action": "increased",
+            "shares_delta": 24000,
+            "amount": 28440000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -1794,79 +1343,39 @@
         "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
       },
       {
-        "code": "6278",
-        "name": "台表科",
-        "industry": "光電業",
-        "side": "mixed",
-        "buy_count": 1,
-        "sell_count": 1,
-        "same_side_count": 1,
-        "etf_count": 2,
-        "net_signal": 0,
-        "net_shares": 1326000,
-        "net_amount": 378573000,
-        "buy_amount": 408265000,
-        "sell_amount": -29692000,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "added",
-            "shares_delta": 1430000,
-            "amount": 408265000
-          },
-          {
-            "etf_code": "00996A",
-            "etf_name": "主動兆豐台灣豐收",
-            "issuer": "兆豐",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -104000,
-            "amount": -29692000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "2383",
-        "name": "台光電",
-        "industry": "電子零組件業",
+        "code": "3443",
+        "name": "創意",
+        "industry": "半導體業",
         "side": "buy",
         "buy_count": 2,
         "sell_count": 0,
         "same_side_count": 2,
         "etf_count": 2,
         "net_signal": 2,
-        "net_shares": 74000,
-        "net_amount": 371850000,
-        "buy_amount": 371850000,
+        "net_shares": 101000,
+        "net_amount": 825170000,
+        "buy_amount": 825170000,
         "sell_amount": 0,
         "date": "2026-10-28",
-        "updated_at": "2026-10-27",
+        "updated_at": "2026-10-28",
         "details": [
           {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
+            "etf_code": "00403A",
+            "etf_name": "主動統一升級50",
+            "issuer": "統一",
             "side": "buy",
             "action": "increased",
-            "shares_delta": 70000,
-            "amount": 351750000
+            "shares_delta": 30000,
+            "amount": 245100000
           },
           {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
+            "etf_code": "00981A",
+            "etf_name": "主動統一台股增長",
+            "issuer": "統一",
             "side": "buy",
             "action": "increased",
-            "shares_delta": 4000,
-            "amount": 20100000
+            "shares_delta": 71000,
+            "amount": 580070000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -1883,39 +1392,39 @@
         "same_side_count": 3,
         "etf_count": 3,
         "net_signal": 3,
-        "net_shares": 22000,
-        "net_amount": 352330000,
-        "buy_amount": 352330000,
+        "net_shares": 40000,
+        "net_amount": 691800000,
+        "buy_amount": 691800000,
         "sell_amount": 0,
         "date": "2026-10-28",
-        "updated_at": "2026-10-27",
+        "updated_at": "2026-10-28",
         "details": [
           {
-            "etf_code": "00403A",
-            "etf_name": "主動統一升級50",
+            "etf_code": "00405A",
+            "etf_name": "主動富邦台灣龍耀",
+            "issuer": "富邦",
+            "side": "buy",
+            "action": "increased",
+            "shares_delta": 12000,
+            "amount": 207540000
+          },
+          {
+            "etf_code": "00407A",
+            "etf_name": "主動凱基台灣",
+            "issuer": "凱基",
+            "side": "buy",
+            "action": "increased",
+            "shares_delta": 6000,
+            "amount": 103770000
+          },
+          {
+            "etf_code": "00981A",
+            "etf_name": "主動統一台股增長",
             "issuer": "統一",
             "side": "buy",
             "action": "increased",
-            "shares_delta": 14000,
-            "amount": 224210000
-          },
-          {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 7000,
-            "amount": 112105000
-          },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 1000,
-            "amount": 16015000
+            "shares_delta": 22000,
+            "amount": 380490000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -1923,8 +1432,8 @@
         "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
       },
       {
-        "code": "3189",
-        "name": "景碩",
+        "code": "2454",
+        "name": "聯發科",
         "industry": "半導體業",
         "side": "buy",
         "buy_count": 2,
@@ -1932,30 +1441,30 @@
         "same_side_count": 2,
         "etf_count": 2,
         "net_signal": 2,
-        "net_shares": 311000,
-        "net_amount": 321885000,
-        "buy_amount": 321885000,
+        "net_shares": 103000,
+        "net_amount": 436205000,
+        "buy_amount": 436205000,
         "sell_amount": 0,
         "date": "2026-10-28",
-        "updated_at": "2026-10-27",
+        "updated_at": "2026-10-28",
         "details": [
           {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
+            "etf_code": "00403A",
+            "etf_name": "主動統一升級50",
+            "issuer": "統一",
             "side": "buy",
             "action": "increased",
-            "shares_delta": 300000,
-            "amount": 310500000
+            "shares_delta": 30000,
+            "amount": 127050000
           },
           {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
+            "etf_code": "00981A",
+            "etf_name": "主動統一台股增長",
+            "issuer": "統一",
             "side": "buy",
             "action": "increased",
-            "shares_delta": 11000,
-            "amount": 11385000
+            "shares_delta": 73000,
+            "amount": 309155000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -1963,8 +1472,48 @@
         "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
       },
       {
-        "code": "4958",
-        "name": "臻鼎-KY",
+        "code": "3017",
+        "name": "奇鋐",
+        "industry": "電腦及週邊設備業",
+        "side": "buy",
+        "buy_count": 2,
+        "sell_count": 0,
+        "same_side_count": 2,
+        "etf_count": 2,
+        "net_signal": 2,
+        "net_shares": 130000,
+        "net_amount": 417950000,
+        "buy_amount": 417950000,
+        "sell_amount": 0,
+        "date": "2026-10-28",
+        "updated_at": "2026-10-28",
+        "details": [
+          {
+            "etf_code": "00406A",
+            "etf_name": "主動中信台灣收益",
+            "issuer": "中國信託",
+            "side": "buy",
+            "action": "increased",
+            "shares_delta": 80000,
+            "amount": 257200000
+          },
+          {
+            "etf_code": "00991A",
+            "etf_name": "主動復華未來50",
+            "issuer": "復華",
+            "side": "buy",
+            "action": "increased",
+            "shares_delta": 50000,
+            "amount": 160750000
+          }
+        ],
+        "source": "ETF資訊網主動 ETF 追蹤",
+        "source_url": "https://www.etfinfo.tw/active",
+        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
+      },
+      {
+        "code": "3037",
+        "name": "欣興",
         "industry": "電子零組件業",
         "side": "buy",
         "buy_count": 2,
@@ -1972,12 +1521,12 @@
         "same_side_count": 2,
         "etf_count": 2,
         "net_signal": 2,
-        "net_shares": 521000,
-        "net_amount": 286550000,
-        "buy_amount": 286550000,
+        "net_shares": 370000,
+        "net_amount": 407000000,
+        "buy_amount": 407000000,
         "sell_amount": 0,
         "date": "2026-10-28",
-        "updated_at": "2026-10-27",
+        "updated_at": "2026-10-28",
         "details": [
           {
             "etf_code": "00406A",
@@ -1985,97 +1534,8 @@
             "issuer": "中國信託",
             "side": "buy",
             "action": "increased",
-            "shares_delta": 500000,
-            "amount": 275000000
-          },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 21000,
-            "amount": 11550000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "2059",
-        "name": "川湖",
-        "industry": "電子零組件業",
-        "side": "buy",
-        "buy_count": 2,
-        "sell_count": 0,
-        "same_side_count": 2,
-        "etf_count": 2,
-        "net_signal": 2,
-        "net_shares": 23000,
-        "net_amount": 233450000,
-        "buy_amount": 233450000,
-        "sell_amount": 0,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 22000,
-            "amount": 223300000
-          },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 1000,
-            "amount": 10150000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "6805",
-        "name": "富世達",
-        "industry": "電子零組件業",
-        "side": "buy",
-        "buy_count": 2,
-        "sell_count": 1,
-        "same_side_count": 2,
-        "etf_count": 3,
-        "net_signal": 1,
-        "net_shares": 90000,
-        "net_amount": 221400000,
-        "buy_amount": 393600000,
-        "sell_amount": -172200000,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00405A",
-            "etf_name": "主動富邦台灣龍耀",
-            "issuer": "富邦",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -70000,
-            "amount": -172200000
-          },
-          {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 110000,
-            "amount": 270600000
+            "shares_delta": 320000,
+            "amount": 352000000
           },
           {
             "etf_code": "00981A",
@@ -2084,7 +1544,7 @@
             "side": "buy",
             "action": "increased",
             "shares_delta": 50000,
-            "amount": 123000000
+            "amount": 55000000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -2092,21 +1552,21 @@
         "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
       },
       {
-        "code": "3661",
-        "name": "世芯-KY",
-        "industry": "半導體業",
+        "code": "1303",
+        "name": "南亞",
+        "industry": "塑膠工業",
         "side": "buy",
         "buy_count": 2,
         "sell_count": 0,
         "same_side_count": 2,
         "etf_count": 2,
         "net_signal": 2,
-        "net_shares": 53000,
-        "net_amount": 201400000,
-        "buy_amount": 201400000,
+        "net_shares": 750000,
+        "net_amount": 239250000,
+        "buy_amount": 239250000,
         "sell_amount": 0,
         "date": "2026-10-28",
-        "updated_at": "2026-10-27",
+        "updated_at": "2026-10-28",
         "details": [
           {
             "etf_code": "00406A",
@@ -2114,435 +1574,17 @@
             "issuer": "中國信託",
             "side": "buy",
             "action": "increased",
-            "shares_delta": 50000,
-            "amount": 190000000
+            "shares_delta": 550000,
+            "amount": 175450000
           },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 3000,
-            "amount": 11400000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "3231",
-        "name": "緯創",
-        "industry": "電腦及週邊設備業",
-        "side": "buy",
-        "buy_count": 3,
-        "sell_count": 0,
-        "same_side_count": 3,
-        "etf_count": 3,
-        "net_signal": 3,
-        "net_shares": 1011000,
-        "net_amount": 196639500,
-        "buy_amount": 196639500,
-        "sell_amount": 0,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 700000,
-            "amount": 136150000
-          },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 64000,
-            "amount": 12448000
-          },
-          {
-            "etf_code": "00980A",
-            "etf_name": "主動野村臺灣優選",
-            "issuer": "野村",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 247000,
-            "amount": 48041500
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "6213",
-        "name": "聯茂",
-        "industry": "電子零組件業",
-        "side": "buy",
-        "buy_count": 2,
-        "sell_count": 0,
-        "same_side_count": 2,
-        "etf_count": 2,
-        "net_signal": 2,
-        "net_shares": 119000,
-        "net_amount": 92582000,
-        "buy_amount": 92582000,
-        "sell_amount": 0,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 15000,
-            "amount": 11670000
-          },
-          {
-            "etf_code": "00980A",
-            "etf_name": "主動野村臺灣優選",
-            "issuer": "野村",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 104000,
-            "amount": 80912000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "6531",
-        "name": "愛普*",
-        "industry": "半導體業",
-        "side": "buy",
-        "buy_count": 3,
-        "sell_count": 0,
-        "same_side_count": 3,
-        "etf_count": 3,
-        "net_signal": 3,
-        "net_shares": 35000,
-        "net_amount": 29505000,
-        "buy_amount": 29505000,
-        "sell_amount": 0,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 13000,
-            "amount": 10959000
-          },
-          {
-            "etf_code": "00982A",
-            "etf_name": "主動群益台灣強棒",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 10000,
-            "amount": 8430000
-          },
-          {
-            "etf_code": "00995A",
-            "etf_name": "主動中信台灣卓越",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 12000,
-            "amount": 10116000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "3665",
-        "name": "貿聯-KY",
-        "industry": "其他電子業",
-        "side": "mixed",
-        "buy_count": 1,
-        "sell_count": 1,
-        "same_side_count": 1,
-        "etf_count": 2,
-        "net_signal": 0,
-        "net_shares": 15000,
-        "net_amount": 27150000,
-        "buy_amount": 59730000,
-        "sell_amount": -32580000,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00980A",
-            "etf_name": "主動野村臺灣優選",
-            "issuer": "野村",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 33000,
-            "amount": 59730000
-          },
-          {
-            "etf_code": "00995A",
-            "etf_name": "主動中信台灣卓越",
-            "issuer": "中國信託",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -18000,
-            "amount": -32580000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "6187",
-        "name": "萬潤",
-        "industry": "半導體業",
-        "side": "buy",
-        "buy_count": 2,
-        "sell_count": 0,
-        "same_side_count": 2,
-        "etf_count": 2,
-        "net_signal": 2,
-        "net_shares": 14000,
-        "net_amount": 17990000,
-        "buy_amount": 17990000,
-        "sell_amount": 0,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00401A",
-            "etf_name": "主動摩根台灣鑫收",
-            "issuer": "摩根",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 6000,
-            "amount": 7710000
-          },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 8000,
-            "amount": 10280000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "8021",
-        "name": "尖點",
-        "industry": "其他電子業",
-        "side": "buy",
-        "buy_count": 2,
-        "sell_count": 0,
-        "same_side_count": 2,
-        "etf_count": 2,
-        "net_signal": 2,
-        "net_shares": 28233,
-        "net_amount": 12408404,
-        "buy_amount": 12408404,
-        "sell_amount": 0,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 22000,
-            "amount": 9669000
-          },
-          {
-            "etf_code": "00996A",
-            "etf_name": "主動兆豐台灣豐收",
-            "issuer": "兆豐",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 6233,
-            "amount": 2739404
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "2360",
-        "name": "致茂",
-        "industry": "其他電子業",
-        "side": "mixed",
-        "buy_count": 1,
-        "sell_count": 1,
-        "same_side_count": 1,
-        "etf_count": 2,
-        "net_signal": 0,
-        "net_shares": 3000,
-        "net_amount": 6105000,
-        "buy_amount": 10175000,
-        "sell_amount": -4070000,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00401A",
-            "etf_name": "主動摩根台灣鑫收",
-            "issuer": "摩根",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 5000,
-            "amount": 10175000
-          },
-          {
-            "etf_code": "00996A",
-            "etf_name": "主動兆豐台灣豐收",
-            "issuer": "兆豐",
-            "side": "sell",
-            "action": "removed",
-            "shares_delta": -2000,
-            "amount": -4070000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "2408",
-        "name": "南亞科",
-        "industry": "半導體業",
-        "side": "mixed",
-        "buy_count": 1,
-        "sell_count": 1,
-        "same_side_count": 1,
-        "etf_count": 2,
-        "net_signal": 0,
-        "net_shares": -76000,
-        "net_amount": -36252000,
-        "buy_amount": 25281000,
-        "sell_amount": -61533000,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 53000,
-            "amount": 25281000
-          },
-          {
-            "etf_code": "00980A",
-            "etf_name": "主動野村臺灣優選",
-            "issuer": "野村",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -129000,
-            "amount": -61533000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "3131",
-        "name": "弘塑",
-        "industry": "半導體業",
-        "side": "sell",
-        "buy_count": 0,
-        "sell_count": 2,
-        "same_side_count": 2,
-        "etf_count": 2,
-        "net_signal": -2,
-        "net_shares": -29000,
-        "net_amount": -58435000,
-        "buy_amount": 0,
-        "sell_amount": -58435000,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "sell",
-            "action": "removed",
-            "shares_delta": -24000,
-            "amount": -48360000
-          },
-          {
-            "etf_code": "00996A",
-            "etf_name": "主動兆豐台灣豐收",
-            "issuer": "兆豐",
-            "side": "sell",
-            "action": "removed",
-            "shares_delta": -5000,
-            "amount": -10075000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "6274",
-        "name": "台燿",
-        "industry": "電子零組件業",
-        "side": "mixed",
-        "buy_count": 1,
-        "sell_count": 1,
-        "same_side_count": 1,
-        "etf_count": 2,
-        "net_signal": 0,
-        "net_shares": -64000,
-        "net_amount": -81920000,
-        "buy_amount": 20480000,
-        "sell_amount": -102400000,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
           {
             "etf_code": "00407A",
             "etf_name": "主動凱基台灣",
             "issuer": "凱基",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -80000,
-            "amount": -102400000
-          },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
             "side": "buy",
             "action": "increased",
-            "shares_delta": 16000,
-            "amount": 20480000
+            "shares_delta": 200000,
+            "amount": 63800000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -2550,39 +1592,39 @@
         "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
       },
       {
-        "code": "7769",
-        "name": "鴻勁",
-        "industry": "半導體業",
-        "side": "sell",
-        "buy_count": 0,
-        "sell_count": 2,
+        "code": "2383",
+        "name": "台光電",
+        "industry": "電子零組件業",
+        "side": "buy",
+        "buy_count": 2,
+        "sell_count": 0,
         "same_side_count": 2,
         "etf_count": 2,
-        "net_signal": -2,
-        "net_shares": -17000,
-        "net_amount": -94605000,
-        "buy_amount": 0,
-        "sell_amount": -94605000,
+        "net_signal": 2,
+        "net_shares": 43000,
+        "net_amount": 216075000,
+        "buy_amount": 216075000,
+        "sell_amount": 0,
         "date": "2026-10-28",
-        "updated_at": "2026-10-27",
+        "updated_at": "2026-10-28",
         "details": [
           {
-            "etf_code": "00401A",
-            "etf_name": "主動摩根台灣鑫收",
-            "issuer": "摩根",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -1000,
-            "amount": -5565000
+            "etf_code": "00406A",
+            "etf_name": "主動中信台灣收益",
+            "issuer": "中國信託",
+            "side": "buy",
+            "action": "increased",
+            "shares_delta": 30000,
+            "amount": 150750000
           },
           {
-            "etf_code": "00980A",
-            "etf_name": "主動野村臺灣優選",
-            "issuer": "野村",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -16000,
-            "amount": -89040000
+            "etf_code": "00407A",
+            "etf_name": "主動凱基台灣",
+            "issuer": "凱基",
+            "side": "buy",
+            "action": "increased",
+            "shares_delta": 13000,
+            "amount": 65325000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -2590,106 +1632,39 @@
         "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
       },
       {
-        "code": "2303",
-        "name": "聯電",
-        "industry": "半導體業",
+        "code": "1560",
+        "name": "中砂",
+        "industry": "電機機械",
         "side": "buy",
-        "buy_count": 3,
-        "sell_count": 1,
-        "same_side_count": 3,
-        "etf_count": 4,
+        "buy_count": 2,
+        "sell_count": 0,
+        "same_side_count": 2,
+        "etf_count": 2,
         "net_signal": 2,
-        "net_shares": -2525000,
-        "net_amount": -323200000,
-        "buy_amount": 188800000,
-        "sell_amount": -512000000,
+        "net_shares": 84000,
+        "net_amount": 76776000,
+        "buy_amount": 76776000,
+        "sell_amount": 0,
         "date": "2026-10-28",
-        "updated_at": "2026-10-27",
+        "updated_at": "2026-10-28",
         "details": [
           {
             "etf_code": "00403A",
             "etf_name": "主動統一升級50",
             "issuer": "統一",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -4000000,
-            "amount": -512000000
+            "side": "buy",
+            "action": "increased",
+            "shares_delta": 70000,
+            "amount": 63980000
           },
           {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
+            "etf_code": "00995A",
+            "etf_name": "主動中信台灣卓越",
             "issuer": "中國信託",
             "side": "buy",
             "action": "increased",
-            "shares_delta": 1200000,
-            "amount": 153600000
-          },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 1000,
-            "amount": 128000
-          },
-          {
-            "etf_code": "00980A",
-            "etf_name": "主動野村臺灣優選",
-            "issuer": "野村",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 274000,
-            "amount": 35072000
-          }
-        ],
-        "source": "ETF資訊網主動 ETF 追蹤",
-        "source_url": "https://www.etfinfo.tw/active",
-        "source_note": "以公開成分股快照差異估算，不代表基金實際成交紀錄。"
-      },
-      {
-        "code": "3443",
-        "name": "創意",
-        "industry": "半導體業",
-        "side": "buy",
-        "buy_count": 2,
-        "sell_count": 1,
-        "same_side_count": 2,
-        "etf_count": 3,
-        "net_signal": 1,
-        "net_shares": -47000,
-        "net_amount": -383990000,
-        "buy_amount": 433010000,
-        "sell_amount": -817000000,
-        "date": "2026-10-28",
-        "updated_at": "2026-10-27",
-        "details": [
-          {
-            "etf_code": "00405A",
-            "etf_name": "主動富邦台灣龍耀",
-            "issuer": "富邦",
-            "side": "sell",
-            "action": "decreased",
-            "shares_delta": -100000,
-            "amount": -817000000
-          },
-          {
-            "etf_code": "00406A",
-            "etf_name": "主動中信台灣收益",
-            "issuer": "中國信託",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 50000,
-            "amount": 408500000
-          },
-          {
-            "etf_code": "00415A",
-            "etf_name": "主動群益核心50",
-            "issuer": "群益",
-            "side": "buy",
-            "action": "increased",
-            "shares_delta": 3000,
-            "amount": 24510000
+            "shares_delta": 14000,
+            "amount": 12796000
           }
         ],
         "source": "ETF資訊網主動 ETF 追蹤",
@@ -2701,7 +1676,7 @@
       "title": "Druckenmiller 風格雷達",
       "subtitle": "先看大盤與產業，再找高信念、可快速驗證 thesis 的股票。",
       "disclaimer": "本工具僅把公開投資哲學轉成量化篩選，僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-10-28 06:30:20",
+      "generatedAt": "2026-10-28 13:44:11",
       "targetDate": "2026-10-28",
       "status": "ok",
       "market": {
@@ -2710,77 +1685,59 @@
         "suggested_exposure": "0%～20%",
         "score": 0,
         "description": "市場廣度偏弱，保留現金比追高更重要。",
-        "breadth": 3.13
+        "breadth": 3.37
       },
       "industries": [
         {
           "name": "半導體業",
-          "score": 205.4,
-          "netAmount": 5127058000.0,
-          "signals": 14,
+          "score": 91.4,
+          "netAmount": 3700405000.0,
+          "signals": 4,
           "sources": [
             "主動 ETF"
           ]
         },
         {
           "name": "電子零組件業",
-          "score": 190.7,
-          "netAmount": 4579662000.0,
-          "signals": 10,
-          "sources": [
-            "主動 ETF"
-          ]
-        },
-        {
-          "name": "電腦及週邊設備業",
-          "score": 45.0,
-          "netAmount": 884649500.0,
-          "signals": 2,
-          "sources": [
-            "主動 ETF"
-          ]
-        },
-        {
-          "name": "其他電子業",
-          "score": 26.5,
-          "netAmount": 45663404.0,
+          "score": 64.2,
+          "netAmount": 1520120000.0,
           "signals": 3,
           "sources": [
             "主動 ETF"
           ]
         },
         {
+          "name": "電腦及週邊設備業",
+          "score": 21.2,
+          "netAmount": 417950000.0,
+          "signals": 1,
+          "sources": [
+            "主動 ETF"
+          ]
+        },
+        {
           "name": "塑膠工業",
-          "score": 24.0,
-          "netAmount": 689997000.0,
+          "score": 19.4,
+          "netAmount": 239250000.0,
           "signals": 1,
           "sources": [
             "主動 ETF"
           ]
         },
         {
-          "name": "通信網路業",
-          "score": 23.6,
-          "netAmount": 462500000.0,
+          "name": "電機機械",
+          "score": 17.8,
+          "netAmount": 76776000.0,
           "signals": 1,
           "sources": [
             "主動 ETF"
           ]
         },
         {
-          "name": "光電業",
-          "score": 8.3,
-          "netAmount": 378573000.0,
-          "signals": 1,
-          "sources": [
-            "主動 ETF"
-          ]
-        },
-        {
-          "name": "金融-金控銀行",
-          "score": -12.0,
+          "name": "航運-貨櫃",
+          "score": -24.0,
           "netAmount": 0.0,
-          "signals": 1,
+          "signals": 2,
           "sources": [
             "聖杯出場警示"
           ]
@@ -3061,131 +2018,11 @@
           ]
         },
         {
-          "code": "2330",
-          "name": "台積電",
-          "industry": "半導體業",
-          "price": null,
-          "date": "2026-10-28",
-          "score": 48,
-          "scoreParts": [
-            {
-              "source": "主動 ETF",
-              "points": 48
-            },
-            {
-              "source": "大盤環境",
-              "points": 0
-            }
-          ],
-          "signals": [
-            "主動 ETF"
-          ],
-          "warnings": [],
-          "thesis": [
-            "主動 ETF 同向加碼"
-          ],
-          "fundamentals": {},
-          "activeEtf": {
-            "side": "buy",
-            "etfCount": 4,
-            "buyCount": 4,
-            "sellCount": 0,
-            "netAmount": 1981225000
-          },
-          "conviction": "小部位試單",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
           "code": "3711",
           "name": "日月光投控",
           "industry": "半導體業",
           "price": null,
           "date": "2026-10-28",
-          "score": 48,
-          "scoreParts": [
-            {
-              "source": "主動 ETF",
-              "points": 48
-            },
-            {
-              "source": "大盤環境",
-              "points": 0
-            }
-          ],
-          "signals": [
-            "主動 ETF"
-          ],
-          "warnings": [],
-          "thesis": [
-            "主動 ETF 同向加碼"
-          ],
-          "fundamentals": {},
-          "activeEtf": {
-            "side": "buy",
-            "etfCount": 5,
-            "buyCount": 5,
-            "sellCount": 0,
-            "netAmount": 1498420000
-          },
-          "conviction": "小部位試單",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
-          "code": "3037",
-          "name": "欣興",
-          "industry": "電子零組件業",
-          "price": null,
-          "date": "2026-10-28",
-          "score": 48.0,
-          "scoreParts": [
-            {
-              "source": "主動 ETF",
-              "points": 48.0
-            },
-            {
-              "source": "大盤環境",
-              "points": 0
-            }
-          ],
-          "signals": [
-            "主動 ETF"
-          ],
-          "warnings": [],
-          "thesis": [
-            "主動 ETF 同向加碼"
-          ],
-          "fundamentals": {},
-          "activeEtf": {
-            "side": "buy",
-            "etfCount": 4,
-            "buyCount": 3,
-            "sellCount": 1,
-            "netAmount": 1335400000
-          },
-          "conviction": "小部位試單",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
-          "code": "2454",
-          "name": "聯發科",
-          "industry": "半導體業",
-          "price": null,
-          "date": "2026-10-28",
           "score": 48.0,
           "scoreParts": [
             {
@@ -3210,209 +2047,9 @@
             "etfCount": 3,
             "buyCount": 3,
             "sellCount": 0,
-            "netAmount": 1156155000
+            "netAmount": 1747230000
           },
           "conviction": "小部位試單",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
-          "code": "1303",
-          "name": "南亞",
-          "industry": "塑膠工業",
-          "price": null,
-          "date": "2026-10-28",
-          "score": 48,
-          "scoreParts": [
-            {
-              "source": "主動 ETF",
-              "points": 48
-            },
-            {
-              "source": "大盤環境",
-              "points": 0
-            }
-          ],
-          "signals": [
-            "主動 ETF"
-          ],
-          "warnings": [],
-          "thesis": [
-            "主動 ETF 同向加碼"
-          ],
-          "fundamentals": {},
-          "activeEtf": {
-            "side": "buy",
-            "etfCount": 5,
-            "buyCount": 5,
-            "sellCount": 0,
-            "netAmount": 689997000
-          },
-          "conviction": "小部位試單",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
-          "code": "3017",
-          "name": "奇鋐",
-          "industry": "電腦及週邊設備業",
-          "price": null,
-          "date": "2026-10-28",
-          "score": 48,
-          "scoreParts": [
-            {
-              "source": "主動 ETF",
-              "points": 48
-            },
-            {
-              "source": "大盤環境",
-              "points": 0
-            }
-          ],
-          "signals": [
-            "主動 ETF"
-          ],
-          "warnings": [],
-          "thesis": [
-            "主動 ETF 同向加碼"
-          ],
-          "fundamentals": {},
-          "activeEtf": {
-            "side": "buy",
-            "etfCount": 5,
-            "buyCount": 4,
-            "sellCount": 1,
-            "netAmount": 688010000
-          },
-          "conviction": "小部位試單",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
-          "code": "3081",
-          "name": "聯亞",
-          "industry": "通信網路業",
-          "price": null,
-          "date": "2026-10-28",
-          "score": 47.2,
-          "scoreParts": [
-            {
-              "source": "主動 ETF",
-              "points": 47.2
-            },
-            {
-              "source": "大盤環境",
-              "points": 0
-            }
-          ],
-          "signals": [
-            "主動 ETF"
-          ],
-          "warnings": [],
-          "thesis": [
-            "主動 ETF 同向加碼"
-          ],
-          "fundamentals": {},
-          "activeEtf": {
-            "side": "buy",
-            "etfCount": 4,
-            "buyCount": 4,
-            "sellCount": 0,
-            "netAmount": 462500000
-          },
-          "conviction": "只觀察",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
-          "code": "5274",
-          "name": "信驊",
-          "industry": "半導體業",
-          "price": null,
-          "date": "2026-10-28",
-          "score": 45.0,
-          "scoreParts": [
-            {
-              "source": "主動 ETF",
-              "points": 45.0
-            },
-            {
-              "source": "大盤環境",
-              "points": 0
-            }
-          ],
-          "signals": [
-            "主動 ETF"
-          ],
-          "warnings": [],
-          "thesis": [
-            "主動 ETF 同向加碼"
-          ],
-          "fundamentals": {},
-          "activeEtf": {
-            "side": "buy",
-            "etfCount": 3,
-            "buyCount": 3,
-            "sellCount": 0,
-            "netAmount": 352330000
-          },
-          "conviction": "只觀察",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
-          "code": "3653",
-          "name": "健策",
-          "industry": "電子零組件業",
-          "price": null,
-          "date": "2026-10-28",
-          "score": 44.0,
-          "scoreParts": [
-            {
-              "source": "主動 ETF",
-              "points": 44.0
-            },
-            {
-              "source": "大盤環境",
-              "points": 0
-            }
-          ],
-          "signals": [
-            "主動 ETF"
-          ],
-          "warnings": [],
-          "thesis": [
-            "主動 ETF 同向加碼"
-          ],
-          "fundamentals": {},
-          "activeEtf": {
-            "side": "buy",
-            "etfCount": 3,
-            "buyCount": 2,
-            "sellCount": 1,
-            "netAmount": 969000000
-          },
-          "conviction": "只觀察",
           "signalCount": 1,
           "thesisBreak": [
             "主動 ETF 流向轉為連續賣超",
@@ -3426,11 +2063,11 @@
           "industry": "電子零組件業",
           "price": null,
           "date": "2026-10-28",
-          "score": 44.0,
+          "score": 48,
           "scoreParts": [
             {
               "source": "主動 ETF",
-              "points": 44.0
+              "points": 48
             },
             {
               "source": "大盤環境",
@@ -3447,12 +2084,12 @@
           "fundamentals": {},
           "activeEtf": {
             "side": "buy",
-            "etfCount": 2,
-            "buyCount": 2,
+            "etfCount": 4,
+            "buyCount": 4,
             "sellCount": 0,
-            "netAmount": 580650000
+            "netAmount": 897045000
           },
-          "conviction": "只觀察",
+          "conviction": "小部位試單",
           "signalCount": 1,
           "thesisBreak": [
             "主動 ETF 流向轉為連續賣超",
@@ -3461,96 +2098,16 @@
           ]
         },
         {
-          "code": "8046",
-          "name": "南電",
-          "industry": "電子零組件業",
-          "price": null,
-          "date": "2026-10-28",
-          "score": 44.0,
-          "scoreParts": [
-            {
-              "source": "主動 ETF",
-              "points": 44.0
-            },
-            {
-              "source": "大盤環境",
-              "points": 0
-            }
-          ],
-          "signals": [
-            "主動 ETF"
-          ],
-          "warnings": [],
-          "thesis": [
-            "主動 ETF 同向加碼"
-          ],
-          "fundamentals": {},
-          "activeEtf": {
-            "side": "buy",
-            "etfCount": 2,
-            "buyCount": 2,
-            "sellCount": 0,
-            "netAmount": 570700000
-          },
-          "conviction": "只觀察",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
-          "code": "6223",
-          "name": "旺矽",
+          "code": "5274",
+          "name": "信驊",
           "industry": "半導體業",
           "price": null,
           "date": "2026-10-28",
-          "score": 43.3,
+          "score": 48.0,
           "scoreParts": [
             {
               "source": "主動 ETF",
-              "points": 43.3
-            },
-            {
-              "source": "大盤環境",
-              "points": 0
-            }
-          ],
-          "signals": [
-            "主動 ETF"
-          ],
-          "warnings": [],
-          "thesis": [
-            "主動 ETF 同向加碼"
-          ],
-          "fundamentals": {},
-          "activeEtf": {
-            "side": "buy",
-            "etfCount": 3,
-            "buyCount": 2,
-            "sellCount": 1,
-            "netAmount": 464630000
-          },
-          "conviction": "只觀察",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
-          "code": "3231",
-          "name": "緯創",
-          "industry": "電腦及週邊設備業",
-          "price": null,
-          "date": "2026-10-28",
-          "score": 41.9,
-          "scoreParts": [
-            {
-              "source": "主動 ETF",
-              "points": 41.9
+              "points": 48.0
             },
             {
               "source": "大盤環境",
@@ -3570,7 +2127,207 @@
             "etfCount": 3,
             "buyCount": 3,
             "sellCount": 0,
-            "netAmount": 196639500
+            "netAmount": 691800000
+          },
+          "conviction": "小部位試單",
+          "signalCount": 1,
+          "thesisBreak": [
+            "主動 ETF 流向轉為連續賣超",
+            "MACD 柱狀體翻回綠色或突破失敗",
+            "營收 / EPS 成長 thesis 消失"
+          ]
+        },
+        {
+          "code": "3443",
+          "name": "創意",
+          "industry": "半導體業",
+          "price": null,
+          "date": "2026-10-28",
+          "score": 44.0,
+          "scoreParts": [
+            {
+              "source": "主動 ETF",
+              "points": 44.0
+            },
+            {
+              "source": "大盤環境",
+              "points": 0
+            }
+          ],
+          "signals": [
+            "主動 ETF"
+          ],
+          "warnings": [],
+          "thesis": [
+            "主動 ETF 同向加碼"
+          ],
+          "fundamentals": {},
+          "activeEtf": {
+            "side": "buy",
+            "etfCount": 2,
+            "buyCount": 2,
+            "sellCount": 0,
+            "netAmount": 825170000
+          },
+          "conviction": "只觀察",
+          "signalCount": 1,
+          "thesisBreak": [
+            "主動 ETF 流向轉為連續賣超",
+            "MACD 柱狀體翻回綠色或突破失敗",
+            "營收 / EPS 成長 thesis 消失"
+          ]
+        },
+        {
+          "code": "2454",
+          "name": "聯發科",
+          "industry": "半導體業",
+          "price": null,
+          "date": "2026-10-28",
+          "score": 42.7,
+          "scoreParts": [
+            {
+              "source": "主動 ETF",
+              "points": 42.7
+            },
+            {
+              "source": "大盤環境",
+              "points": 0
+            }
+          ],
+          "signals": [
+            "主動 ETF"
+          ],
+          "warnings": [],
+          "thesis": [
+            "主動 ETF 同向加碼"
+          ],
+          "fundamentals": {},
+          "activeEtf": {
+            "side": "buy",
+            "etfCount": 2,
+            "buyCount": 2,
+            "sellCount": 0,
+            "netAmount": 436205000
+          },
+          "conviction": "只觀察",
+          "signalCount": 1,
+          "thesisBreak": [
+            "主動 ETF 流向轉為連續賣超",
+            "MACD 柱狀體翻回綠色或突破失敗",
+            "營收 / EPS 成長 thesis 消失"
+          ]
+        },
+        {
+          "code": "3017",
+          "name": "奇鋐",
+          "industry": "電腦及週邊設備業",
+          "price": null,
+          "date": "2026-10-28",
+          "score": 42.4,
+          "scoreParts": [
+            {
+              "source": "主動 ETF",
+              "points": 42.4
+            },
+            {
+              "source": "大盤環境",
+              "points": 0
+            }
+          ],
+          "signals": [
+            "主動 ETF"
+          ],
+          "warnings": [],
+          "thesis": [
+            "主動 ETF 同向加碼"
+          ],
+          "fundamentals": {},
+          "activeEtf": {
+            "side": "buy",
+            "etfCount": 2,
+            "buyCount": 2,
+            "sellCount": 0,
+            "netAmount": 417950000
+          },
+          "conviction": "只觀察",
+          "signalCount": 1,
+          "thesisBreak": [
+            "主動 ETF 流向轉為連續賣超",
+            "MACD 柱狀體翻回綠色或突破失敗",
+            "營收 / EPS 成長 thesis 消失"
+          ]
+        },
+        {
+          "code": "3037",
+          "name": "欣興",
+          "industry": "電子零組件業",
+          "price": null,
+          "date": "2026-10-28",
+          "score": 42.1,
+          "scoreParts": [
+            {
+              "source": "主動 ETF",
+              "points": 42.1
+            },
+            {
+              "source": "大盤環境",
+              "points": 0
+            }
+          ],
+          "signals": [
+            "主動 ETF"
+          ],
+          "warnings": [],
+          "thesis": [
+            "主動 ETF 同向加碼"
+          ],
+          "fundamentals": {},
+          "activeEtf": {
+            "side": "buy",
+            "etfCount": 2,
+            "buyCount": 2,
+            "sellCount": 0,
+            "netAmount": 407000000
+          },
+          "conviction": "只觀察",
+          "signalCount": 1,
+          "thesisBreak": [
+            "主動 ETF 流向轉為連續賣超",
+            "MACD 柱狀體翻回綠色或突破失敗",
+            "營收 / EPS 成長 thesis 消失"
+          ]
+        },
+        {
+          "code": "1303",
+          "name": "南亞",
+          "industry": "塑膠工業",
+          "price": null,
+          "date": "2026-10-28",
+          "score": 38.8,
+          "scoreParts": [
+            {
+              "source": "主動 ETF",
+              "points": 38.8
+            },
+            {
+              "source": "大盤環境",
+              "points": 0
+            }
+          ],
+          "signals": [
+            "主動 ETF"
+          ],
+          "warnings": [],
+          "thesis": [
+            "主動 ETF 同向加碼"
+          ],
+          "fundamentals": {},
+          "activeEtf": {
+            "side": "buy",
+            "etfCount": 2,
+            "buyCount": 2,
+            "sellCount": 0,
+            "netAmount": 239250000
           },
           "conviction": "只觀察",
           "signalCount": 1,
@@ -3586,11 +2343,11 @@
           "industry": "電子零組件業",
           "price": null,
           "date": "2026-10-28",
-          "score": 41.4,
+          "score": 38.3,
           "scoreParts": [
             {
               "source": "主動 ETF",
-              "points": 41.4
+              "points": 38.3
             },
             {
               "source": "大盤環境",
@@ -3610,247 +2367,7 @@
             "etfCount": 2,
             "buyCount": 2,
             "sellCount": 0,
-            "netAmount": 371850000
-          },
-          "conviction": "只觀察",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
-          "code": "3189",
-          "name": "景碩",
-          "industry": "半導體業",
-          "price": null,
-          "date": "2026-10-28",
-          "score": 40.4,
-          "scoreParts": [
-            {
-              "source": "主動 ETF",
-              "points": 40.4
-            },
-            {
-              "source": "大盤環境",
-              "points": 0
-            }
-          ],
-          "signals": [
-            "主動 ETF"
-          ],
-          "warnings": [],
-          "thesis": [
-            "主動 ETF 同向加碼"
-          ],
-          "fundamentals": {},
-          "activeEtf": {
-            "side": "buy",
-            "etfCount": 2,
-            "buyCount": 2,
-            "sellCount": 0,
-            "netAmount": 321885000
-          },
-          "conviction": "只觀察",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
-          "code": "4958",
-          "name": "臻鼎-KY",
-          "industry": "電子零組件業",
-          "price": null,
-          "date": "2026-10-28",
-          "score": 39.7,
-          "scoreParts": [
-            {
-              "source": "主動 ETF",
-              "points": 39.7
-            },
-            {
-              "source": "大盤環境",
-              "points": 0
-            }
-          ],
-          "signals": [
-            "主動 ETF"
-          ],
-          "warnings": [],
-          "thesis": [
-            "主動 ETF 同向加碼"
-          ],
-          "fundamentals": {},
-          "activeEtf": {
-            "side": "buy",
-            "etfCount": 2,
-            "buyCount": 2,
-            "sellCount": 0,
-            "netAmount": 286550000
-          },
-          "conviction": "只觀察",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
-          "code": "2059",
-          "name": "川湖",
-          "industry": "電子零組件業",
-          "price": null,
-          "date": "2026-10-28",
-          "score": 38.7,
-          "scoreParts": [
-            {
-              "source": "主動 ETF",
-              "points": 38.7
-            },
-            {
-              "source": "大盤環境",
-              "points": 0
-            }
-          ],
-          "signals": [
-            "主動 ETF"
-          ],
-          "warnings": [],
-          "thesis": [
-            "主動 ETF 同向加碼"
-          ],
-          "fundamentals": {},
-          "activeEtf": {
-            "side": "buy",
-            "etfCount": 2,
-            "buyCount": 2,
-            "sellCount": 0,
-            "netAmount": 233450000
-          },
-          "conviction": "只觀察",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
-          "code": "6531",
-          "name": "愛普*",
-          "industry": "半導體業",
-          "price": null,
-          "date": "2026-10-28",
-          "score": 38.6,
-          "scoreParts": [
-            {
-              "source": "主動 ETF",
-              "points": 38.6
-            },
-            {
-              "source": "大盤環境",
-              "points": 0
-            }
-          ],
-          "signals": [
-            "主動 ETF"
-          ],
-          "warnings": [],
-          "thesis": [
-            "主動 ETF 同向加碼"
-          ],
-          "fundamentals": {},
-          "activeEtf": {
-            "side": "buy",
-            "etfCount": 3,
-            "buyCount": 3,
-            "sellCount": 0,
-            "netAmount": 29505000
-          },
-          "conviction": "只觀察",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
-          "code": "6805",
-          "name": "富世達",
-          "industry": "電子零組件業",
-          "price": null,
-          "date": "2026-10-28",
-          "score": 38.4,
-          "scoreParts": [
-            {
-              "source": "主動 ETF",
-              "points": 38.4
-            },
-            {
-              "source": "大盤環境",
-              "points": 0
-            }
-          ],
-          "signals": [
-            "主動 ETF"
-          ],
-          "warnings": [],
-          "thesis": [
-            "主動 ETF 同向加碼"
-          ],
-          "fundamentals": {},
-          "activeEtf": {
-            "side": "buy",
-            "etfCount": 3,
-            "buyCount": 2,
-            "sellCount": 1,
-            "netAmount": 221400000
-          },
-          "conviction": "只觀察",
-          "signalCount": 1,
-          "thesisBreak": [
-            "主動 ETF 流向轉為連續賣超",
-            "MACD 柱狀體翻回綠色或突破失敗",
-            "營收 / EPS 成長 thesis 消失"
-          ]
-        },
-        {
-          "code": "3661",
-          "name": "世芯-KY",
-          "industry": "半導體業",
-          "price": null,
-          "date": "2026-10-28",
-          "score": 38.0,
-          "scoreParts": [
-            {
-              "source": "主動 ETF",
-              "points": 38.0
-            },
-            {
-              "source": "大盤環境",
-              "points": 0
-            }
-          ],
-          "signals": [
-            "主動 ETF"
-          ],
-          "warnings": [],
-          "thesis": [
-            "主動 ETF 同向加碼"
-          ],
-          "fundamentals": {},
-          "activeEtf": {
-            "side": "buy",
-            "etfCount": 2,
-            "buyCount": 2,
-            "sellCount": 0,
-            "netAmount": 201400000
+            "netAmount": 216075000
           },
           "conviction": "只觀察",
           "signalCount": 1,
@@ -3944,7 +2461,7 @@
       "title": "台股聖杯雷達",
       "subtitle": "大盤決定倉位，產業決定方向，個股決定進場，風控決定能不能活下來。",
       "disclaimer": "本工具僅供研究與教育用途，不構成投資建議。",
-      "generatedAt": "2026-10-28 06:30:19",
+      "generatedAt": "2026-10-28 13:44:11",
       "targetDate": "2026-10-28",
       "dataSource": "twstock universe + yfinance history",
       "market": {
@@ -3963,177 +2480,321 @@
       },
       "industries": [
         {
-          "industry": "金融-金控銀行",
-          "baseIndustries": [
-            "金融保險業"
-          ],
-          "return5": 0.034379250540118,
-          "return20": 0.045598474177198645,
-          "return60": 0.2187748885520866,
-          "volumeRatio": 0.8473537026309271,
-          "relativeStrength20": 0.045598474177198645,
-          "stockCount": 6,
-          "industryScore": 89.3,
-          "status": "主流強勢",
-          "rank": 1
-        },
-        {
-          "industry": "電機機械-自動化設備",
-          "baseIndustries": [
-            "電機機械"
-          ],
-          "return5": 0.003356481532582857,
-          "return20": 0.04675377374992233,
-          "return60": 0.14481150173449395,
-          "volumeRatio": 0.8154832777967631,
-          "relativeStrength20": 0.04675377374992233,
-          "stockCount": 2,
-          "industryScore": 72.1,
-          "status": "轉強觀察",
-          "rank": 2
-        },
-        {
           "industry": "航運-貨櫃",
           "baseIndustries": [
             "航運業"
           ],
-          "return5": 0.004807369490095305,
-          "return20": 0.02940175760358251,
-          "return60": 0.1875519193747392,
-          "volumeRatio": 0.618947461403902,
-          "relativeStrength20": 0.02940175760358251,
-          "stockCount": 5,
-          "industryScore": 67.1,
+          "return5": 0.01203727212049201,
+          "return20": 0.04067160305617806,
+          "return60": 0.3310142205764589,
+          "volumeRatio": 0.530131931180665,
+          "relativeStrength20": 0.04067160305617806,
+          "stockCount": 2,
+          "industryScore": 100.0,
+          "status": "主流強勢",
+          "rank": 1
+        },
+        {
+          "industry": "電子零組件-連接器線束",
+          "baseIndustries": [
+            "電子零組件業"
+          ],
+          "return5": 0.0012658034698872626,
+          "return20": -0.05495816776392009,
+          "return60": 0.20395741473831872,
+          "volumeRatio": 0.48304622228375266,
+          "relativeStrength20": -0.05495816776392009,
+          "stockCount": 1,
+          "industryScore": 0.0,
+          "status": "弱勢避開",
+          "rank": 2
+        }
+      ],
+      "usIndustries": [
+        {
+          "symbol": "XLE",
+          "name": "美股能源",
+          "mappedIndustries": [
+            "油電燃氣業",
+            "化學工業",
+            "塑膠工業"
+          ],
+          "return5": 0.002787482420828246,
+          "return20": 0.11138208901009909,
+          "return60": 0.16797672487121976,
+          "volumeRatio": 0.9546779392812376,
+          "relativeStrength20": 0.10087894893648523,
+          "industryScore": 91.0,
+          "status": "主流強勢",
+          "rank": 1
+        },
+        {
+          "symbol": "XLV",
+          "name": "美股醫療",
+          "mappedIndustries": [
+            "生技醫療-製藥",
+            "生技醫療-醫材通路"
+          ],
+          "return5": 0.003185380896685362,
+          "return20": 0.06584726551751911,
+          "return60": 0.10740276217017813,
+          "volumeRatio": 0.8466850095453877,
+          "relativeStrength20": 0.055344125443905254,
+          "industryScore": 78.5,
+          "status": "轉強觀察",
+          "rank": 2
+        },
+        {
+          "symbol": "XLP",
+          "name": "美股民生消費",
+          "mappedIndustries": [
+            "食品工業",
+            "貿易百貨業"
+          ],
+          "return5": -0.005854690995948215,
+          "return20": 0.07444168875420598,
+          "return60": 0.014407821107728709,
+          "volumeRatio": 1.0586716263142728,
+          "relativeStrength20": 0.06393854868059212,
+          "industryScore": 68.5,
           "status": "轉強觀察",
           "rank": 3
         },
         {
-          "industry": "通信網路-網通設備",
-          "baseIndustries": [
-            "通信網路業"
+          "symbol": "IGV",
+          "name": "美股軟體",
+          "mappedIndustries": [
+            "資訊服務-資安雲端"
           ],
-          "return5": -0.044444444444444446,
-          "return20": -0.0063025210084033615,
-          "return60": 0.15931372549019607,
-          "volumeRatio": 0.9460868243230358,
-          "relativeStrength20": -0.0063025210084033615,
-          "stockCount": 1,
-          "industryScore": 44.3,
-          "status": "弱勢避開",
+          "return5": 0.025179175440669048,
+          "return20": 0.04770843389844207,
+          "return60": 0.09372546626072303,
+          "volumeRatio": 0.8156296049751418,
+          "relativeStrength20": 0.03720529382482821,
+          "industryScore": 65.0,
+          "status": "轉強觀察",
           "rank": 4
         },
         {
-          "industry": "橡膠工業",
-          "baseIndustries": [
-            "橡膠工業"
+          "symbol": "XLB",
+          "name": "美股原物料",
+          "mappedIndustries": [
+            "鋼鐵-上游原料",
+            "鋼鐵-不鏽鋼扣件",
+            "水泥工業",
+            "玻璃陶瓷"
           ],
-          "return5": -0.02058825773351333,
-          "return20": 0.0,
-          "return60": -0.09016391733988433,
-          "volumeRatio": 1.1012303425399632,
-          "relativeStrength20": 0.0,
-          "stockCount": 1,
-          "industryScore": 42.9,
-          "status": "弱勢避開",
+          "return5": 0.00019489743355313185,
+          "return20": 0.05400412786269722,
+          "return60": -0.012884580172025241,
+          "volumeRatio": 0.7511374514483482,
+          "relativeStrength20": 0.04350098778908336,
+          "industryScore": 53.5,
+          "status": "中性",
           "rank": 5
         },
         {
-          "industry": "貿易百貨業",
-          "baseIndustries": [
-            "貿易百貨業"
+          "symbol": "XLY",
+          "name": "美股非必需消費",
+          "mappedIndustries": [
+            "汽車工業",
+            "貿易百貨業",
+            "觀光餐旅"
           ],
-          "return5": 0.008812000339493378,
-          "return20": -0.012620209724015875,
-          "return60": -0.028859141661209807,
-          "volumeRatio": 0.6882327705646568,
-          "relativeStrength20": -0.012620209724015875,
-          "stockCount": 8,
-          "industryScore": 40.0,
-          "status": "弱勢避開",
+          "return5": -0.0027265856897308203,
+          "return20": 0.058572218067786376,
+          "return60": -0.025995473445237567,
+          "volumeRatio": 0.809847994653018,
+          "relativeStrength20": 0.04806907799417252,
+          "industryScore": 53.5,
+          "status": "中性",
           "rank": 6
         },
         {
-          "industry": "航運-散裝航空",
-          "baseIndustries": [
-            "航運業"
+          "symbol": "XLK",
+          "name": "美股科技",
+          "mappedIndustries": [
+            "半導體-IC設計",
+            "半導體-晶圓代工",
+            "電腦週邊-伺服器AI",
+            "資訊服務-資安雲端",
+            "電子零組件-PCB"
           ],
-          "return5": 0.0014202028760419442,
-          "return20": -0.021193877818414492,
-          "return60": 0.1499386818375703,
-          "volumeRatio": 0.6848620978206227,
-          "relativeStrength20": -0.021193877818414492,
-          "stockCount": 4,
-          "industryScore": 30.0,
+          "return5": 0.008857608397173975,
+          "return20": -0.028301370554956896,
+          "return60": 0.017710074507632578,
+          "volumeRatio": 0.827192114432547,
+          "relativeStrength20": -0.03880451062857075,
+          "industryScore": 43.0,
           "status": "弱勢避開",
           "rank": 7
         },
         {
-          "industry": "電子零組件-電源散熱",
-          "baseIndustries": [
-            "電子零組件業"
+          "symbol": "SMH",
+          "name": "美股半導體",
+          "mappedIndustries": [
+            "半導體-晶圓代工",
+            "半導體-IC設計",
+            "半導體-封測",
+            "半導體-設備材料",
+            "半導體-矽晶圓"
           ],
-          "return5": -0.047075959539614645,
-          "return20": -0.07093721472922283,
-          "return60": 0.10261728025396583,
-          "volumeRatio": 1.0160578449078956,
-          "relativeStrength20": -0.07093721472922283,
-          "stockCount": 2,
-          "industryScore": 14.3,
+          "return5": 0.012107041650052029,
+          "return20": -0.07481116183677135,
+          "return60": -0.021312846855100907,
+          "volumeRatio": 0.9798972548160645,
+          "relativeStrength20": -0.0853143019103852,
+          "industryScore": 30.5,
           "status": "弱勢避開",
           "rank": 8
+        },
+        {
+          "symbol": "XLF",
+          "name": "美股金融",
+          "mappedIndustries": [
+            "金融-金控銀行",
+            "金融-證券期貨",
+            "金融-保險"
+          ],
+          "return5": -0.0029443417707301633,
+          "return20": 0.046348284707850636,
+          "return60": -0.034640653612906434,
+          "volumeRatio": 0.7202763564013498,
+          "relativeStrength20": 0.03584514463423678,
+          "industryScore": 30.0,
+          "status": "弱勢避開",
+          "rank": 9
+        },
+        {
+          "symbol": "XLI",
+          "name": "美股工業",
+          "mappedIndustries": [
+            "電機機械-工具機",
+            "電機機械-自動化設備",
+            "航運-散裝航空"
+          ],
+          "return5": -0.002733001376926455,
+          "return20": 0.005210267087299228,
+          "return60": -0.09951710515221543,
+          "volumeRatio": 0.8867956717253684,
+          "relativeStrength20": -0.0052928729863146295,
+          "industryScore": 25.5,
+          "status": "弱勢避開",
+          "rank": 10
         }
       ],
-      "usIndustries": [],
-      "usTaiwanMatches": [],
+      "usTaiwanMatches": [
+        {
+          "symbol": "XLE",
+          "name": "美股能源",
+          "rank": 1,
+          "industryScore": 91.0,
+          "status": "主流強勢",
+          "return5": 0.28,
+          "return20": 11.14,
+          "return60": 16.8,
+          "relativeStrength20": 10.09,
+          "volumeRatio": 0.95,
+          "mappedIndustries": [
+            "化學工業",
+            "塑膠工業",
+            "油電燃氣業"
+          ],
+          "stocks": []
+        },
+        {
+          "symbol": "XLV",
+          "name": "美股醫療",
+          "rank": 2,
+          "industryScore": 78.5,
+          "status": "轉強觀察",
+          "return5": 0.32,
+          "return20": 6.58,
+          "return60": 10.74,
+          "relativeStrength20": 5.53,
+          "volumeRatio": 0.85,
+          "mappedIndustries": [
+            "生技醫療-製藥",
+            "生技醫療-醫材通路"
+          ],
+          "stocks": []
+        },
+        {
+          "symbol": "XLP",
+          "name": "美股民生消費",
+          "rank": 3,
+          "industryScore": 68.5,
+          "status": "轉強觀察",
+          "return5": -0.59,
+          "return20": 7.44,
+          "return60": 1.44,
+          "relativeStrength20": 6.39,
+          "volumeRatio": 1.06,
+          "mappedIndustries": [
+            "貿易百貨業",
+            "食品工業"
+          ],
+          "stocks": []
+        },
+        {
+          "symbol": "IGV",
+          "name": "美股軟體",
+          "rank": 4,
+          "industryScore": 65.0,
+          "status": "轉強觀察",
+          "return5": 2.52,
+          "return20": 4.77,
+          "return60": 9.37,
+          "relativeStrength20": 3.72,
+          "volumeRatio": 0.82,
+          "mappedIndustries": [
+            "資訊服務-資安雲端"
+          ],
+          "stocks": []
+        },
+        {
+          "symbol": "XLB",
+          "name": "美股原物料",
+          "rank": 5,
+          "industryScore": 53.5,
+          "status": "中性",
+          "return5": 0.02,
+          "return20": 5.4,
+          "return60": -1.29,
+          "relativeStrength20": 4.35,
+          "volumeRatio": 0.75,
+          "mappedIndustries": [
+            "水泥工業",
+            "玻璃陶瓷",
+            "鋼鐵-上游原料",
+            "鋼鐵-不鏽鋼扣件"
+          ],
+          "stocks": []
+        },
+        {
+          "symbol": "XLY",
+          "name": "美股非必需消費",
+          "rank": 6,
+          "industryScore": 53.5,
+          "status": "中性",
+          "return5": -0.27,
+          "return20": 5.86,
+          "return60": -2.6,
+          "relativeStrength20": 4.81,
+          "volumeRatio": 0.81,
+          "mappedIndustries": [
+            "汽車工業",
+            "觀光餐旅",
+            "貿易百貨業"
+          ],
+          "stocks": []
+        }
+      ],
       "candidates": {
         "breakout": [],
         "pullback": [],
         "overheated": [],
         "exit": [
-          {
-            "code": "2880.TW",
-            "name": "華南金",
-            "industry": "金融-金控銀行",
-            "baseIndustry": "金融保險業",
-            "close": 49.3,
-            "price": 49.3,
-            "date": "2026-10-28",
-            "return5": 2.49,
-            "return20": 7.76,
-            "return60": 16.75,
-            "relativeStrength20": 7.76,
-            "volumeRatio": 0.97,
-            "signal": "減碼警示",
-            "bucket": "exit",
-            "score": 88.2,
-            "action": "減碼",
-            "ma5": 49.96,
-            "ma10": 49.4,
-            "ma20": 47.71,
-            "ma60": 44.58,
-            "ma120": 40.22,
-            "stopPrices": {
-              "MA20": 47.71,
-              "最近回檔低點": 44.0,
-              "固定 7%": 45.85
-            },
-            "positionSizing": {
-              "valid": true,
-              "riskAmount": 10000.0,
-              "positionValue": 200000.0,
-              "rawPositionValue": 309576.0,
-              "shares": 4056,
-              "lots": 4,
-              "oddLot": 56,
-              "stopPrice": 47.71,
-              "maxLoss": 6459.0,
-              "riskRewardTo8Pct": 2.48,
-              "firstTakeProfit": 53.24,
-              "secondTakeProfit": 56.69,
-              "exceedsSingleLimit": true,
-              "exceedsIndustryLimit": false
-            }
-          },
           {
             "code": "2609.TW",
             "name": "陽明",
@@ -4149,7 +2810,7 @@
             "volumeRatio": 0.41,
             "signal": "減碼警示",
             "bucket": "exit",
-            "score": 76.3,
+            "score": 82.9,
             "action": "減碼",
             "ma5": 62.36,
             "ma10": 63.05,
@@ -4193,7 +2854,7 @@
             "volumeRatio": 0.65,
             "signal": "減碼警示",
             "bucket": "exit",
-            "score": 74.6,
+            "score": 81.1,
             "action": "減碼",
             "ma5": 118.1,
             "ma10": 119.25,
@@ -4221,70 +2882,6 @@
               "exceedsSingleLimit": true,
               "exceedsIndustryLimit": false
             }
-          },
-          {
-            "code": "2618.TW",
-            "name": "長榮航",
-            "industry": "航運-貨櫃",
-            "baseIndustry": "航運業",
-            "close": 42.4,
-            "price": 42.4,
-            "date": "2026-10-28",
-            "return5": 0.12,
-            "return20": 0.95,
-            "return60": 1.56,
-            "relativeStrength20": 0.95,
-            "volumeRatio": 0.74,
-            "signal": "出場警示",
-            "bucket": "exit",
-            "score": 43.3,
-            "action": "出場",
-            "ma5": 42.36,
-            "ma10": 42.74,
-            "ma20": 42.41,
-            "ma60": 42.35,
-            "ma120": 40.8,
-            "stopPrices": {
-              "MA20": 42.41,
-              "最近回檔低點": 41.4,
-              "固定 7%": 39.43
-            },
-            "positionSizing": {
-              "valid": false,
-              "message": "停損價高於或等於進場價，無法計算部位。"
-            }
-          },
-          {
-            "code": "2645.TW",
-            "name": "長榮航太",
-            "industry": "航運-貨櫃",
-            "baseIndustry": "航運業",
-            "close": 167.5,
-            "price": 167.5,
-            "date": "2026-10-28",
-            "return5": -1.47,
-            "return20": -2.62,
-            "return60": -4.83,
-            "relativeStrength20": -2.62,
-            "volumeRatio": 0.74,
-            "signal": "出場警示",
-            "bucket": "exit",
-            "score": 37.8,
-            "action": "出場",
-            "ma5": 168.9,
-            "ma10": 169.85,
-            "ma20": 171.12,
-            "ma60": 176.08,
-            "ma120": 178.87,
-            "stopPrices": {
-              "MA20": 171.12,
-              "最近回檔低點": 166.5,
-              "固定 7%": 155.78
-            },
-            "positionSizing": {
-              "valid": false,
-              "message": "停損價高於或等於進場價，無法計算部位。"
-            }
           }
         ]
       },
@@ -4310,14 +2907,29 @@
       "status": "needs_sponsor",
       "source": "FinMind TaiwanStockTradingDailyReport",
       "sourceNote": "目前的 FINMIND_TOKEN 可登入，但 TaiwanStockTradingDailyReport 需要 FinMind Sponsor 權限。",
-      "generatedAt": "2026-10-28 06:30:23",
+      "generatedAt": "2026-10-28 13:44:13",
       "date": "2026-10-28",
-      "targets": 36,
+      "targets": 31,
       "items": [],
       "errors": [
         {
+          "code": "3711",
+          "name": "日月光投控",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "2368",
+          "name": "金像電",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
           "code": "3037",
           "name": "欣興",
+          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
+        },
+        {
+          "code": "5274",
+          "name": "信驊",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
@@ -4326,23 +2938,8 @@
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "3711",
-          "name": "日月光投控",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
           "code": "2377",
           "name": "微星",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "1303",
-          "name": "南亞",
-          "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
-        },
-        {
-          "code": "2330",
-          "name": "台積電",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
@@ -4351,18 +2948,18 @@
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "3653",
-          "name": "健策",
+          "code": "3443",
+          "name": "創意",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "6223",
-          "name": "旺矽",
+          "code": "1441",
+          "name": "大東",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         },
         {
-          "code": "8046",
-          "name": "南電",
+          "code": "2383",
+          "name": "台光電",
           "message": "Your level is free. Please update your user level. Detail information:https://finmindtrade.com/analysis/#/Sponsor/sponsor"
         }
       ]
@@ -4375,19 +2972,19 @@
         "pct_change": 9.83,
         "cb_code": "47148",
         "cb_name": "永捷八",
-        "cb_price": 115.0,
+        "cb_price": 117.05,
         "conversion_price": 16.1,
         "conversion_value": 79.81,
-        "premium_pct": 44.09,
-        "double_low": 159.09,
-        "cb_trade_date": "2026-10-16",
-        "cb_units": 9.0,
-        "cb_trade_value": 1028750.0,
+        "premium_pct": 46.65,
+        "double_low": 163.7,
+        "cb_trade_date": "2026-10-28",
+        "cb_units": 35.0,
+        "cb_trade_value": 4091400.0,
         "maturity_date": "2029-05-04",
         "put_option_date": "2028-05-04",
         "put_option_price": 100.5006,
         "guaranteed": true,
-        "desc": "CB:永捷八 | 雙低:159.09"
+        "desc": "CB:永捷八 | 雙低:163.7"
       }
     ]
   }
